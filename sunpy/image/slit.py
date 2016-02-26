@@ -15,7 +15,7 @@ def slit(mcube_in, range_a, range_b):
     mcube_in : `sunpy.map.MapCube`
         A mapcube of the images you want to perform the slit analysis on.
         Usually with x and y as space, and z as time.
-        Within the mapcube x and y should be uniformly equal
+        The x and y axes must be equal for all instances within the mapcube.
     range_a : `astropy.units.Quantity`
         A list of two `astropy.unit.Quantity` objects representing x1 and x2,
         start and end of slit in x.
@@ -37,7 +37,6 @@ def slit(mcube_in, range_a, range_b):
         (hasattr(range_a and range_b, 'unit')))):
         if (range_a.unit.is_equivalent(mcube_in[0].units.x) and
             range_b.unit.is_equivalent(mcube_in[0].units.y)):
-            
             # convert the world to pixel
             init_map = mcube_in[0]
             c_x1, c_y1 = init_map.data_to_pixel(range_a[0], range_b[0])
@@ -63,29 +62,25 @@ def slit(mcube_in, range_a, range_b):
     # plus one, minus one, to get an average
     slit_p1 = slit + [-1,+1]
     slit_m1 = slit + [+1,-1]
-    
+    slit_I = []
 
-    
-    
-    
-    
-    
-    
-    for d_arr in mcube_in:
-        data = d_arr.data
-        # get the initial slit pixels
-        s_values = data[slit.T[0], slit.T[1]]
-        # plus one
-        s_p1_values = data[slit_p1.T[0], slit_p1.T[1]]
-        # minus one
-        s_m1_values = data[slit_m1.T[0], slit_m1.T[1]]
-        # wap it all in one list
-        slit_I.append([s_m1_values, s_values, s_p1_values])
+    init_arr = np.zeros([3, len(slit), len(mcube_in)])
 
-    end_array = np.array(slit_I)
-    mean_arr = end_array.mean(axis=1)
-    im_array = np.rot90(mean_arr)
-    return([im_array, slit])
+    all_data = mcube_in.as_array()
+
+    del_s_x = np.array([slit_m1.T[0], slit.T[0], slit_p1.T[0]])
+    del_s_y = np.array([slit_m1.T[1], slit.T[1], slit_p1.T[1]])
+
+    im_arr = all_data[del_s_x, del_s_y]
+    out_arr = im_arr.mean(axis=0)
+    return out_arr, slit
+
+
+# TODO build a function to give any number of iterations from the central slit
+#def slit_count(shift_x, shift_y):
+
+
+
 
 
 
@@ -97,13 +92,11 @@ def get_pixels_on_line(x1, y1, x2, y2):
 
     Parameters
     ----------
-    x1, y1, x2, y2 : `<type 'int'>`
-
-    If `getvalues`==False then it will return tuples of (x, y) coordinates
-    instead of pixel values.
+    x1, y1, x2, y2 :`int`
 
     References
     ----------
+    | https://github.com/ejeschke/ginga/blob/master/ginga/BaseImage.py#L387
     | http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     | https://ginga.readthedocs.org/en/latest/
 
