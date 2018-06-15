@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from urllib.error import URLError
 
+import mock
 import pytest
 
 import astropy.units as u
@@ -9,7 +11,6 @@ from sunpy.net import vso
 from sunpy.net.vso import attrs as va
 from sunpy.net.vso import QueryResponse
 from sunpy.net import attr
-
 from sunpy.tests.mocks import MockObject
 
 
@@ -410,3 +411,27 @@ def test_vso_hmi(client, tmpdir):
         fileids = dri.fileiditem.fileid
         series = list(map(lambda x: x.split(':')[0], fileids))
         assert all([s == series[0] for s in series])
+
+
+@mock.patch('sunpy.net.vso.VSOClient.get_vso_values', side_effect=URLError(''))
+def test_vso_attr_offline(mock_urlopen):
+    # Check it correctly errors off-line
+    with pytest.raises(URLError):
+        vso.VSOClient.get_vso_values()
+
+
+@pytest.mark.remote_data
+def test_vso_attr():
+    """
+    Check that the dict is correctly filled.
+    """
+    adict = vso.VSOClient.get_vso_values()
+    assert isinstance(adict, dict)
+    assert len(adict.keys()) == 5
+    for key, value in adict.items():
+        assert isinstance(key, attr.AttrMeta)
+        assert isinstance(adict[key], list)
+        assert isinstance(value, list)
+        for val in value:
+            assert isinstance(val, tuple)
+            assert len(val) == 2

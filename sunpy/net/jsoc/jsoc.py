@@ -15,6 +15,7 @@ import astropy.table
 from astropy.utils.misc import isiterable
 
 from sunpy import config
+from sunpy.net import attrs
 from sunpy.net.base_client import BaseClient
 from sunpy.net.download import Downloader, Results
 from sunpy.net.attr import and_
@@ -864,3 +865,10 @@ class JSOCClient(BaseClient):
                    'Segment', 'Keys', 'PrimeKey', 'Sample']
 
         return all([x.__class__.__name__ in chkattr for x in query])
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = {}
+        return adict

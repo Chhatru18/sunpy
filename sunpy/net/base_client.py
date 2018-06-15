@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from sunpy.net import attr
+
 
 class BaseClient(ABC):
     """
@@ -16,6 +18,8 @@ class BaseClient(ABC):
     are examples of download clients that subclass `BaseClient`.
     """
 
+    # TODO: Make attr reg be added to the docs and if you print(Client)
+
     _registry = dict()
 
     def __init_subclass__(cls, *args, **kwargs):
@@ -29,20 +33,32 @@ class BaseClient(ABC):
         """
         super().__init_subclass__(**kwargs)
         # We do not want to register GenericClient since its a dummy client.
-        if cls.__name__ is not 'GenericClient':
+        if cls.__name__ is not "GenericClient":
             cls._registry[cls] = cls._can_handle_query
+            # This can't be a good way to do it.
+            attr.Attr.update_values(cls.register_values())
 
     @abstractmethod
     def search(self, *args, **kwargs):
         """
         This enables the user to search for data using the client.
         """
+        raise NotImplementedError
 
     @abstractmethod
     def fetch(self, *args, **kwargs):
         """
         This enables the user to fetch the data using the client, after a search.
         """
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def register_values(cls, *query):
+        """
+        This enables the client to register attributes it supports to the Attr framework.
+        """
+        raise NotImplementedError
 
     @classmethod
     @abstractmethod
@@ -50,3 +66,4 @@ class BaseClient(ABC):
         """
         This enables the client to register what kind of searches it can handle, to prevent Fido using the incorrect client.
         """
+        raise NotImplementedError

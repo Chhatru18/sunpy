@@ -107,6 +107,8 @@ class AttrMeta(type):
         lines.insert(1, '-' * (pad_name + 1) + '+' + '-' * (pad_long + 2) + '+' + '-' * (pad_desc + 1))
         return "\n".join(lines)
 
+    # TODO: Make automatic doc generation work for attrs.
+
 
 class Attr(metaclass=AttrMeta):
     """This is the base for all attributes."""
@@ -135,6 +137,8 @@ class Attr(metaclass=AttrMeta):
 
     def __eq__(self, other):
         return dict(vars(self)) == dict(vars(other))
+
+    # TODO: Make Print(Attr) work
 
     @classmethod
     def update_values(cls, adict):

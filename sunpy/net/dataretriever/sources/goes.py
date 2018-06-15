@@ -3,6 +3,7 @@
 # Google Summer of Code 2014
 
 import os
+from datetime import timedelta
 from urllib.parse import urlsplit
 
 from astropy.time import TimeDelta
@@ -10,7 +11,7 @@ from astropy.time import Time
 import astropy.units as u
 
 
-from datetime import timedelta
+from sunpy.net import attr, attrs
 from sunpy.time import parse_time, TimeRange
 from ..client import GenericClient
 from sunpy import config
@@ -149,3 +150,22 @@ class XRSClient(GenericClient):
             if x.__class__.__name__ == 'Instrument' and x.value.lower() in ('xrs', 'goes'):
                 return all(chklist)
         return False
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        goes_number = [2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        adict = {
+            attrs.Instrument: [
+                (
+                    "GOES",
+                    "The Geostationary Operational Environmental Satellite Program.",
+                ),
+                ("XRS", "GOES X-ray Flux"),
+            ],
+            attrs.goes.SatelliteNumber: [
+                (str(x), "GOES Satellite Number {}".format(x)) for x in goes_number
+            ],
+        }
+        return adict

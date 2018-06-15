@@ -14,6 +14,7 @@ from astropy.time import TimeDelta
 import astropy.units as u
 
 import sunpy
+from sunpy.net import attr, attrs
 from sunpy.util import replacement_filename
 from sunpy.net.dataretriever.client import simple_path
 
@@ -66,6 +67,13 @@ class NOAAIndicesClient(GenericClient):
                 return all(chklist)
         return False
 
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = {attrs.Instrument: [('NOAA-Indices', 'Recent Solar Indices of Observed Monthly Mean Values')]}
+        return adict
+
 
 class NOAAPredictClient(GenericClient):
 
@@ -109,6 +117,13 @@ class NOAAPredictClient(GenericClient):
             if x.__class__.__name__ == 'Instrument' and x.value.lower() == 'noaa-predict':
                 return all(chklist)
         return False
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = {attrs.Instrument: [('NOAA-Predict', 'Predicted Sunspot Number And Radio Flux Values With Expected Ranges.')]}
+        return adict
 
 
 class SRSClient(GenericClient):
@@ -263,3 +278,11 @@ class SRSClient(GenericClient):
                str(x.value).lower() in ["soon", "srs_table"]:
                 return True
         return False
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = { attrs.Instrument: [("soon", "Solar Region Summary."),
+                                     ("srs_table", "Solar Region Summary.")]}
+        return adict

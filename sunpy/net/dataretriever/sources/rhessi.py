@@ -14,7 +14,8 @@ import astropy.units as u
 from sunpy.time import TimeRange, parse_time
 from sunpy.instr import rhessi
 
-from ..client import GenericClient
+from sunpy.net import attr, attrs
+from sunpy.net.dataretriever.client import GenericClient
 
 __all__ = ['RHESSIClient']
 
@@ -172,3 +173,11 @@ class RHESSIClient(GenericClient):
             if x.__class__.__name__ == 'Instrument' and x.value.lower() == 'rhessi':
                 return all(chklist)
         return False
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = {attrs.Instrument: [('RHESSI',
+                                     'Reuven Ramaty High Energy Solar Spectroscopic Imager.')]}
+        return adict

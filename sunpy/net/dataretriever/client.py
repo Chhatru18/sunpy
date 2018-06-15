@@ -6,6 +6,7 @@ from functools import partial
 import pathlib
 
 import numpy as np
+
 import astropy.table
 import astropy.units as u
 
@@ -13,14 +14,13 @@ import sunpy
 from sunpy.time import TimeRange
 from sunpy.util import replacement_filename
 from sunpy import config
-
 from sunpy.net.base_client import BaseClient
 from sunpy.net.download import Downloader, Results
 from sunpy.net.vso.attrs import Time, Wavelength, _Range
 
 TIME_FORMAT = config.get("general", "time_format")
 
-__all__ = ['QueryResponse', 'GenericClient']
+__all__ = ["QueryResponse", "GenericClient"]
 
 
 def simple_path(path, sock, url):
@@ -40,14 +40,17 @@ class QueryResponseBlock(object):
         url  : Uniform Resource Locator
         """
         self._map = map0
-        self.source = map0.get('source', "Data not Available")
-        self.provider = map0.get('provider', "Data not Available")
-        self.physobs = map0.get('physobs', "Data not Available")
-        self.instrument = map0.get('instrument', "Data not Available")
+        self.source = map0.get("source", "Data not Available")
+        self.provider = map0.get("provider", "Data not Available")
+        self.physobs = map0.get("physobs", "Data not Available")
+        self.instrument = map0.get("instrument", "Data not Available")
         self.url = url
-        self.time = TimeRange(map0.get('Time_start'),
-                              map0.get('Time_end')) if time is None else time
-        self.wave = map0.get('wavelength', np.NaN)
+        self.time = (
+            TimeRange(map0.get("Time_start"), map0.get("Time_end"))
+            if time is None
+            else time
+        )
+        self.wave = map0.get("wavelength", np.NaN)
 
 
 def iter_urls(amap, url_list, time):
@@ -75,16 +78,20 @@ class QueryResponse(list):
         """
         Returns the time-span for which records are available
         """
-        return TimeRange(min(qrblock.time.start for qrblock in self),
-                         max(qrblock.time.end for qrblock in self))
+        return TimeRange(
+            min(qrblock.time.start for qrblock in self),
+            max(qrblock.time.end for qrblock in self),
+        )
 
     def response_block_properties(self):
         """
         Returns a set of class attributes on all the response blocks.
         """
-        s = {a if not a.startswith('_') else None for a in dir(self[0])}
+        s = {a if not a.startswith("_") else None for a in dir(self[0])}
         for resp in self[1:]:
-            s = s.intersection({a if not a.startswith('_') else None for a in dir(resp)})
+            s = s.intersection(
+                {a if not a.startswith("_") else None for a in dir(resp)}
+            )
 
         s.remove(None)
         return s
@@ -99,17 +106,21 @@ class QueryResponse(list):
         return self._build_table()._repr_html_()
 
     def _build_table(self):
-        columns = OrderedDict((('Start Time', []), ('End Time', []),
-                               ('Source', []), ('Instrument', []),
-                               ('Wavelength', [])))
+        columns = OrderedDict(
+            (
+                ("Start Time", []),
+                ("End Time", []),
+                ("Source", []),
+                ("Instrument", []),
+                ("Wavelength", []),
+            )
+        )
         for i, qrblock in enumerate(self):
-            columns['Start Time'].append(
-                (qrblock.time.start).strftime(TIME_FORMAT))
-            columns['End Time'].append(
-                (qrblock.time.end).strftime(TIME_FORMAT))
-            columns['Source'].append(qrblock.source)
-            columns['Instrument'].append(qrblock.instrument)
-            columns['Wavelength'].append(str(u.Quantity(qrblock.wave)))
+            columns["Start Time"].append((qrblock.time.start).strftime(TIME_FORMAT))
+            columns["End Time"].append((qrblock.time.end).strftime(TIME_FORMAT))
+            columns["Source"].append(qrblock.source)
+            columns["Instrument"].append(qrblock.instrument)
+            columns["Wavelength"].append(str(u.Quantity(qrblock.wave)))
 
         return astropy.table.Table(columns)
 
@@ -152,9 +163,9 @@ class GenericClient(BaseClient):
         """
         for elem in args:
             if isinstance(elem, Time):
-                self.map_['TimeRange'] = TimeRange(elem.start, elem.end)
-                self.map_['Time_start'] = elem.start
-                self.map_['Time_end'] = elem.end
+                self.map_["TimeRange"] = TimeRange(elem.start, elem.end)
+                self.map_["Time_start"] = elem.start
+                self.map_["Time_end"] = elem.end
             elif isinstance(elem, _Range):
                 a_min = elem.min
                 a_max = elem.max
@@ -162,13 +173,13 @@ class GenericClient(BaseClient):
                     self.map_[elem.__class__.__name__.lower()] = a_min
                 else:
                     if isinstance(elem, Wavelength):
-                        prefix = 'wave'
+                        prefix = "wave"
                     else:
-                        prefix = ''
+                        prefix = ""
                     minmax = namedtuple("minmax", "{0}min {0}max".format(prefix))
                     self.map_[elem.__class__.__name__.lower()] = minmax(a_min, a_max)
             else:
-                if hasattr(elem, 'value'):
+                if hasattr(elem, "value"):
                     self.map_[elem.__class__.__name__.lower()] = elem.value
                 else:
                     # This will only get hit if the attr is something like
@@ -178,7 +189,8 @@ class GenericClient(BaseClient):
                     # convert it into the map_ dict.
                     raise ValueError(
                         "GenericClient can not add {} to the map_ dictionary to pass "
-                        "to the Client.".format(elem.__class__.__name__))  # pragma: no cover
+                        "to the Client.".format(elem.__class__.__name__)
+                    )  # pragma: no cover
         self._makeimap()
 
     @classmethod
@@ -242,12 +254,12 @@ class GenericClient(BaseClient):
         paths = []
         for i, filename in enumerate(filenames):
             if path is None:
-                fname = os.path.join(default_dir, '{file}')
-            elif isinstance(path, str) and '{file}' not in path:
-                fname = os.path.join(path, '{file}')
+                fname = os.path.join(default_dir, "{file}")
+            elif isinstance(path, str) and "{file}" not in path:
+                fname = os.path.join(path, "{file}")
 
             temp_dict = qres[i]._map.copy()
-            temp_dict['file'] = filename
+            temp_dict["file"] = filename
             fname = fname.format(**temp_dict)
             fname = os.path.expanduser(fname)
 
@@ -282,8 +294,7 @@ class GenericClient(BaseClient):
 
         kwergs = copy.copy(self.map_)
         kwergs.update(kwargs)
-        urls = self._get_url_for_timerange(
-            self.map_.get('TimeRange'), **kwergs)
+        urls = self._get_url_for_timerange(self.map_.get("TimeRange"), **kwergs)
         if urls:
             times = self._get_time_for_url(urls)
             if times and times is not NotImplemented:
@@ -314,13 +325,15 @@ class GenericClient(BaseClient):
             if isinstance(path, pathlib.Path):
                 path = str(path.absolute())
             elif not isinstance(path, str):
-                err = "path should be either 'pathlib.Path' or 'str'. "\
+                err = (
+                    "path should be either 'pathlib.Path' or 'str'. "
                     "Got '{}'.".format(type(path))
+                )
                 raise TypeError(err)
 
         urls = [qrblock.url for qrblock in qres]
 
-        filenames = [url.split('/')[-1] for url in urls]
+        filenames = [url.split("/")[-1] for url in urls]
 
         paths = self._get_full_filenames(qres, filenames, path)
 
@@ -330,8 +343,9 @@ class GenericClient(BaseClient):
 
         # We cast to list here in list(zip... to force execution of
         # res.require([x]) at the start of the loop.
-        for aurl, ncall, fname in list(zip(urls, map(lambda x: res.require([x]),
-                                                     urls), paths)):
+        for aurl, ncall, fname in list(
+            zip(urls, map(lambda x: res.require([x]), urls), paths)
+        ):
             dobj.download(aurl, fname, ncall, error_callback)
 
         return res
@@ -340,5 +354,5 @@ class GenericClient(BaseClient):
         """Helper Function"""
         paths = []
         for k, v in map_.items():
-            paths.append(map_[k]['path'])
+            paths.append(map_[k]["path"])
         return paths

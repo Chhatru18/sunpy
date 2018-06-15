@@ -213,5 +213,5 @@ examples/**/*.asdf
 figure_test_images*
 tags
 
-### Pycharm(?)
+### Pycharm
 .idea

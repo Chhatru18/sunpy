@@ -9,8 +9,10 @@ import sys
 import socket
 import warnings
 import itertools
+from lxml import etree
 from functools import partial
 from collections import defaultdict
+from urllib.request import urlretrieve
 from urllib.error import URLError, HTTPError
 from urllib.request import urlopen
 
@@ -820,3 +822,38 @@ class VSOClient(BaseClient):
     @classmethod
     def _can_handle_query(cls, *query):
         return all([x.__class__.__name__ in attrs.__all__ for x in query])
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        try:
+            adict = cls.get_vso_values()
+        except URLError:
+            # TODO: Handle this better.
+            print('Looks like the VSO server is not reachable.')
+            adict = {}
+        return adict
+
+    def get_vso_values():
+        """
+        Reads the VSO keywords and returns a dict with them for the attrs we support.
+        """
+        def _get_pairs(element):
+            return (
+                element.findtext("kw").strip().lower(),
+                element.findtext("description").strip(),
+            )
+
+        root = etree.parse(urlretrieve("https://vso.nascom.nasa.gov/API/VSO_keywords.xml")[0]).getroot()
+        # Find all the unique top level tags
+        xml_keys = {a.tag for a in root}
+        # Get a mapping of uppercase name to class for all the things in __all__
+        vso_keys = {a.upper(): getattr(attrs, a) for a in attrs.__all__}
+        # Find the names which have attrs and are in the xml
+        shared_keys = set(xml_keys).intersection(vso_keys.keys())
+        # Create a new mapping of names to attrs for these names that are in both
+        vso_keys = {k: vso_keys[k] for k in shared_keys}
+        # Return a dict of pairs
+        return {vso_keys[key]: [_get_pairs(a) for a in root.findall(key)]
+                for key in shared_keys}

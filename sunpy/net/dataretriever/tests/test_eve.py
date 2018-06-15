@@ -107,3 +107,9 @@ def test_levels(time):
     qr = Fido.search(time, eve_a, a.Level(0) | a.Level(1))
     clients = {type(a.client) for a in qr.responses}
     assert clients.symmetric_difference({VSOClient, eve.EVEClient}) == set()
+
+
+def test_attr_reg():
+    # Checks for the tab
+    a.Instrument.eve = a.Instrument('EVE')
+    a.Level.A0 = a.Level('0')

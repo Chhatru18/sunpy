@@ -5,6 +5,7 @@
 from astropy.time import TimeDelta
 import astropy.units as u
 
+from sunpy.net import attrs
 from sunpy.time import TimeRange
 from sunpy.util.scraper import Scraper
 
@@ -111,3 +112,11 @@ class EVEClient(GenericClient):
         if chk_var == 2:
             return True
         return False
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = {attrs.Instrument: [('EVE', 'Extreme ultraviolet Variability Experiment, which is part of the NASA Solar Dynamics Observatory mission.')],
+                 attrs.Level: [('0', 'EVE: The specific EVE client can only return Level 0C data. Any other number will use the VSO Client.')]}
+        return adict

@@ -9,8 +9,8 @@ import astropy.units as u
 from sunpy.time import TimeRange
 from sunpy.util.scraper import Scraper
 
-from sunpy.net import attrs as a
-from ..client import GenericClient
+from sunpy.net import attr, attrs as a
+from sunpy.net.dataretriever.client import GenericClient
 
 __all__ = ['NoRHClient']
 
@@ -120,3 +120,11 @@ class NoRHClient(GenericClient):
                 return True
 
         return False
+
+    @classmethod
+    def register_values(cls):
+        # Hardcode this here for now.
+        # I added the ones that are listed under _can_handle_query.
+        adict = {a.Instrument: [('NORH',
+                                 'Nobeyama Radio Heliograph is an imaging radio telescope (17/34GHz) for the Sun in Nobeyama Solar Radio Observatory.')]}
+        return adict
