@@ -5,23 +5,18 @@
 #include <stdio.h>  
 #include <stdarg.h>  
 #include <stdint.h>
-#include "types.h"  
+#include <math.h>
 
+#include "types.h"
 #include "anadecompress.h"  
 #include "anacompress.h"
-
 #include "anarw.h"
 
-
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
-
-void swap(char** a, char** b)
+static __inline void swap(char *a,char *b)
 {
-    char *temp = *a;
-    *a = *b;
-    *b = temp;
+  char c=*a;
+  *a=*b;
+  *b=c;
 }
 
 void bswapi64(int64_t *x,int n)
@@ -204,10 +199,10 @@ uint8_t *ana_fzread(char *file_name,int **ds,int *nd,char **header,int *type,int
     fclose(fin);
     if(swap_endian) // endianness is wrong
       switch(*type){
-        case(INT16): bswapi16((int16_t*)out,n_elem); break;
-        case(INT32):
-        case(FLOAT32): bswapi32((int32_t*)out,n_elem); break;
-        case(FLOAT64): bswapi64((int64_t*)out,n_elem); break;
+        case(INT16_ana): bswapi16((int16_t*)out,n_elem); break;
+        case(INT32_ana):
+        case(FLOAT32_ana): bswapi32((int32_t*)out,n_elem); break;
+        case(FLOAT64_ana): bswapi64((int64_t*)out,n_elem); break;
       }
     *osz=size;
     return out; 
@@ -251,16 +246,16 @@ void ana_fzwrite(uint8_t *data,char *file_name,int *ds,int nd,char *header,int t
   int size=n_elem*type_sizes[type];
   if(t_endian){ // big endian platform
     switch(type){
-      case(INT16): bswapi16((int16_t*)data,n_elem); break;
-      case(INT32):
-      case(FLOAT32): bswapi32((int32_t*)data,n_elem); break;
-      case(FLOAT64): bswapi64((int64_t*)data,n_elem); break;
+      case(INT16_ana): bswapi16((int16_t*)data,n_elem); break;
+      case(INT32_ana):
+      case(FLOAT32_ana): bswapi32((int32_t*)data,n_elem); break;
+      case(FLOAT64_ana): bswapi64((int64_t*)data,n_elem); break;
 //      case(INT64): fprintf(stderr,"ana_fzwrite: error: ana_fzwrite: unknown variable type!\n");
     }
     bswapi32(fh.dim,nd);
   }
   if(header){
-    int len=min(strlen(header),255);
+    int len=fmin(strlen(header),255);
     strncpy(fh.txt,header,len);
     fh.txt[len]=0;
   }
@@ -273,10 +268,10 @@ void ana_fzwrite(uint8_t *data,char *file_name,int *ds,int nd,char *header,int t
   fclose(f);
   if(t_endian){ // big endian platform: swap back
     switch(type){
-      case(INT16): bswapi16((int16_t*)data,n_elem); break;
-      case(INT32):
-      case(FLOAT32): bswapi32((int32_t*)data,n_elem); break;
-      case(FLOAT64): bswapi64((int64_t*)data,n_elem); break;
+      case(INT16_ana): bswapi16((int16_t*)data,n_elem); break;
+      case(INT32_ana):
+      case(FLOAT32_ana): bswapi32((int32_t*)data,n_elem); break;
+      case(FLOAT64_ana): bswapi64((int64_t*)data,n_elem); break;
     }
   }
 }
@@ -319,7 +314,7 @@ void ana_fcwrite(uint8_t *data,char *file_name,int *ds,int nd,char *header,int t
     bswapi32(fh.dim,nd);
   }
   if(header){
-    int len=min(strlen(header),255);
+    int len=fmin(strlen(header),255);
     strncpy(fh.txt,header,len);
     fh.txt[len]=0;
   }

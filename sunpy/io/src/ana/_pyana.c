@@ -9,21 +9,47 @@ version of the original anarw routines.
 // Headers
 #include <Python.h>				// For python extension
 #include <numpy/arrayobject.h> 	// For numpy
-//#include "anadecompress.h"
-//#include "anacompress.h"
+#include "anadecompress.h"
+#include "anacompress.h"
 #include "types.h"
 #include "anarw.h"
 
 #ifdef _WIN32 // MSC_VER
 #define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <time.h>
 
-struct timeval {
-	long tv_sec;            /* seconds */
-	long tv_usec;           /* and microseconds */
+struct timezone2 
+{
+  int  tz_minuteswest; /* minutes W of Greenwich */
+  int  tz_dsttime;     /* type of dst correction */
 };
 
-// vasprintf() and asprintf() may not be defined on Windows
+typedef struct timeval {
+	long tv_sec;
+	long tv_usec;
+} timeval;
+
+int gettimeofday(struct timeval * tp, struct timezone2 * tzp)
+{
+	// FILETIME Jan 1 1970 00:00:00
+	// Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
+	static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL); 
+
+	SYSTEMTIME  nSystemTime;
+	FILETIME    nFileTime;
+	uint64_t    nTime;
+
+	GetSystemTime( &nSystemTime );
+	SystemTimeToFileTime( &nSystemTime, &nFileTime );
+	nTime =  ((uint64_t)nFileTime.dwLowDateTime )      ;
+	nTime += ((uint64_t)nFileTime.dwHighDateTime) << 32;
+
+	tp->tv_sec  = (long) ((nTime - EPOCH) / 10000000L);
+	tp->tv_usec = (long) (nSystemTime.wMilliseconds * 1000);
+	return 0;
+}
+
 int vasprintf( char **sptr, const char *fmt, va_list argv )
 {
     va_list argv2;
@@ -193,12 +219,12 @@ static PyObject *pyana_fzread(PyObject *self, PyObject *args) {
 
 	// Convert datatype from ANA type to PyArray type
 	switch (type) {
-		case (INT8): npy_type = PyArray_INT8; break;
-		case (INT16): npy_type = PyArray_INT16; break;
-		case (INT32): npy_type = PyArray_INT32; break;
-		case (FLOAT32): npy_type = PyArray_FLOAT32; break;
-		case (FLOAT64): npy_type = PyArray_FLOAT64; break;
-		case (INT64): npy_type = PyArray_INT64; break;
+		case (INT8_ana): npy_type = PyArray_INT8; break;
+		case (INT16_ana): npy_type = PyArray_INT16; break;
+		case (INT32_ana): npy_type = PyArray_INT32; break;
+		case (FLOAT32_ana): npy_type = PyArray_FLOAT32; break;
+		case (FLOAT64_ana): npy_type = PyArray_FLOAT64; break;
+		case (INT64_ana): npy_type = PyArray_INT64; break;
 		default:
 			PyErr_SetString(PyExc_ValueError, "In pyana_fzread: datatype of ana file unknown/unsupported.");
 			return NULL;
@@ -268,13 +294,8 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 
 		struct timeval *tv_time=NULL;
 		struct tm *tm_time=NULL;
-		#ifdef _WIN32 // MSC_VER
-		GetLocalTime(&tv_time);
-		printf()
-		#else
 		// Warning for NULL here is meant to happen, we can ignore it.
 		gettimeofday(&tv_time, NULL);
-		#endif // _WIN32
 		tm_time = gmtime(&(tv_time->tv_sec));
 		asprintf(&header, "#%-42s compress=%d date=%02d:%02d:%02d.%03ld\n",
 			filename,
@@ -288,22 +309,22 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 	// supports it
 	switch (PyArray_TYPE((PyObject *) anadata)) {
 		case (PyArray_INT8):
-			type = INT8;
+			type = INT8_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_INT8\n");
 			break;
 		case (PyArray_INT16):
-			type = INT16;
+			type = INT16_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_INT16\n");
 			break;
 		case (PyArray_FLOAT32):
-			type = FLOAT32;
+			type = FLOAT32_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_FLOAT32\n");
 			break;
 		case (PyArray_FLOAT64):
-			type = FLOAT64;
+			type = FLOAT64_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_FLOAT64\n");
 			break;
@@ -314,7 +335,7 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 			break;
 	}
 	// Check if compression flag is sane
-	if (compress == 1 && (type == FLOAT32 || type == FLOAT64)) {
+	if (compress == 1 && (type == FLOAT32_ana || type == FLOAT64_ana)) {
 		PyErr_SetString(PyExc_RuntimeError, "In pyana_fzwrite: datatype requested cannot be compressed.");
 		return NULL;
 	}

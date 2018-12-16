@@ -12,7 +12,10 @@ def _get_ana_extension():
     cfg['sources'].extend(sorted(glob(os.path.join(os.path.dirname(__file__), 'src', 'ana', '*.c'))))
 
     if get_distutils_build_option('debug'):
-        cfg['extra_compile_args'].extend(["-Wall"])
+        if setup_helpers.get_compiler_option() == 'msvc':
+            cfg['extra_compile_args'].extend(["-Wall"])
+        else:
+            cfg['extra_compile_args'].extend(["-Werror", "-Wall"])
     else:
         cfg['extra_compile_args'].extend(['-w'])
     return Extension('sunpy.io._pyana', **cfg)
