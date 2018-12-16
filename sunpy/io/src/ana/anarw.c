@@ -13,16 +13,15 @@
 #include "anarw.h"
 
 
-static __inline int min(int a,int b)
-{
-  return (a<b)?a:b;
-}
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
 
-static __inline void swap(char *a,char *b)
+void swap(char** a, char** b)
 {
-  char c=*a;
-  *a=*b;
-  *b=c;
+    char *temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 void bswapi64(int64_t *x,int n)

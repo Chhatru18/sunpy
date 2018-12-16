@@ -9,15 +9,21 @@ version of the original anarw routines.
 // Headers
 #include <Python.h>				// For python extension
 #include <numpy/arrayobject.h> 	// For numpy
-#include <sys/time.h>			// For timestamps
-#include <time.h>				// For timestamps
 //#include "anadecompress.h"
 //#include "anacompress.h"
 #include "types.h"
 #include "anarw.h"
 
-// vasprintf() and asprintf() may not be defined, particularly on Windows
-#ifndef __USE_GNU
+#ifdef _WIN32 // MSC_VER
+#define WIN32_LEAN_AND_MEAN
+#include <time.h>
+
+struct timeval {
+	long tv_sec;            /* seconds */
+	long tv_usec;           /* and microseconds */
+};
+
+// vasprintf() and asprintf() may not be defined on Windows
 int vasprintf( char **sptr, const char *fmt, va_list argv )
 {
     va_list argv2;
@@ -42,7 +48,9 @@ int asprintf( char **sptr, const char *fmt, ... )
     va_end( argv );
     return retval;
 }
-#endif
+#else
+    #include <sys/time.h>
+#endif // _WIN32
 
 // Prototypes
 static PyObject * pyana_fzread(PyObject *self, PyObject *args);
@@ -167,7 +175,7 @@ static PyObject *pyana_fzread(PyObject *self, PyObject *args) {
 	}
 
 	// Mold into numpy array
-	npy_intp npy_dims[nd];		// Dimensions array
+	npy_intp* npy_dims = malloc(nd*sizeof(npy_intp));		// Dimensions array
 	int npy_type;					// Numpy datatype
 
 	// Calculate total datasize
@@ -257,14 +265,22 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 	// If header is NULL, then set the comment to a default value
 	if (NULL == header) {
 		if (debug == 1) printf("pyana_fzwrite(): Setting default header\n");
+
 		struct timeval *tv_time=NULL;
 		struct tm *tm_time=NULL;
-		gettimeofday(tv_time, NULL);
+		#ifdef _WIN32 // MSC_VER
+		GetLocalTime(&tv_time);
+		printf()
+		#else
+		// Warning for NULL here is meant to happen, we can ignore it.
+		gettimeofday(&tv_time, NULL);
+		#endif // _WIN32
 		tm_time = gmtime(&(tv_time->tv_sec));
 		asprintf(&header, "#%-42s compress=%d date=%02d:%02d:%02d.%03ld\n",
 			filename,
 			compress,
 			tm_time->tm_hour, tm_time->tm_min, tm_time->tm_sec, (long) (tv_time->tv_usec/1000));
+
 	}
 	if (debug == 1) printf("pyana_fzwrite(): Header: '%s'\n", header);
 
