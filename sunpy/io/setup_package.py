@@ -13,11 +13,15 @@ def _get_ana_extension():
 
     if get_distutils_build_option('debug'):
         if setup_helpers.get_compiler_option() == 'msvc':
-            cfg['extra_compile_args'].extend(["-Wall"])
+            cfg['extra_compile_args'].extend(["/Wall"])
         else:
-            cfg['extra_compile_args'].extend(["-Werror", "-Wall"])
+            cfg['extra_compile_args'].extend(["-Werror", "-Wall",
+                                              "-Wno-nonnull"])
     else:
-        cfg['extra_compile_args'].extend(['-w'])
+        if setup_helpers.get_compiler_option() == 'msvc':
+            cfg['extra_compile_args'].extend(['/w'])
+        else:
+            cfg['extra_compile_args'].extend(['-w'])
     return Extension('sunpy.io._pyana', **cfg)
 
 

@@ -2,15 +2,14 @@
 @brief A C extension for Python to read ana f0 files
 @author Tim van Werkhoven <t.i.m.vanwerkhoven@gmail.com>
 
-Based on Michiel van Noort's IDL DLM library 'f0' which contains a cleaned up
-version of the original anarw routines.
+Based on Michiel van Noort's IDL DLM library 'f0' which contains
+a cleaned up version of the original anarw routines.
 */
 
-// Headers
 #include <Python.h>				// For python extension
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h> 	// For numpy
-#include "anadecompress.h"
-#include "anacompress.h"
+
 #include "types.h"
 #include "anarw.h"
 
@@ -19,7 +18,7 @@ version of the original anarw routines.
 #include <windows.h>
 #include <time.h>
 
-struct timezone2 
+struct timezone2
 {
   int  tz_minuteswest; /* minutes W of Greenwich */
   int  tz_dsttime;     /* type of dst correction */
@@ -34,7 +33,7 @@ int gettimeofday(struct timeval * tp, struct timezone2 * tzp)
 {
 	// FILETIME Jan 1 1970 00:00:00
 	// Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
-	static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL); 
+	static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
 
 	SYSTEMTIME  nSystemTime;
 	FILETIME    nFileTime;
@@ -219,12 +218,12 @@ static PyObject *pyana_fzread(PyObject *self, PyObject *args) {
 
 	// Convert datatype from ANA type to PyArray type
 	switch (type) {
-		case (INT8_ana): npy_type = PyArray_INT8; break;
-		case (INT16_ana): npy_type = PyArray_INT16; break;
-		case (INT32_ana): npy_type = PyArray_INT32; break;
-		case (FLOAT32_ana): npy_type = PyArray_FLOAT32; break;
-		case (FLOAT64_ana): npy_type = PyArray_FLOAT64; break;
-		case (INT64_ana): npy_type = PyArray_INT64; break;
+		case (INT8_ana): npy_type = NPY_INT8; break;
+		case (INT16_ana): npy_type = NPY_INT16; break;
+		case (INT32_ana): npy_type = NPY_INT32; break;
+		case (FLOAT32_ana): npy_type = NPY_FLOAT32; break;
+		case (FLOAT64_ana): npy_type = NPY_FLOAT64; break;
+		case (INT64_ana): npy_type = NPY_INT64; break;
 		default:
 			PyErr_SetString(PyExc_ValueError, "In pyana_fzread: datatype of ana file unknown/unsupported.");
 			return NULL;
@@ -236,9 +235,9 @@ static PyObject *pyana_fzread(PyObject *self, PyObject *args) {
 	anadata = (PyArrayObject*) PyArray_SimpleNewFromData(nd, npy_dims,
 		npy_type, (void *) anaraw);
 	// Make sure Python owns the data, so it will free the data after use
-	PyArray_FLAGS(anadata) |= NPY_OWNDATA;
+	PyArray_ENABLEFLAGS(anadata, NPY_ARRAY_OWNDATA);
 
-	if (!PyArray_CHKFLAGS(anadata, NPY_OWNDATA)) {
+	if (!PyArray_CHKFLAGS(anadata, NPY_ARRAY_OWNDATA)) {
 		PyErr_SetString(PyExc_RuntimeError, "In pyana_fzread: unable to own the data, will cause memory leak. Aborting");
 		return NULL;
 	}
@@ -295,7 +294,7 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 		struct timeval *tv_time=NULL;
 		struct tm *tm_time=NULL;
 		// Warning for NULL here is meant to happen, we can ignore it.
-		gettimeofday(&tv_time, NULL);
+		gettimeofday(tv_time, NULL);
 		tm_time = gmtime(&(tv_time->tv_sec));
 		asprintf(&header, "#%-42s compress=%d date=%02d:%02d:%02d.%03ld\n",
 			filename,
@@ -307,23 +306,23 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 
 	// Convert datatype from PyArray type to ANA type, and verify that ANA
 	// supports it
-	switch (PyArray_TYPE((PyObject *) anadata)) {
-		case (PyArray_INT8):
+	switch (PyArray_TYPE(anadata)) {
+		case (NPY_INT8):
 			type = INT8_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_INT8\n");
 			break;
-		case (PyArray_INT16):
+		case (NPY_INT16):
 			type = INT16_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_INT16\n");
 			break;
-		case (PyArray_FLOAT32):
+		case (NPY_FLOAT32):
 			type = FLOAT32_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_FLOAT32\n");
 			break;
-		case (PyArray_FLOAT64):
+		case (NPY_FLOAT64):
 			type = FLOAT64_ana;
 			if (debug == 1)
 				printf("pyana_fzwrite(): Found type PyArray_FLOAT64\n");
@@ -341,19 +340,19 @@ static PyObject * pyana_fzwrite(PyObject *self, PyObject *args) {
 	}
 	if (debug == 1)
 		printf("pyana_fzwrite(): pyarray datatype is %d, ana datatype is %d\n",
-		PyArray_TYPE((PyObject *) anadata), type);
+		PyArray_TYPE(anadata), type);
 
 
 	// Sanitize data, make a new array from the old array and force the
-	// NPY_CARRAY_RO requirement which ensures a C-contiguous and aligned
+	// NPY_ARRAY_CARRAY_RO requirement which ensures a C-contiguous and aligned
 	// array will be made
-	anadata_align = PyArray_FromArray(anadata, PyArray_DESCR((PyObject *) anadata), NPY_CARRAY_RO);
+	anadata_align = PyArray_FromArray(anadata, PyArray_DESCR(anadata),NPY_ARRAY_CARRAY_RO);
 
 	// Get a pointer to the aligned data
-	anadata_bytes = (uint8_t *) PyArray_BYTES(anadata_align);
+	anadata_bytes = (uint8_t*) PyArray_DATA(anadata_align);
 	// Get the number of dimensions
 	PyArrayObject *arrobj = (PyArrayObject*) anadata_align;
-	int nd = arrobj->nd;
+	int nd = PyArray_NDIM(arrobj);
 	int *dims = malloc(nd*sizeof(int));
 	// Get the dimensions and number of elements
 	npy_intp *npy_dims = PyArray_DIMS(anadata_align);
