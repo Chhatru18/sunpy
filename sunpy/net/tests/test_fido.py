@@ -1,28 +1,25 @@
 import os
 import copy
 import tempfile
-import pathlib
 
-import pytest
 import hypothesis.strategies as st
-from hypothesis import given, assume, example, settings, HealthCheck
+import pytest
+from drms import DrmsQueryError
+from hypothesis import HealthCheck, assume, example, given, settings
 
 import astropy.units as u
-from drms import DrmsQueryError
 
-from sunpy.net import attr
-from sunpy.net.vso import attrs as va
-from sunpy.net import Fido, attrs as a
-from sunpy.net.base_client import BaseClient
-from sunpy.net.vso import QueryResponse as vsoQueryResponse
-from sunpy.net.fido_factory import DownloadResponse, UnifiedResponse
-from sunpy.net.dataretriever.client import QueryResponse
-from sunpy.util.datatype_factory_base import NoMatchError, MultipleMatchError
-from sunpy.time import TimeRange, parse_time
 from sunpy import config
-
-from sunpy.net.tests.strategies import (online_instruments, offline_instruments,
-                                        time_attr, goes_time)
+from sunpy.net import Fido, attr
+from sunpy.net import attrs as a
+from sunpy.net.base_client import BaseClient
+from sunpy.net.dataretriever.client import QueryResponse
+from sunpy.net.fido_factory import DownloadResponse, UnifiedResponse
+from sunpy.net.tests.strategies import goes_time, offline_instruments, online_instruments, time_attr
+from sunpy.net.vso import QueryResponse as vsoQueryResponse
+from sunpy.net.vso import attrs as va
+from sunpy.time import TimeRange, parse_time
+from sunpy.util.datatype_factory_base import MultipleMatchError, NoMatchError
 
 TIMEFORMAT = config.get("general", "time_format")
 
@@ -30,7 +27,7 @@ TIMEFORMAT = config.get("general", "time_format")
 @st.composite
 def offline_query(draw, instrument=offline_instruments()):
     """
-    Strategy for any valid offline query
+    Strategy for any valid offline query.
     """
     query = draw(instrument)
     # If we have AttrAnd then we don't have GOES
@@ -74,7 +71,7 @@ def test_online_fido(query):
 
 def check_response(query, unifiedresp):
     """
-    Common test for online or offline query
+    Common test for online or offline query.
     """
     query_tr = None
     query_instr = None
@@ -165,8 +162,7 @@ def test_call_error():
 
 def test_multiple_match():
     """
-    Using the builtin clients a multiple match is not possible so we create a
-    dummy class.
+    Using the builtin clients a multiple match is not possible so we create a dummy class.
     """
     new_registry = copy.deepcopy(Fido.registry)
     Fido.registry = new_registry

@@ -1,11 +1,13 @@
+.. _sunpy-instr:
+
+***********
 SunPy instr
-===========
+***********
 
-The ``instr`` submodule contains instrument specific routines, generally this
-submodule is focused on routines that process calibrated data.
-
+This package contains instrument specific routines, focused on routines that process calibrated data.
 
 .. automodapi:: sunpy.instr
+   :no-heading:
 
 .. automodapi:: sunpy.instr.aia
 

@@ -3,9 +3,9 @@ This module provides a set of colormaps specific for solar data.
 """
 from copy import deepcopy
 
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.cm as mplcm
+import matplotlib.pyplot as plt
+import numpy as np
 
 from sunpy.cm import color_tables as ct
 
@@ -117,7 +117,8 @@ for name, cmap in cmlist.items():
 
 
 def show_colormaps(search=None):
-    """Displays a plot of the custom color maps supported in SunPy.
+    """
+    Displays a plot of the custom color maps supported in SunPy.
 
     Parameters
     ----------
@@ -138,7 +139,6 @@ def show_colormaps(search=None):
 
     References
     ----------
-
     """
 
     if search is not None:
@@ -150,7 +150,7 @@ def show_colormaps(search=None):
 
     nmaps = len(maps) + 1
 
-    a = np.linspace(0, 1, 256).reshape(1, -1)  # pylint: disable=E1103
+    a = np.linspace(0, 1, 256).reshape(1, -1)
     a = np.vstack((a, a))
 
     fig = plt.figure(figsize=(7, 10), dpi=128)

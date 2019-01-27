@@ -1,11 +1,10 @@
 import pytest
 
+import astropy.units as u
+from astropy.time import TimeDelta
+
 from sunpy.time import TimeRange, parse_time
 from sunpy.util.scraper import Scraper
-
-from astropy.time import TimeDelta
-import astropy.units as u
-
 
 PATTERN_EXAMPLES = [
     ('%b%y', TimeDelta(31*u.day)),

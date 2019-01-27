@@ -1,20 +1,23 @@
+"""
+This module provides processing routines for Fermi Gamma-ray Space Telescope (FGST), formerly called
+the Gamma-ray Large Area Space Telescope (GLAST).
+"""
 import os
 import copy
 import urllib
-import datetime
 import tempfile
 from collections import OrderedDict
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 import astropy.units as u
-from astropy.time import TimeDelta
 from astropy.coordinates import Latitude, Longitude
+from astropy.time import TimeDelta
 
 from sunpy import sun
-from sunpy.time import TimeRange, parse_time
 from sunpy.io.fits import fits
+from sunpy.time import TimeRange, parse_time
 
 __all__ = ['download_weekly_pointing_file', 'get_detector_sun_angles_for_time',
            'get_detector_sun_angles_for_date', 'plot_detector_sun_angles',
@@ -23,9 +26,9 @@ __all__ = ['download_weekly_pointing_file', 'get_detector_sun_angles_for_time',
 
 def download_weekly_pointing_file(date):
     """
-    Downloads the FERMI/LAT weekly pointing file corresponding to the specified
-    date. This file contains 1 minute cadence data on the spacecraft pointing,
-    useful for calculating detector angles.
+    Downloads the FERMI/LAT weekly pointing file corresponding to the specified date. This file
+    contains 1 minute cadence data on the spacecraft pointing, useful for calculating detector
+    angles.
 
     Parameters
     ----------
@@ -118,8 +121,7 @@ def get_detector_sun_angles_for_time(time, file):
 
 def get_detector_sun_angles_for_date(date, file):
     """
-    get the GBM detector angles vs the sun as a function of time for a given
-    date
+    get the GBM detector angles vs the sun as a function of time for a given date.
 
     Parameters
     ----------
@@ -205,8 +207,7 @@ def plot_detector_sun_angles(angles):
 
 def get_scx_scz_at_time(time, file):
     """
-    Read a downloaded FERMI weekly pointing file and extract scx, scz for a
-    single time.
+    Read a downloaded FERMI weekly pointing file and extract scx, scz for a single time.
 
     Parameters
     ----------
@@ -235,8 +236,7 @@ def get_scx_scz_at_time(time, file):
 
 def get_scx_scz_in_timerange(timerange, file):
     """
-    Read a downloaded FERMI weekly pointing file and extract scx, scz for a
-    timerange.
+    Read a downloaded FERMI weekly pointing file and extract scx, scz for a timerange.
 
     Parameters
     ----------
@@ -268,10 +268,11 @@ def get_scx_scz_in_timerange(timerange, file):
 
 def nai_detector_angles():
     """
-    Returns the dictionary of Fermi/GBM NAI detector zenith and azimuth angles,
-    in spacecraft coordinates. zenith angle is measured from +z (along the LAT
-    boresight), azimuth is measured from +x. see Meegan et al. (2009) for
-    details and detector angles.
+    Returns the dictionary of Fermi/GBM NAI detector zenith and azimuth angles, in spacecraft
+    coordinates.
+
+    zenith angle is measured from +z (along the LAT boresight), azimuth is measured from +x. see
+    Meegan et al. (2009) for details and detector angles.
     """
 
     # angles listed as [azimuth, zenith]
@@ -293,8 +294,7 @@ def nai_detector_angles():
 
 def nai_detector_radecs(detectors, scx, scz, time):
     """
-    calculates the RA/DEC for each NaI detector given spacecraft z and x RA/DEC
-    positions.
+    calculates the RA/DEC for each NaI detector given spacecraft z and x RA/DEC positions.
 
     NB: This routine is based on code found in GTBURST, originally written by
     Dr Giacamo Vianello for the Fermi Science Tools.
@@ -394,8 +394,8 @@ def rotate_vector(vector, axis, theta):
 
 def get_detector_separation_angles(detector_radecs, sunpos):
     """
-    Finds the separation angle between the Sun and each NaI detector,
-    given a dictionary of detector RA/DECs.
+    Finds the separation angle between the Sun and each NaI detector, given a dictionary of detector
+    RA/DECs.
 
     Parameters
     ----------
@@ -406,7 +406,6 @@ def get_detector_separation_angles(detector_radecs, sunpos):
             Two-element list containing the RA/DEC of the Sun position as
             Astropy Quantities, e.g. [<Longitude 73.94 deg>,
             <Latitude 22.66 deg>]
-
     """
     angles = copy.deepcopy(detector_radecs)
     for l, d in detector_radecs.items():
@@ -419,8 +418,7 @@ def get_detector_separation_angles(detector_radecs, sunpos):
 
 def separation_angle(radec1, radec2):
     """
-    Use the law of spherical cosines to calculate the separation angle
-    between two RA/DEC positions.
+    Use the law of spherical cosines to calculate the separation angle between two RA/DEC positions.
 
     Parameters
     ----------
@@ -430,7 +428,6 @@ def separation_angle(radec1, radec2):
     radec2 : `list`
            A two-element list containing an RA/DEC position as Astropy Quantities,
            e.g. [<Longitude 73.94 deg>, <Latitude 22.66 deg>]
-
     """
 
     cosine_of_angle = (
@@ -459,7 +456,6 @@ def met_to_utc(timeinsec):
     -------
     `astropy.time.Time`
         The input Fermi Mission Elapsed Time converted to a `~astropy.time.Time` object.
-
     """
     # Times for GBM are in Mission Elapsed Time (MET).
     # The reference time for this is 2001-Jan-01 00:00.
@@ -481,7 +477,6 @@ def utc_to_met(time_ut):
     -------
     `astropy.units.Quantity`
         The Fermi Mission Elapsed Time corresponding to the input UT
-
     """
     met_ref_time = parse_time('2001-01-01 00:00')
 

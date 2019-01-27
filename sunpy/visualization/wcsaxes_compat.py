@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-Helpers and Functions to make WCSAxes work in SunPy
+This module provides helpers and functions to make WCSAxes work in SunPy.
 """
 import matplotlib.pyplot as plt
 
@@ -20,11 +19,11 @@ __all__ = ['is_wcsaxes']
 
 def is_wcsaxes(axes):
     """
-    Test a matplotlib Axes object to see if it is an instance of WCSAxes.
+    Tests a matplotlib Axes object to see if it is an instance of WCSAxes.
 
     Parameters
     ----------
-    axes : `matplotlib.axes` Object
+    axes : `matplotlib.axes` object
         Axes to test
 
     Returns
@@ -60,7 +59,6 @@ def gca_wcs(wcs, fig=None, slices=None):
     -------
     ax : `matplotlib.axes.Axes` or `~astropy.visualization.wcsaxes.WCSAxes`
         object. The current axes, or a new one if created.
-
     """
 
     if not fig:
@@ -83,14 +81,14 @@ def get_world_transform(axes):
     Get the transformation to world coordinates.
 
     If the axes is a `~astropy.visualization.wcsaxes.WCSAxes` instance this
-    returns the transform to the ``'world'`` coordinates, otherwise it returns
+    returns the transform to the ``world`` coordinates, otherwise it returns
     the transform to the matplotlib data coordinates, which are assumed to be in
     world coordinates.
 
     Parameters
     ----------
-    axes : `~astropy.visualization.wcsaxes.WCSAxes` or `~matplotlib.axes.Axes`
-        object. The axes to get the transform from.
+    axes : `~astropy.visualization.wcsaxes.WCSAxes`, `~matplotlib.axes.Axes`
+        The axes to get the transform from.
 
     Returns
     -------
@@ -107,8 +105,7 @@ def get_world_transform(axes):
 
 def solar_coord_type_from_ctype(ctype):
     """
-    Determine whether a particular WCS ctype corresponds to an angle or scalar
-    coordinate.
+    Determine whether a particular WCS ctype corresponds to an angle or scalar coordinate.
     """
 
     if ctype[2:4] == 'LN':
@@ -189,7 +186,7 @@ def default_wcs_grid(axes, units, ctypes):
 
 
 @u.quantity_input
-def wcsaxes_heliographic_overlay(axes, grid_spacing: u.deg=10*u.deg, **kwargs):
+def wcsaxes_heliographic_overlay(axes, grid_spacing: u.deg = 10*u.deg, **kwargs):
     """
     Create a heliographic overlay using wcsaxes.
 
@@ -211,7 +208,6 @@ def wcsaxes_heliographic_overlay(axes, grid_spacing: u.deg=10*u.deg, **kwargs):
     Notes
     -----
     Keywords are passed to `~astropy.visualization.wcsaxes.coordinates_map.CoordinatesMap.grid`.
-
     """
 
     # Unpack spacing

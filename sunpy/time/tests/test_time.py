@@ -8,7 +8,7 @@ import astropy.time
 from astropy.time import Time
 
 import sunpy.time as time
-from sunpy.time import parse_time, is_time_equal
+from sunpy.time import is_time_equal, parse_time
 
 LANDING = Time('1966-02-03', format='isot')
 
@@ -180,7 +180,7 @@ def test_parse_time_date():
 
 def test_parse_time_now():
     """
-    Ensure 'parse_time' can be called with 'now' argument to get utc
+    Ensure 'parse_time' can be called with 'now' argument to get utc.
     """
     now = parse_time('now')
     assert isinstance(now, astropy.time.Time)

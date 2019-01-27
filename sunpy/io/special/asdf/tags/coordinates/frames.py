@@ -5,8 +5,8 @@ import glob
 from astropy.io.misc.asdf.tags.coordinates.frames import BaseCoordType
 
 import sunpy.coordinates
-from ...types import SunPyType
 
+from ...types import SunPyType
 
 __all__ = ['SunPyCoordType']
 
@@ -20,8 +20,7 @@ SCHEMA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
 
 def _get_frames():
     """
-    By reading the schema files, get the list of all the frames we can
-    save/load.
+    By reading the schema files, get the list of all the frames we can save/load.
     """
     search = os.path.join(SCHEMA_PATH, 'coordinates', 'frames', '*.yaml')
     files = glob.glob(search)

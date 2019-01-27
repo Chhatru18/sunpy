@@ -1,7 +1,6 @@
-#
-# Calculates the co-ordinates along great arcs between two specified points
-# which are assumed to be on disk.
-#
+"""
+This module implements utility functions for SunPy coordinate frames.
+"""
 import numpy as np
 
 import astropy.units as u
@@ -14,8 +13,8 @@ __all__ = ['GreatArc']
 
 class GreatArc(object):
     """
-    Calculate the properties of a great arc at user-specified points between a
-    start and end point on a sphere.
+    Calculate the properties of a great arc at user-specified points between a start and end point
+    on a sphere.
 
     Parameters
     ----------
@@ -76,7 +75,6 @@ class GreatArc(object):
     >>> m.plot(axes=ax)  # doctest: +SKIP
     >>> ax.plot_coord(great_arc.coordinates(), color='c')  # doctest: +SKIP
     >>> plt.show()  # doctest: +SKIP
-
     """
 
     def __init__(self, start, end, center=None, points=None):
@@ -161,9 +159,8 @@ class GreatArc(object):
 
     def inner_angles(self, points=None):
         """
-        Calculates the inner angles for the parameterized points along the arc
-        and returns the value in radians, from the start co-ordinate to the
-        end.
+        Calculates the inner angles for the parameterized points along the arc and returns the value
+        in radians, from the start co-ordinate to the end.
 
         Parameters
         ----------
@@ -181,15 +178,14 @@ class GreatArc(object):
         inner_angles : `~astropy.units.rad`
             Radian angles of the points along the great arc from the start to
             end co-ordinate.
-
         """
         these_points = self._points_handler(points)
         return these_points.reshape(len(these_points), 1)*self.inner_angle
 
     def distances(self, points=None):
         """
-        Calculates the distance from the start co-ordinate to the end
-        co-ordinate on the sphere for all the parameterized points.
+        Calculates the distance from the start co-ordinate to the end co-ordinate on the sphere for
+        all the parameterized points.
 
         Parameters
         ----------
@@ -214,9 +210,8 @@ class GreatArc(object):
 
     def coordinates(self, points=None):
         """
-        Calculates the co-ordinates on the sphere from the start to the end
-        co-ordinate for all the parameterized points.  Co-ordinates are
-        returned in the frame of the start coordinate.
+        Calculates the co-ordinates on the sphere from the start to the end co-ordinate for all the
+        parameterized points.  Co-ordinates are returned in the frame of the start coordinate.
 
         Parameters
         ----------
@@ -234,7 +229,6 @@ class GreatArc(object):
         arc : `~astropy.coordinates.SkyCoord`
             Co-ordinates along the great arc in the co-ordinate frame of the
             start point.
-
         """
         # Calculate the inner angles
         these_inner_angles = self.inner_angles(points=points)

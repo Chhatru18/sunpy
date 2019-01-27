@@ -1,5 +1,5 @@
 """
-Contains functions useful for analysing GOES/XRS data.
+This module provides routines useful for analysing GOES/XRS data.
 
 Each of the Geostationary Operational Environmental Satellite (GOES) series
 since the mid-1970s has carried an X-Ray Sensor (XRS) which observes
@@ -41,10 +41,9 @@ References
 ----------
 
 .. [Ref1] Hanser, F.A., & Sellers, F.B. 1996, Proc. SPIE, 2812, 344
-.. [Ref2] Dere, K.P., et al. 2009 A&A, 498, 915 DOI: `10.1051/0004-6361/200911712 <https://doi.org/10.1051/0004-6361/200911712>`__
-
+.. [Ref2] Dere, K.P., et al. 2009 A&A, 498, 915 DOI:
+          `10.1051/0004-6361/200911712 <https://doi.org/10.1051/0004-6361/200911712>`__
 """
-
 import csv
 import copy
 import socket
@@ -53,18 +52,18 @@ import datetime
 from itertools import dropwhile
 
 import numpy as np
+from scipy import interpolate
+from scipy.integrate import cumtrapz, trapz
+
 import astropy.units as u
 from astropy.time import TimeDelta
-from scipy import interpolate
-from scipy.integrate import trapz, cumtrapz
 
-from sunpy import sun
-from sunpy.net import hek
-from sunpy import timeseries
-from sunpy.time import parse_time
-from sunpy.util.net import check_download_file
+from sunpy import sun, timeseries
 from sunpy.coordinates import get_sunearth_distance
+from sunpy.net import hek
+from sunpy.time import parse_time
 from sunpy.util.config import get_and_create_download_dir
+from sunpy.util.net import check_download_file
 
 GOES_CONVERSION_DICT = {'X': u.Quantity(1e-4, "W/m^2"),
                         'M': u.Quantity(1e-5, "W/m^2"),
@@ -104,7 +103,6 @@ def get_goes_event_list(timerange, goes_class_filter=None):
     goes_class_filter: (optional) str
         A string specifying a minimum GOES class for inclusion in the list,
         e.g. 'M1', 'X2'.
-
     """
     # use HEK module to search for GOES events
     client = hek.HEKClient()
@@ -246,7 +244,6 @@ def calculate_temperature_em(goests, abundances="coronal",
     2011-06-07 00:00:06.104999900  1.000000e-09  1.808400e-07     3.550100  1.990333e+48
     2011-06-07 00:00:08.151999950  1.000000e-09  1.860900e-07     3.518700  2.122771e+48
     ...
-
     """
     # Check that input argument is of correct type
     if not isinstance(goests, timeseries.XRSTimeSeries):
@@ -368,7 +365,6 @@ def _goes_chianti_tem(longflux: u.W/u.m/u.m, shortflux: u.W/u.m/u.m, satellite=8
     <Quantity [11.28295376, 11.28295376] MK>
     >>> em  # doctest: +REMOTE_DATA
     <Quantity [4.78577516e+48, 4.78577516e+48] 1 / cm3>
-
     """
     if not download_dir:
         download_dir = get_and_create_download_dir()
@@ -504,7 +500,6 @@ def _goes_get_chianti_temp(fluxratio: u.one, satellite=8, abundances="coronal",
     ...                               abundances="coronal")  # doctest: +REMOTE_DATA
     >>> temp  # doctest: +REMOTE_DATA
     <Quantity [12.27557778, 12.27557778] MK>
-
     """
     if not download_dir:
         download_dir = get_and_create_download_dir()
@@ -661,7 +656,6 @@ def _goes_get_chianti_em(longflux: u.W/u.m/u.m, temp: u.MK, satellite=8,
     ...                           abundances="coronal")  # doctest: +REMOTE_DATA
     >>> em  # doctest: +REMOTE_DATA
     <Quantity [3.45200672e+48, 3.45200672e+48] 1 / cm3>
-
     """
     if not download_dir:
         download_dir = get_and_create_download_dir()
@@ -823,7 +817,6 @@ def calculate_radiative_loss_rate(goests, force_download=False,
     2011-06-07 00:00:08.151999950  1.000000e-09  1.860900e-07     3.518700  2.122771e+48   1.719931e+19
     2011-06-07 00:00:10.201999903  1.000000e-09  1.808400e-07     3.550100  1.990333e+48   1.601718e+19
     ...
-
     """
     if not download_dir:
         download_dir = get_and_create_download_dir()
@@ -1071,7 +1064,6 @@ def calculate_xray_luminosity(goests):
     2011-06-07 00:00:06.104999900  1.000000e-09  1.808400e-07     2.896209e+14     5.237503e+16
     2011-06-07 00:00:08.151999950  1.000000e-09  1.860900e-07     2.896209e+14     5.389555e+16
     ...
-
     """
     # Check that input argument is of correct type
     if not isinstance(goests, timeseries.XRSTimeSeries):
@@ -1167,7 +1159,6 @@ def _goes_lx(longflux, shortflux, obstime=None, date=None):
     <Quantity 1.96860565e+19 s W>
     >>> lx_out["shortlum_int"]  # doctest: +REMOTE_DATA
     <Quantity 1.96860565e+18 s W>
-
     """
     # Calculate X-ray luminosities
     longlum = _calc_xraylum(longflux, date=date)
@@ -1247,7 +1238,6 @@ def _calc_xraylum(flux: u.W/u.m/u.m, date=None):
     >>> xraylum = _calc_xraylum(flux, date="2014-04-21")  # doctest: +REMOTE_DATA
     >>> xraylum  # doctest: +REMOTE_DATA
     <Quantity [1.98751663e+18, 1.98751663e+18] W>
-
     """
     if date is not None:
         date = parse_time(date)

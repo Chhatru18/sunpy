@@ -1,27 +1,16 @@
-# -*- coding: utf-8 -*-
+"""
+This module provides plotting support in iPython.
+"""
 from matplotlib import pyplot
 
 
 def toggle_pylab(fn):
     """
-    A decorator to prevent functions from opening matplotlib windows
-    unexpectedly when sunpy is run in interactive shells like ipython
-    --pylab.
+    A decorator to prevent functions from opening matplotlib windows unexpectedly when sunpy is run
+    in interactive shells like ipython.
 
-    Toggles the value of matplotlib.pyplot.isinteractive() to preserve the
-    users' expectations of pylab's behaviour in general.
-
-    Parameters
-    ----------
-    fn : function object
-        ?
-
-    Returns
-    ------
-    ? : ?
-        ?
-    .. todo::
-        improve documentation
+    Toggles the value of matplotlib.pyplot.isinteractive() to preserve the users' expectations of
+    pylab's behaviour in general.
     """
 
     if pyplot.isinteractive():

@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
-from sqlalchemy import or_, and_, not_
+"""
+This module implements attributes for the database package.
+"""
+from sqlalchemy import and_, not_, or_
 
-from sunpy.time import parse_time
+from sunpy.database.tables import DatabaseEntry
+from sunpy.database.tables import FitsHeaderEntry as TableFitsHeaderEntry
+from sunpy.database.tables import Tag as TableTag
+from sunpy.net.attr import Attr, AttrAnd, AttrOr, AttrWalker, SimpleAttr, ValueAttr
 from sunpy.net.vso import attrs as vso_attrs
-from sunpy.net.attr import (AttrWalker, Attr, ValueAttr,
-                            AttrAnd, AttrOr, SimpleAttr)
-from sunpy.database.tables import (DatabaseEntry,
-                                   Tag as TableTag,
-                                   FitsHeaderEntry as TableFitsHeaderEntry)
+from sunpy.time import parse_time
 
 __all__ = [
     'Starred', 'Tag', 'Path', 'DownloadTime', 'FitsHeaderEntry', 'walker']
@@ -200,7 +201,6 @@ def _create(wlk, root, session):
         elif typ == 'path':
             path, inverted = value
             if inverted:
-                # pylint: disable=E711
                 query = query.filter(or_(
                     DatabaseEntry.path != path, DatabaseEntry.path == None))
             else:

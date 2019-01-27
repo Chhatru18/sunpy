@@ -1,24 +1,24 @@
-"""XML helper functions"""
+"""
+This module provides XML helper functions.
 
-from xml.dom.minidom import parseString #pylint: disable=E0611,F0401
+Original version is from `here. <https://github.com/ActiveState/code/tree/master/recipes/Python/116539_turn_structure_XMLdocument>`_
+"""
+from xml.dom.minidom import parseString
 
 __all__ = ['NotTextNodeError', 'xml_to_dict', 'node_to_dict', 'get_node_text']
 
-#
-# Converting XML to a Dictionary
-# Author: Christoph Dietze
-# URL   : http://code.activestate.com/recipes/116539/
-#
+
 class NotTextNodeError(Exception):
     pass
 
+
 def xml_to_dict(xmlstring):
     """
-    Converts an XML string to a Python dictionary
+    Converts an XML string to a Python dictionary.
 
-    .. Warning::
+    .. warning::
         This method does not support multiple inner nodes of the same name but
-        with different values.  It always takes the last value.
+        with different values. It always takes the last value.
 
     Examples
     --------
@@ -35,10 +35,10 @@ def xml_to_dict(xmlstring):
     """
     return node_to_dict(parseString(xmlstring))
 
+
 def node_to_dict(node):
     """
-    node_to_dict() scans through the children of node and makes a dictionary
-    from the content.
+    ``node_to_dict`` scans through the children of node and makes a dictionary from the content.
 
     Three cases are differentiated:
 
@@ -49,7 +49,6 @@ def node_to_dict(node):
        the form: {nodeName:list}.
     3. Else, node_to_dict() will call itself recursively on the nodes children
        (merging {nodeName: node_to_dict()} to the dictionary).
-
     """
     dic = {}
     for n in node.childNodes:
@@ -77,10 +76,12 @@ def node_to_dict(node):
         continue
     return dic
 
+
 def get_node_text(node):
     """
-    scans through all children of node and gathers the text. if node has
-    non-text child-nodes, then NotTextNodeError is raised.
+    Scans through all children of node and gathers the text.
+
+    If node has non-text child-nodes, then ``NotTextNodeError`` is raised.
     """
     t = ""
     for n in node.childNodes:

@@ -17,16 +17,17 @@ Template matching algorithm:
    Processing and Pattern Recognition Society, Quebec City, Canada, May 15-19,
    1995, p. 120-123 http://www.scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf.
 """
+from copy import deepcopy
+
 import numpy as np
 from scipy.ndimage.interpolation import shift
-from copy import deepcopy
-from astropy import units as u
 from skimage.feature import match_template
+
+from astropy import units as u
 
 # SunPy imports
 import sunpy.map
 from sunpy.map.mapbase import GenericMap
-
 
 __all__ = ['calculate_shift', 'clip_edges', 'calculate_clipping',
            'match_template_to_layer', 'find_best_match_location',
@@ -38,15 +39,16 @@ __all__ = ['calculate_shift', 'clip_edges', 'calculate_clipping',
 
 def _default_fmap_function(data):
     """
-    This function ensures that the data are floats.  It is the default data
-    manipulation function for the coalignment method.
+    This function ensures that the data are floats.
+
+    It is the default data manipulation function for the coalignment method.
     """
     return np.float64(data)
 
 
 def calculate_shift(this_layer, template):
-    """Calculates the pixel shift required to put the template in the "best"
-    position on a layer.
+    """
+    Calculates the pixel shift required to put the template in the "best" position on a layer.
 
     Parameters
     ----------
@@ -79,10 +81,9 @@ def calculate_shift(this_layer, template):
 @u.quantity_input
 def clip_edges(data, yclips: u.pix, xclips: u.pix):
     """
-    Clips off the y and x edges of a 2d array according to a list of pixel
-    values.  This function is useful for removing data at the edge of
-    2d images that may be affected by shifts from solar de-rotation and
-    layer co-registration, leaving an image unaffected by edge effects.
+    Clips off the y and x edges of a 2d array according to a list of pixel values.  This function is
+    useful for removing data at the edge of 2d images that may be affected by shifts from solar de-
+    rotation and layer co-registration, leaving an image unaffected by edge effects.
 
     Parameters
     ----------
@@ -151,8 +152,7 @@ def calculate_clipping(y: u.pix, x: u.pix):
 #
 def _upper_clip(z):
     """
-    Find smallest integer bigger than all the positive entries in the input
-    array.
+    Find smallest integer bigger than all the positive entries in the input array.
     """
     zupper = 0
     zcond = z >= 0
@@ -163,8 +163,8 @@ def _upper_clip(z):
 
 def _lower_clip(z):
     """
-    Find smallest positive integer bigger than the absolute values of the
-    negative entries in the input array.
+    Find smallest positive integer bigger than the absolute values of the negative entries in the
+    input array.
     """
     zlower = 0
     zcond = z <= 0
@@ -175,9 +175,9 @@ def _lower_clip(z):
 
 def match_template_to_layer(layer, template):
     """
-    Calculate the correlation array that describes how well the template
-    matches the layer. All inputs are assumed to be numpy arrays.  This
-    function requires the "match_template" function in scikit image.
+    Calculate the correlation array that describes how well the template matches the layer. All
+    inputs are assumed to be numpy arrays.  This function requires the "match_template" function in
+    scikit image.
 
     Parameters
     ----------
@@ -197,8 +197,7 @@ def match_template_to_layer(layer, template):
 
 def find_best_match_location(corr):
     """
-    Calculate an estimate of the location of the peak of the correlation
-    result in image pixels.
+    Calculate an estimate of the location of the peak of the correlation result in image pixels.
 
     Parameters
     ----------
@@ -230,10 +229,9 @@ def find_best_match_location(corr):
 
 def get_correlation_shifts(array):
     """
-    Estimate the location of the maximum of a fit to the input array.  The
-    estimation in the x and y directions are done separately. The location
-    estimates can be used to implement subpixel shifts between two different
-    images.
+    Estimate the location of the maximum of a fit to the input array.  The estimation in the x and y
+    directions are done separately. The location estimates can be used to implement subpixel shifts
+    between two different images.
 
     Parameters
     ----------
@@ -300,8 +298,8 @@ def parabolic_turning_point(y):
 
 def repair_image_nonfinite(image):
     """
-    Return a new image in which all the nonfinite entries of the original
-    image have been replaced by the local mean.
+    Return a new image in which all the nonfinite entries of the original image have been replaced
+    by the local mean.
 
     Parameters
     ----------
@@ -409,9 +407,8 @@ def apply_shifts(mc, yshift: u.pix, xshift: u.pix, clip=True, **kwargs):
 def calculate_match_template_shift(mc, template=None, layer_index=0,
                                    func=_default_fmap_function):
     """
-    Calculate the arcsecond shifts necessary to co-register the layers in a
-    `~sunpy.map.MapSequence` according to a template taken from that
-    `~sunpy.map.MapSequence`.
+    Calculate the arcsecond shifts necessary to co-register the layers in a `~sunpy.map.MapSequence`
+    according to a template taken from that `~sunpy.map.MapSequence`.
 
     When using this functionality, it is a good idea to check that the shifts
     that were applied to were reasonable and expected. One way of checking this
@@ -445,7 +442,6 @@ def calculate_match_template_shift(mc, template=None, layer_index=0,
         logarithm or the square root.  The function is of the form
         func = F(data).  The default function ensures that the data are
         floats.
-
     """
 
     # Size of the data
@@ -506,14 +502,12 @@ def mapsequence_coalign_by_match_template(mc, template=None, layer_index=0,
                                           func=_default_fmap_function, clip=True,
                                           shift=None, **kwargs):
     """
-    Co-register the layers in a `~sunpy.map.MapSequence` according to a template
-    taken from that `~sunpy.map.MapSequence`.  This method REQUIRES that
-    scikit-image be installed. When using this functionality, it is a good idea
-    to check that the shifts that were applied to were reasonable and expected.
-    One way of checking this is to animate the original `~sunpy.map.MapSequence`,
-    animate the coaligned `~sunpy.map.MapSequence`, and compare the differences you
-    see to the calculated shifts.
-
+    Co-register the layers in a `~sunpy.map.MapSequence` according to a template taken from that
+    `~sunpy.map.MapSequence`.  This method REQUIRES that scikit-image be installed. When using this
+    functionality, it is a good idea to check that the shifts that were applied to were reasonable
+    and expected. One way of checking this is to animate the original `~sunpy.map.MapSequence`,
+    animate the coaligned `~sunpy.map.MapSequence`, and compare the differences you see to the
+    calculated shifts.
 
     Parameters
     ----------

@@ -1,24 +1,18 @@
-# Author: Rishabh Sharma <rishabh.sharma.gunner@gmail.com>
-# This module was developed under funding provided by
-# Google Summer of Code 2014
-
-
-from ..client import GenericClient
-import os
+"""
+This module provides the downloader client for NOAA sunpot data.
+"""
 import tarfile
-from functools import partial
 from collections import OrderedDict
 
-from astropy.time import Time
-from astropy.time import TimeDelta
 import astropy.units as u
+from astropy.time import Time, TimeDelta
 
 import sunpy
-from sunpy.util import replacement_filename
 from sunpy.net.dataretriever.client import simple_path
-
 from sunpy.net.download import Downloader, Results
+from sunpy.util import replacement_filename
 
+from ..client import GenericClient
 
 __all__ = ['NOAAIndicesClient', 'NOAAPredictClient', 'SRSClient']
 
@@ -27,7 +21,9 @@ class NOAAIndicesClient(GenericClient):
 
     @staticmethod
     def _get_default_uri():
-        """Return the url to download indices"""
+        """
+        Return the url to download indices.
+        """
         return ["ftp://ftp.swpc.noaa.gov/pub/weekly/RecentIndices.txt"]
 
     def _get_url_for_timerange(self, timerange, **kwargs):
@@ -71,7 +67,9 @@ class NOAAPredictClient(GenericClient):
 
     @staticmethod
     def _get_default_uri():
-        """Return the url to download indices"""
+        """
+        Return the url to download indices.
+        """
         return ["http://services.swpc.noaa.gov/text/predicted-sunspot-radio-flux.txt"]
 
     def _get_url_for_timerange(self, timerange, **kwargs):

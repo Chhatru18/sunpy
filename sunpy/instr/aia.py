@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 """
-Provides processing routines for data captured with the AIA instrument on SDO.
+This module provides processing routines for data captured with the AIA instrument on SDO.
 """
 import numpy as np
+
 import astropy.units as u
 
 from sunpy.map.sources.sdo import AIAMap, HMIMap
@@ -13,10 +13,10 @@ __all__ = ['aiaprep']
 def aiaprep(aiamap):
     """
     Processes a level 1 `~sunpy.map.sources.sdo.AIAMap` into a level 1.5
-    `~sunpy.map.sources.sdo.AIAMap`. Rotates, scales and
-    translates the image so that solar North is aligned with the y axis, each
-    pixel is 0.6 arcsec across, and the center of the sun is at the center of
-    the image. The actual transformation is done by Map's
+    `~sunpy.map.sources.sdo.AIAMap`. Rotates, scales and translates the image so that solar North is
+    aligned with the y axis, each pixel is 0.6 arcsec across, and the center of the sun is at the
+    center of the image. The actual transformation is done by Map's.
+
     :meth:`~sunpy.map.mapbase.GenericMap.rotate` method.
 
     This function is similar in functionality to aia_prep() in SSWIDL, but

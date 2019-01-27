@@ -1,37 +1,34 @@
 """
-Map is a generic Map class from which all other Map classes inherit from.
+This module provides the GenericMap class from which all other Map classes inherit from.
 """
 import copy
-import warnings
 import inspect
-from collections import namedtuple
 import textwrap
+import warnings
+from collections import namedtuple
 
-import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import patches, cm, colors
+import numpy as np
+from matplotlib import cm, colors, patches
 
-import astropy.wcs
 import astropy.units as u
-from astropy.io import fits
-from astropy.visualization.wcsaxes import WCSAxes
+import astropy.wcs
 from astropy.coordinates import SkyCoord, UnitSphericalRepresentation
+from astropy.nddata import NDData
+from astropy.visualization.wcsaxes import WCSAxes
 
-import sunpy.io as io
+import sunpy.cm
 # The next two are not used but are called to register functions with external modules
 import sunpy.coordinates
-import sunpy.cm
+import sunpy.io as io
 from sunpy import config
-from sunpy.visualization import toggle_pylab, wcsaxes_compat, axis_labels_from_ctype
-from sunpy.sun import constants
-from sunpy.sun import sun
-from sunpy.time import parse_time, is_time
-from sunpy.image.transform import affine_transform
-from sunpy.image.rescale import reshape_image_to_4d_superpixel
-from sunpy.image.rescale import resample as sunpy_image_resample
 from sunpy.coordinates import get_sun_B0, get_sun_L0, get_sunearth_distance
-
-from astropy.nddata import NDData
+from sunpy.image.resample import resample as sunpy_image_resample
+from sunpy.image.resample import reshape_image_to_4d_superpixel
+from sunpy.image.transform import affine_transform
+from sunpy.sun import constants, sun
+from sunpy.time import is_time, parse_time
+from sunpy.visualization import axis_labels_from_ctype, toggle_pylab, wcsaxes_compat
 
 TIME_FORMAT = config.get("general", "time_format")
 PixelPair = namedtuple('PixelPair', 'x y')
@@ -42,7 +39,7 @@ __all__ = ['GenericMap']
 
 class GenericMap(NDData):
     """
-    A Generic spatially-aware 2D data array
+    A Generic spatially-aware 2D data array.
 
     Parameters
     ----------
@@ -145,10 +142,11 @@ class GenericMap(NDData):
     def __init_subclass__(cls, **kwargs):
         """
         An __init_subclass__ hook initializes all of the subclasses of a given class.
-        So for each subclass, it will call this block of code on import.
-        This replicates some metaclass magic without the need to be aware of metaclasses.
-        Here we use this to register each subclass in a dict that has the `is_datasource_for` attribute.
-        This is then passed into the Map Factory so we can register them.
+
+        So for each subclass, it will call this block of code on import. This replicates some
+        metaclass magic without the need to be aware of metaclasses. Here we use this to register
+        each subclass in a dict that has the `is_datasource_for` attribute. This is then passed into
+        the Map Factory so we can register them.
         """
         super().__init_subclass__(**kwargs)
         if hasattr(cls, 'is_datasource_for'):
@@ -207,7 +205,9 @@ class GenericMap(NDData):
             self.plot_settings.update(plot_settings)
 
     def __getitem__(self, key):
-        """ This should allow indexing by physical coordinate """
+        """
+        This should allow indexing by physical coordinate.
+        """
         raise NotImplementedError(
             "The ability to index Map by physical"
             " coordinate is not yet implemented.")
@@ -244,14 +244,15 @@ class GenericMap(NDData):
     def _new_instance(cls, data, meta, plot_settings=None, **kwargs):
         """
         Instantiate a new instance of this class using given data.
+
         This is a shortcut for ``type(self)(data, meta, plot_settings)``.
         """
         return cls(data, meta, plot_settings=plot_settings, **kwargs)
 
     def _get_lon_lat(self, frame):
         """
-        Given a coordinate frame, extract the lon and lat by casting to
-        SphericalRepresentation first.
+        Given a coordinate frame, extract the lon and lat by casting to SphericalRepresentation
+        first.
         """
         r = frame.represent_as(UnitSphericalRepresentation)
         return r.lon.to(self.spatial_units[0]), r.lat.to(self.spatial_units[1])
@@ -289,18 +290,16 @@ class GenericMap(NDData):
     @property
     def coordinate_frame(self):
         """
-        An `astropy.coordinates.BaseFrame` instance created from the coordinate
-        information for this Map.
+        An `astropy.coordinates.BaseFrame` instance created from the coordinate information for this
+        Map.
         """
         return astropy.wcs.utils.wcs_to_celestial_frame(self.wcs)
 
     def _as_mpl_axes(self):
         """
-        Compatibility hook for Matplotlib and WCSAxes.
-        This functionality requires the WCSAxes package to work. The reason
-        we include this here is that it allows users to use WCSAxes without
-        having to explicitly import WCSAxes
-        With this method, one can do::
+        Compatibility hook for Matplotlib and WCSAxes. This functionality requires the WCSAxes
+        package to work. The reason we include this here is that it allows users to use WCSAxes
+        without having to explicitly import WCSAxes With this method, one can do::
 
             import matplotlib.pyplot as plt
             import sunpy.map
@@ -372,7 +371,9 @@ class GenericMap(NDData):
 # #### Keyword attribute and other attribute definitions #### #
 
     def _base_name(self):
-        """Abstract the shared bit between name and latex_name"""
+        """
+        Abstract the shared bit between name and latex_name.
+        """
         return "{nickname} {{measurement}} {date}".format(
             nickname=self.nickname,
             date=parse_time(self.date).strftime(TIME_FORMAT)
@@ -380,12 +381,16 @@ class GenericMap(NDData):
 
     @property
     def name(self):
-        """Human-readable description of the Map."""
+        """
+        Human-readable description of the Map.
+        """
         return self._base_name().format(measurement=self.measurement)
 
     @property
     def latex_name(self):
-        """LaTeX formatted description of the Map."""
+        """
+        LaTeX formatted description of the Map.
+        """
         if isinstance(self.measurement, u.Quantity):
             return self._base_name().format(measurement=self.measurement._repr_latex_())
         else:
@@ -393,8 +398,10 @@ class GenericMap(NDData):
 
     @property
     def nickname(self):
-        """An abbreviated human-readable description of the map-type; part of
-        the Helioviewer data model."""
+        """
+        An abbreviated human-readable description of the map-type; part of the Helioviewer data
+        model.
+        """
         return self._nickname if self._nickname else self.detector
 
     @nickname.setter
@@ -403,7 +410,9 @@ class GenericMap(NDData):
 
     @property
     def date(self):
-        """Image observation time."""
+        """
+        Image observation time.
+        """
         time = self.meta.get('date-obs', None)
         if time is None:
             if self._default_time is None:
@@ -418,12 +427,16 @@ class GenericMap(NDData):
 
     @property
     def detector(self):
-        """Detector name."""
+        """
+        Detector name.
+        """
         return self.meta.get('detector', "")
 
     @property
     def dsun(self):
-        """The observer distance from the Sun."""
+        """
+        The observer distance from the Sun.
+        """
         dsun = self.meta.get('dsun_obs', None)
 
         if dsun is None:
@@ -439,29 +452,39 @@ class GenericMap(NDData):
 
     @property
     def exposure_time(self):
-        """Exposure time of the image in seconds."""
+        """
+        Exposure time of the image in seconds.
+        """
         return self.meta.get('exptime', 0.0) * u.s
 
     @property
     def instrument(self):
-        """Instrument name."""
+        """
+        Instrument name.
+        """
         return self.meta.get('instrume', "").replace("_", " ")
 
     @property
     def measurement(self):
-        """Measurement name, defaults to the wavelength of image."""
+        """
+        Measurement name, defaults to the wavelength of image.
+        """
         return u.Quantity(self.meta.get('wavelnth', 0),
                           self.meta.get('waveunit', ""))
 
     @property
     def wavelength(self):
-        """Wavelength of the observation."""
+        """
+        Wavelength of the observation.
+        """
         return u.Quantity(self.meta.get('wavelnth', 0),
                           self.meta.get('waveunit', ""))
 
     @property
     def observatory(self):
-        """Observatory or Telescope name."""
+        """
+        Observatory or Telescope name.
+        """
         return self.meta.get('obsrvtry',
                              self.meta.get('telescop', "")).replace("_", " ")
 
@@ -496,17 +519,18 @@ class GenericMap(NDData):
 
     @property
     def shifted_value(self):
-        """The total shift applied to the reference coordinate by past applications of
-        `~sunpy.map.GenericMap.shift`."""
+        """
+        The total shift applied to the reference coordinate by past applications of
+        `~sunpy.map.GenericMap.shift`.
+        """
         return self._shift
 
     @u.quantity_input
     def shift(self, axis1: u.deg, axis2: u.deg):
         """
-        Returns a map shifted by a specified amount to, for example, correct
-        for a bad map location. These values are applied directly to the
-        `~sunpy.map.GenericMap.reference_coordinate`. To check how much shift
-        has already been applied see `~sunpy.map.GenericMap.shifted_value`
+        Returns a map shifted by a specified amount to, for example, correct for a bad map location.
+        These values are applied directly to the `~sunpy.map.GenericMap.reference_coordinate`. To
+        check how much shift has already been applied see `~sunpy.map.GenericMap.shifted_value`
 
         Parameters
         ----------
@@ -539,12 +563,16 @@ class GenericMap(NDData):
 
     @property
     def rsun_meters(self):
-        """Radius of the sun in meters."""
+        """
+        Radius of the sun in meters.
+        """
         return u.Quantity(self.meta.get('rsun_ref', constants.radius), 'meter')
 
     @property
     def rsun_obs(self):
-        """Radius of the Sun."""
+        """
+        Radius of the Sun.
+        """
         rsun_arcseconds = self.meta.get('rsun_obs',
                                         self.meta.get('solar_r',
                                                       self.meta.get('radius',
@@ -561,13 +589,17 @@ class GenericMap(NDData):
 
     @property
     def coordinate_system(self):
-        """Coordinate system used for x and y axes (ctype1/2)."""
+        """
+        Coordinate system used for x and y axes (ctype1/2).
+        """
         return SpatialPair(self.meta.get('ctype1', 'HPLN-   '),
                            self.meta.get('ctype2', 'HPLT-   '))
 
     @property
     def carrington_longitude(self):
-        """Carrington longitude (crln_obs)."""
+        """
+        Carrington longitude (crln_obs).
+        """
         carrington_longitude = self.meta.get('crln_obs', None)
 
         if carrington_longitude is None:
@@ -586,7 +618,9 @@ class GenericMap(NDData):
 
     @property
     def heliographic_latitude(self):
-        """Heliographic latitude."""
+        """
+        Heliographic latitude.
+        """
         heliographic_latitude = self.meta.get('hglt_obs',
                                               self.meta.get('crlt_obs',
                                                             self.meta.get('solar_b0', None)))
@@ -607,7 +641,9 @@ class GenericMap(NDData):
 
     @property
     def heliographic_longitude(self):
-        """Heliographic longitude."""
+        """
+        Heliographic longitude.
+        """
         heliographic_longitude = self.meta.get('hgln_obs', None)
 
         if heliographic_longitude is None:
@@ -639,8 +675,9 @@ class GenericMap(NDData):
     @property
     def _reference_longitude(self):
         """
-        FITS-WCS compatible longitude. Used in self.wcs and
-        self.reference_coordinate.
+        FITS-WCS compatible longitude.
+
+        Used in self.wcs and self.reference_coordinate.
         """
         return self.meta.get('crval1', 0.) * self.spatial_units[0]
 
@@ -650,15 +687,20 @@ class GenericMap(NDData):
 
     @property
     def reference_coordinate(self):
-        """Reference point WCS axes in data units (i.e. crval1, crval2). This value
-        includes a shift if one is set."""
+        """
+        Reference point WCS axes in data units (i.e. crval1, crval2).
+
+        This value includes a shift if one is set.
+        """
         return SkyCoord(self._reference_longitude,
                         self._reference_latitude,
                         frame=self.coordinate_frame)
 
     @property
     def reference_pixel(self):
-        """Reference point axes in pixels (i.e. crpix1, crpix2)."""
+        """
+        Reference point axes in pixels (i.e. crpix1, crpix2).
+        """
         return PixelPair(self.meta.get('crpix1',
                                        (self.meta.get('naxis1') + 1) / 2.) * u.pixel,
                          self.meta.get('crpix2',
@@ -667,8 +709,7 @@ class GenericMap(NDData):
     @property
     def scale(self):
         """
-        Image scale along the x and y axes in units/pixel
-        (i.e. cdelt1, cdelt2).
+        Image scale along the x and y axes in units/pixel (i.e. cdelt1, cdelt2).
         """
         # TODO: Fix this if only CDi_j matrix is provided
         return SpatialPair(self.meta.get('cdelt1', 1.) * self.spatial_units[0] / u.pixel,
@@ -685,8 +726,7 @@ class GenericMap(NDData):
     @property
     def rotation_matrix(self):
         """
-        Matrix describing the rotation required to align solar North with
-        the top of the image.
+        Matrix describing the rotation required to align solar North with the top of the image.
         """
         if 'PC1_1' in self.meta:
             return np.array([[self.meta['PC1_1'], self.meta['PC1_2']],
@@ -704,11 +744,9 @@ class GenericMap(NDData):
 
     def _rotation_matrix_from_crota(self):
         """
-        This method converts the deprecated CROTA FITS kwargs to the new
-        PC rotation matrix.
+        This method converts the deprecated CROTA FITS kwargs to the new PC rotation matrix.
 
-        This method can be overriden if an instruments header does not use this
-        conversion.
+        This method can be overriden if an instruments header does not use this conversion.
         """
         lam = self.scale[0] / self.scale[1]
         p = np.deg2rad(self.meta.get('CROTA2', 0))
@@ -755,7 +793,9 @@ class GenericMap(NDData):
             self.meta['bitpix'] = float_fac * 8 * self.dtype.itemsize
 
     def _get_cmap_name(self):
-        """Build the default color map name."""
+        """
+        Build the default color map name.
+        """
         cmap_string = (self.observatory + self.meta['detector'] +
                        str(int(self.wavelength.to('angstrom').value)))
         return cmap_string.lower()
@@ -771,7 +811,6 @@ class GenericMap(NDData):
 
         Allows for default unit assignment for:
             CUNIT1, CUNIT2, WAVEUNIT
-
         """
 
         for meta_property in ('cunit1', 'cunit2', 'waveunit'):
@@ -851,7 +890,6 @@ class GenericMap(NDData):
 
         coord : `astropy.coordinates.SkyCoord`
             A coordinate object representing the output coordinate.
-
         """
 
         # Hold the WCS instance here so we can inspect the output units after
@@ -870,7 +908,8 @@ class GenericMap(NDData):
 # #### I/O routines #### #
 
     def save(self, filepath, filetype='auto', **kwargs):
-        """Saves the SunPy Map object to a file.
+        """
+        Saves the SunPy Map object to a file.
 
         Currently SunPy can only save files in the FITS format. In the future
         support will be added for saving to other formats.
@@ -894,9 +933,10 @@ class GenericMap(NDData):
 
 # #### Image processing routines #### #
 
-    @u.quantity_input
+    @u.quantity_input()
     def resample(self, dimensions: u.pixel, method='linear'):
-        """Returns a new Map that has been resampled up or down
+        """
+        Returns a new Map that has been resampled up or down.
 
         Arbitrary resampling of the Map to new dimension sizes.
 
@@ -1168,8 +1208,8 @@ class GenericMap(NDData):
 
     def submap(self, bottom_left, top_right=None):
         """
-        Returns a submap of the map defined by the rectangle given by the
-        ``[bottom_left, top_right]`` coordinates.
+        Returns a submap of the map defined by the rectangle given by the ``[bottom_left,
+        top_right]`` coordinates.
 
         Parameters
         ----------
@@ -1329,8 +1369,9 @@ class GenericMap(NDData):
 
     @u.quantity_input
     def superpixel(self, dimensions: u.pixel, offset: u.pixel=(0, 0)*u.pixel, func=np.sum):
-        """Returns a new map consisting of superpixels formed by applying
-        'func' to the original map data.
+        """
+        Returns a new map consisting of superpixels formed by applying 'func' to the original map
+        data.
 
         Parameters
         ----------
@@ -1420,8 +1461,7 @@ class GenericMap(NDData):
     @u.quantity_input
     def draw_grid(self, axes=None, grid_spacing: u.deg=15*u.deg, **kwargs):
         """
-        Draws a coordinate overlay on the plot in the Heliographic Stonyhurst
-        coordinate system.
+        Draws a coordinate overlay on the plot in the Heliographic Stonyhurst coordinate system.
 
         To overlay other coordinate systems see the `WCSAxes Documentation
         <http://docs.astropy.org/en/stable/visualization/wcsaxes/overlaying_coordinate_systems.html>`_
@@ -1455,7 +1495,7 @@ class GenericMap(NDData):
 
     def draw_limb(self, axes=None, **kwargs):
         """
-        Draws a circle representing the solar limb
+        Draws a circle representing the solar limb.
 
         Parameters
         ----------
@@ -1527,7 +1567,6 @@ class GenericMap(NDData):
 
         Extra keyword arguments to this function are passed through to the
         `~matplotlib.patches.Rectangle` instance.
-
         """
 
         if not axes:
@@ -1581,7 +1620,6 @@ class GenericMap(NDData):
         -----
         Extra keyword arguments to this function are passed through to the
         `~matplotlib.pyplot.contour` function.
-
         """
         if not axes:
             axes = wcsaxes_compat.gca_wcs(self.wcs)
@@ -1657,8 +1695,8 @@ class GenericMap(NDData):
     @toggle_pylab
     def plot(self, annotate=True, axes=None, title=True, **imshow_kwargs):
         """
-        Plots the map object using matplotlib, in a method equivalent
-        to plt.imshow() using nearest neighbour interpolation.
+        Plots the map object using matplotlib, in a method equivalent to plt.imshow() using nearest
+        neighbour interpolation.
 
         Parameters
         ----------
@@ -1684,7 +1722,6 @@ class GenericMap(NDData):
         >>> aia.plot()   # doctest: +SKIP
         >>> aia.draw_limb()   # doctest: +SKIP
         >>> aia.draw_grid()   # doctest: +SKIP
-
         """
 
         # extract hiddden kwarg
@@ -1750,6 +1787,6 @@ class GenericMap(NDData):
 
 
 class InvalidHeaderInformation(ValueError):
-    """Exception to raise when an invalid header tag value is encountered for a
-    FITS/JPEG 2000 file."""
-    pass
+    """
+    Exception to raise when an invalid header tag value is encountered for a FITS/JPEG 2000 file.
+    """

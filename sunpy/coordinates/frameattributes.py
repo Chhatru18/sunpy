@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
-import datetime
+"""
+This module implements coordinate attributes used by SunPy coordinate frames.
+"""
 
 import astropy.units as u
+from astropy.coordinates import CoordinateAttribute, TimeAttribute
 from astropy.time import Time
-from astropy.coordinates import TimeAttribute, CoordinateAttribute
 
 from sunpy.time import parse_time
 
@@ -12,9 +13,8 @@ __all__ = ['TimeFrameAttributeSunPy', 'ObserverCoordinateAttribute']
 
 class TimeFrameAttributeSunPy(TimeAttribute):
     """
-    Frame attribute descriptor for quantities that are Time objects.
-    See the `~astropy.coordinates.Attribute` API doc for further
-    information.
+    Frame attribute descriptor for quantities that are Time objects. See the
+    `~astropy.coordinates.Attribute` API doc for further information.
 
     Parameters
     ----------
@@ -32,8 +32,8 @@ class TimeFrameAttributeSunPy(TimeAttribute):
 
     def convert_input(self, value):
         """
-        Convert input value to a Time object and validate by running through the
-        Time constructor.  Also check that the input was a scalar.
+        Convert input value to a Time object and validate by running through the Time constructor.
+        Also check that the input was a scalar.
 
         Parameters
         ----------
@@ -55,7 +55,7 @@ class TimeFrameAttributeSunPy(TimeAttribute):
             return None, False
 
         elif value == 'now':
-            return Time(datetime.datetime.now()), True
+            return parse_time("now"), True
 
         elif isinstance(value, Time):
             out = value
@@ -63,7 +63,7 @@ class TimeFrameAttributeSunPy(TimeAttribute):
 
         elif isinstance(value, str):
             try:
-                out = Time(parse_time(value))
+                out = parse_time(value)
             except Exception as err:
                 raise ValueError('Invalid time input {0}={1!r}\n{2}'.format(self.name, value, err))
             converted = True
@@ -79,10 +79,11 @@ class TimeFrameAttributeSunPy(TimeAttribute):
 
 class ObserverCoordinateAttribute(CoordinateAttribute):
     """
-    An Attribute to describe the location of the observer in the solar system.
-    The observer location can be given as a string of a known observer, which
-    will be converted to a coordinate as long as the ``obstime`` attribute is
-    valid on the instance of the frame. Alternatively a low-level frame class
+    An Attribute to describe the location of the observer in the solar system. The observer location
+    can be given as a string of a known observer, which will be converted to a coordinate as long as
+    the ``obstime`` attribute is valid on the instance of the frame. Alternatively a low-level frame
+    class.
+
     *or* a `~astropy.coordinates.SkyCoord` can be provided to specify the
     location of the observer. If a `~astropy.coordinates.SkyCoord` is passed it
     will always be converted to the low-level frame class when accessed.
@@ -107,8 +108,7 @@ class ObserverCoordinateAttribute(CoordinateAttribute):
 
     def _convert_string_to_coord(self, out, obstime):
         """
-        Given a value and and frame instance calculate the position of the
-        object given as a string.
+        Given a value and and frame instance calculate the position of the object given as a string.
         """
 
         # Import here to prevent circular import

@@ -1,7 +1,7 @@
 .. _reporting-problems:
 
 Reporting Bugs
-==============
+**************
 
 If you are having a problem with sunpy, search the mailing
 lists first: it is possible that someone else has already run into

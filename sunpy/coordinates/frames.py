@@ -1,21 +1,19 @@
 """
-Common solar physics coordinate systems.
-
-This submodule implements various solar physics coordinate frames for use with
-the `astropy.coordinates` module.
+This module implements various solar physics coordinate frames for use with the
+`astropy.coordinates` module.
 """
 import numpy as np
 
 import astropy.units as u
 from astropy.coordinates import Attribute, ConvertError
 from astropy.coordinates.baseframe import BaseCoordinateFrame, RepresentationMapping
-from astropy.coordinates.representation import (CartesianRepresentation, SphericalRepresentation,
-                                                CylindricalRepresentation,
+from astropy.coordinates.representation import (CartesianRepresentation, CylindricalRepresentation,
+                                                SphericalRepresentation,
                                                 UnitSphericalRepresentation)
 
 from sunpy import sun
 
-from .frameattributes import TimeFrameAttributeSunPy, ObserverCoordinateAttribute
+from .frameattributes import ObserverCoordinateAttribute, TimeFrameAttributeSunPy
 
 RSUN_METERS = sun.constants.get('radius').si.to(u.m)
 DSUN_METERS = sun.constants.get('mean distance').si.to(u.m)
@@ -35,8 +33,8 @@ class SunPyBaseCoordinateFrame(BaseCoordinateFrame):
 
     def __str__(self):
         """
-        We override this here so that when you print a SkyCoord it shows the
-        observer as the string and not the whole massive coordinate.
+        We override this here so that when you print a SkyCoord it shows the observer as the string
+        and not the whole massive coordinate.
         """
         if getattr(self, "object_name", None):
             return f"<{self.__class__.__name__} Coordinate for '{self.object_name}'>"
@@ -58,7 +56,7 @@ class HeliographicStonyhurst(SunPyBaseCoordinateFrame):
 
         HeliographicStonyhurst(lon, lat, obstime)
         HeliographicStonyhurst(lon, lat, radius, obstime)
-        HeliographicStonyhurst(x, y, z, obstime, representation='cartesian')
+        HeliographicStonyhurst(x, y, z, obstime, representation_type='cartesian')
 
     Parameters
     ----------
@@ -378,9 +376,8 @@ class Helioprojective(SunPyBaseCoordinateFrame):
 
     def calculate_distance(self):
         """
-        This method calculates the third coordinate of the Helioprojective
-        frame. It assumes that the coordinate point is on the disk of the Sun
-        at the rsun radius.
+        This method calculates the third coordinate of the Helioprojective frame. It assumes that
+        the coordinate point is on the disk of the Sun at the rsun radius.
 
         If a point in the frame is off limb then NaN will be returned.
 

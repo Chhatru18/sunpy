@@ -1,31 +1,21 @@
-"""Datasource-specific classes
+"""
+This package contains the datasource-specific Map classes.
 
-This is where datasource specific logic is implemented. Each mission should
-have its own file with one or more classes defined. Typically, these classes
-will be subclasses of the :mod`sunpy.map.Map` class.
+This is where datasource specific logic is implemented. Each mission should have its own file with
+one or more classes defined. Typically, these classes will be subclasses of the
+`sunpy.map.GenericMap` class.
 """
 __all__ = ['XRTMap', 'SOTMap', 'SWAPMap', 'RHESSIMap', 'AIAMap', 'HMIMap',
            'EITMap', 'LASCOMap', 'MDIMap', 'EUVIMap', 'CORMap', 'HIMap',
-           'SXTMap', 'SJIMap', 'TRACEMap', 'source_stretch']
+           'SXTMap', 'SJIMap', 'TRACEMap', 'from_helioviewer_project', 'source_stretch']
 
-from .. map_factory import Map
-
-from .hinode import XRTMap, SOTMap
-
-from .proba2 import SWAPMap
-
-from .rhessi import RHESSIMap
-
-from .sdo import AIAMap, HMIMap
-
-from .soho import EITMap, LASCOMap, MDIMap
-
-from .stereo import EUVIMap, CORMap, HIMap
-
-from .yohkoh import SXTMap
-
+from .hinode import SOTMap, XRTMap
 from .iris import SJIMap
-
+from .proba2 import SWAPMap
+from .rhessi import RHESSIMap
+from .sdo import AIAMap, HMIMap
+from .soho import EITMap, LASCOMap, MDIMap
+from .source_type import from_helioviewer_project, source_stretch
+from .stereo import CORMap, EUVIMap, HIMap
 from .trace import TRACEMap
-
-from .source_type import source_stretch, from_helioviewer_project
+from .yohkoh import SXTMap

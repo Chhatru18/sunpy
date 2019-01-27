@@ -1,15 +1,13 @@
-#  Author: Rishabh Sharma <rishabh.sharma.gunner@gmail.com>
-#  This Module was developed under funding provided by
-#  Google Summer of Code 2014
-
-
-from astropy.time import TimeDelta
+"""
+This module provides the downloader client for NoRH data.
+"""
 import astropy.units as u
+from astropy.time import TimeDelta
 
+from sunpy.net import attrs as a
 from sunpy.time import TimeRange
 from sunpy.util.scraper import Scraper
 
-from sunpy.net import attrs as a
 from ..client import GenericClient
 
 __all__ = ['NoRHClient']

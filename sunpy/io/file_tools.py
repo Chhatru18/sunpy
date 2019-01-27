@@ -1,6 +1,8 @@
-import re
+"""
+This module provides a generic file reader.
+"""
 import os
-import collections
+import re
 
 try:
     from . import fits
@@ -166,8 +168,8 @@ def write_file(fname, data, header, filetype='auto', **kwargs):
 
 def _detect_filetype(filepath):
     """
-    Attempts to determine the type of data contained in a file.  This is only
-    used for reading because it opens the file to check the data.
+    Attempts to determine the type of data contained in a file.  This is only used for reading
+    because it opens the file to check the data.
 
     Parameters
     ----------
@@ -224,13 +226,15 @@ def _detect_filetype(filepath):
 
 
 class UnrecognizedFileTypeError(IOError):
-    """Exception to raise when an unknown file type is encountered"""
-    pass
+    """
+    Exception to raise when an unknown file type is encountered.
+    """
 
 
 class ReaderError(ImportError):
-    """Exception to raise when an unknown file type is encountered"""
-    pass
+    """
+    Exception to raise when an unknown file type is encountered.
+    """
 
 
 class InvalidJPEG2000FileExtension(IOError):

@@ -2,23 +2,21 @@ import numpy as np
 import pytest
 
 import astropy.units as u
-from astropy.tests.helper import quantity_allclose, assert_quantity_allclose
-from astropy.coordinates import (SkyCoord, get_body_barycentric, HeliocentricTrueEcliptic, Angle,
-                                 ConvertError)
+from astropy.coordinates import (Angle, ConvertError, HeliocentricTrueEcliptic,
+                                 SkyCoord, get_body_barycentric)
+from astropy.tests.helper import assert_quantity_allclose, quantity_allclose
 from astropy.time import Time
 
-from sunpy.coordinates import (Helioprojective, HeliographicStonyhurst,
-                               HeliographicCarrington, Heliocentric,
-                               get_sun_L0, get_earth)
+from sunpy.coordinates import (Heliocentric, HeliographicCarrington, HeliographicStonyhurst,
+                               Helioprojective, get_earth, get_sun_L0)
 from sunpy.time import parse_time
 
 
 def test_hcc_to_hgs():
-    '''
-    Check that a coordinate pointing to the observer in Heliocentric
-    coordinates maps to the lattitude/longitude of the observer in
-    HeliographicStonyhurst coordinates.
-    '''
+    """
+    Check that a coordinate pointing to the observer in Heliocentric coordinates maps to the
+    lattitude/longitude of the observer in HeliographicStonyhurst coordinates.
+    """
     lat = 10 * u.deg
     lon = 20 * u.deg
     observer = HeliographicStonyhurst(lat=lat, lon=lon)

@@ -1,19 +1,17 @@
-# Author: Rishabh Sharma <rishabh.sharma.gunner@gmail.com>
-# This module was developed under funding provided by
-# Google Summer of Code 2014
-
+"""
+This module provides the downloader client for GOES data.
+"""
 import os
+from datetime import timedelta
 from urllib.parse import urlsplit
 
-from astropy.time import TimeDelta
-from astropy.time import Time
 import astropy.units as u
+from astropy.time import Time, TimeDelta
 
-
-from datetime import timedelta
-from sunpy.time import parse_time, TimeRange
-from ..client import GenericClient
 from sunpy import config
+from sunpy.time import TimeRange, parse_time
+
+from ..client import GenericClient
 
 TIME_FORMAT = config.get("general", "time_format")
 

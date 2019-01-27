@@ -1,3 +1,6 @@
+"""
+This module provies the TimeSeriesFactory class.
+"""
 import os
 import copy
 import glob
@@ -9,43 +12,41 @@ import numpy as np
 import pandas as pd
 
 import astropy
-import astropy.units as u
 import astropy.io.fits
-from astropy.time import Time
+import astropy.units as u
 from astropy.table import Table
+from astropy.time import Time
 
 import sunpy
-from sunpy.util import expand_list
-from sunpy.io.fits import HDPair
-from sunpy.util.net import download_file
-from sunpy.io.header import FileHeader
-from sunpy.util.config import get_and_create_download_dir
 from sunpy.io.file_tools import UnrecognizedFileTypeError, read_file
-from sunpy.util.metadata import MetaDict
+from sunpy.io.fits import HDPair
+from sunpy.io.header import FileHeader
 from sunpy.timeseries.timeseriesbase import GenericTimeSeries
-from sunpy.util.datatype_factory_base import (NoMatchError, MultipleMatchError,
-                                              ValidationFunctionError, BasicRegistrationFactory)
+from sunpy.util import expand_list
+from sunpy.util.config import get_and_create_download_dir
+from sunpy.util.datatype_factory_base import (BasicRegistrationFactory, MultipleMatchError,
+                                              NoMatchError, ValidationFunctionError)
+from sunpy.util.metadata import MetaDict
+from sunpy.util.net import download_file
 
-__authors__ = ["Alex Hamilton, Russell Hewett, Stuart Mumford"]
-
-__all__ = ['TimeSeries', 'TimeSeriesFactory']
+__all__ = ['TimeSeries', 'TimeSeriesFactory', 'NoTimeSeriesFound',
+           'InvalidTimeSeriesInput', 'InvalidTimeSeriesType']
 
 
 class TimeSeriesFactory(BasicRegistrationFactory):
     """
     TimeSeries(*args, **kwargs)
 
-    TimeSeries factory class.  Used to create a variety of TimeSeries objects.
+    TimeSeries factory class. Used to create a variety of TimeSeries objects.
     Valid time series types are specified by registering them with the factory.
 
     Parameters
     ----------
-
     source : `str`, optional
         A string to select the observational source of the data, currently
         necessary to define how files should be read for all instruments.
-
-    concatenate : `bool`, optional, default:False
+    concatenate : `bool`, optional
+        Defaults to `False`.
         If set, combine any resulting list of TimeSeries objects into a single
         TimeSeries, using successive concatenate methods.
 
@@ -102,27 +103,22 @@ class TimeSeriesFactory(BasicRegistrationFactory):
     >>> my_timeseries = sunpy.timeseries.TimeSeries((data, header), data2, header2,
     ...                                             'file1.fits', url, 'eit_*.fits')  # doctest: +SKIP
     """
-
     def _read_file(self, fname, **kwargs):
         """
         Test reading a file with sunpy.io for automatic source detection.
 
         Parameters
         ----------
-
-        fname : filename
-
-        kwargs
+        fname : `str`
+            Path to file to parse.
 
         Returns
         -------
-
-        parsed :  bool
+        parsed :  `bool`
             True if file has been reading
-
-        pairs : list or str
+        pairs : `list`, `str`
             List of (data, header) pairs if ``parsed`` is ``True`` or ``fname``
-            if ``False``
+            ``False`` if the file is not supported or incorrect.
         """
         if 'source' not in kwargs.keys() or not kwargs['source']:
             try:
@@ -144,6 +140,7 @@ class TimeSeriesFactory(BasicRegistrationFactory):
     def _validate_meta(self, meta):
         """
         Validate a meta argument for use as metadata.
+
         Currently only validates by class.
         """
         if isinstance(meta, astropy.io.fits.header.Header):
@@ -158,10 +155,9 @@ class TimeSeriesFactory(BasicRegistrationFactory):
     def _validate_units(self, units):
         """
         Validates the astropy unit-information associated with a TimeSeries.
-        Should be a dictionary of some form (but not MetaDict) with only
-        astropy units for values.
-        """
 
+        Should be a dictionary of some form (but not MetaDict) with only astropy units for values.
+        """
         warnings.simplefilter('always', Warning)
         result = True
 
@@ -179,8 +175,8 @@ class TimeSeriesFactory(BasicRegistrationFactory):
 
     def _from_table(self, t):
         """
-        Extract the data, metadata and units from an astropy table for use in
-        constructing a TimeSeries.
+        Extract the data, metadata and units from an astropy table for use in constructing a
+        TimeSeries.
 
         Parameters
         ----------
@@ -227,8 +223,9 @@ class TimeSeriesFactory(BasicRegistrationFactory):
 
     def _parse_args(self, *args, **kwargs):
         """
-        Parses an args list for data-header pairs.  args can contain any
-        mixture of the following entries:
+        Parses an `args` list for data-header pairs. `args` can contain any mixture of the following
+        entries:
+
         * tuples of (data, header, unit) (1)
         * data, header not in a tuple (1)
         * filename, which will be read
@@ -248,7 +245,6 @@ class TimeSeriesFactory(BasicRegistrationFactory):
                          'file4',
                          'directory1',
                          '*.fits')
-
         """
 
         data_header_unit_tuples = list()
@@ -370,17 +366,17 @@ class TimeSeriesFactory(BasicRegistrationFactory):
         return data_header_unit_tuples, data_header_pairs, already_timeseries, filepaths
 
     def __call__(self, *args, **kwargs):
-        """ Method for running the factory. Takes arbitrary arguments and
-        keyword arguments and passes them to a sequence of pre-registered types
-        to determine which is the correct TimeSeries source type to build.
+        """
+        Method for running the factory. Takes arbitrary arguments and keyword arguments and passes
+        them to a sequence of pre-registered types to determine which is the correct TimeSeries
+        source type to build.
 
         Arguments args and kwargs are passed through to the validation
-        function and to the constructor for the final type.  For TimeSeries
+        function and to the constructor for the final type. For TimeSeries
         types, validation function must take a data-header pair as an argument.
 
         Parameters
         ----------
-
         silence_errors : `bool`, optional
             If set, ignore data-header pairs which cause an exception.
 
@@ -510,9 +506,9 @@ class TimeSeriesFactory(BasicRegistrationFactory):
 
     def _check_registered_widgets(self, **kwargs):
         """
-        Checks the (instrument) source/s that are compatible with this given
-        file/data. Only if exactly one source is compatible will a TimeSeries
-        be returned.
+        Checks the (instrument) source/s that are compatible with this given file/data.
+
+        Only if exactly one source is compatible will a TimeSeries be returned.
         """
 
         WidgetType = self._get_matching_widget(**kwargs)
@@ -540,21 +536,22 @@ def _is_url(arg):
 
 
 class InvalidTimeSeriesInput(ValueError):
-    """Exception to raise when input variable is not a TimeSeries instance and
-    does not point to a valid TimeSeries input file."""
-    pass
+    """
+    Exception to raise when input variable is not a TimeSeries instance and does not point to a
+    valid TimeSeries input file.
+    """
 
 
 class InvalidTimeSeriesType(ValueError):
-    """Exception to raise when an invalid type of time series is requested with
-    TimeSeries."""
-    pass
+    """
+    Exception to raise when an invalid type of time series is requested with TimeSeries.
+    """
 
 
 class NoTimeSeriesFound(ValueError):
-    """Exception to raise when input does not point to any valid time series or
-    files."""
-    pass
+    """
+    Exception to raise when input does not point to any valid time series or files.
+    """
 
 
 TimeSeries = TimeSeriesFactory(registry=GenericTimeSeries._registry,

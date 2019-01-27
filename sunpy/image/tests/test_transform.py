@@ -1,8 +1,9 @@
-from sunpy.image.transform import affine_transform
 import numpy as np
-from skimage import transform as tf
-import skimage.data as images
 import pytest
+import skimage.data as images
+from skimage import transform as tf
+
+from sunpy.image.transform import affine_transform
 
 # Define test image first so it's accessible to all functions.
 original = images.camera().astype('float')
@@ -18,8 +19,8 @@ def identity():
 
 def compare_results(expect, result, allclose=True):
     """
-    Function to check that the obtained results are what was expected, to
-    within the relative tolerance defined above.
+    Function to check that the obtained results are what was expected, to within the relative
+    tolerance defined above.
     """
     # Outermost pixels can contain artefacts which will be ignored.
     exp = expect[1:-1, 1:-1]
@@ -127,8 +128,8 @@ def test_scale(scale_factor):
                                                           (180, 100, 50, 1.5)])
 def test_all(angle, dx, dy, scale_factor):
     """
-    Tests to make sure that combinations of scaling, shifting and rotation
-    produce the expected output.
+    Tests to make sure that combinations of scaling, shifting and rotation produce the expected
+    output.
     """
     k = int(angle/90)
     angle = np.radians(angle)

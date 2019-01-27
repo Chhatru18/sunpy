@@ -1,7 +1,7 @@
 import astropy.units as u
+from astropy.tests.helper import assert_quantity_allclose
 
 from sunpy.sun import sun
-from astropy.tests.helper import assert_quantity_allclose
 
 
 def test_true_longitude():

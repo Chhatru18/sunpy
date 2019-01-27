@@ -1,7 +1,7 @@
 .. _advanced-install:
 
 Advanced Installation Instructions
-----------------------------------
+**********************************
 
 This document provides details on things you need to know to install and
 manage your own scientific Python + SunPy installation.
@@ -30,7 +30,7 @@ These instructions assume you have a scientific Python distribution with access
 to the `pip` command installed.
 
 Prerequisites
-#############
+-------------
 
 You will need a compiler suite and the development headers for Python and
 Numpy in order to build SunPy. On Linux, using the package manager for your
@@ -54,7 +54,7 @@ resource for setting up your environment to build Python packages.
           (requires an Apple developer account).
 
 SunPy's Requirements
-####################
+--------------------
 
 SunPy consists of many submodules that each have their own requirements.
 You do not need to fulfil all the requirements if you only intend on using
@@ -108,7 +108,7 @@ required to import the core datatypes `~sunpy.map`, `~sunpy.timeseries` and
 packages:
 
 Using `pip`
-###########
+-----------
 
 There are multiple options depending on how many optional dependencies you
 want to install:
@@ -163,7 +163,7 @@ Other available options are: `[image]`, `[jpeg2000]` and `[tests]`
 .. _testing-sunpy:
 
 Testing SunPy
--------------
+*************
 
 The easiest way to test your installed version of SunPy is running
 correctly is to use the :func:`sunpy.self_test()` function::
@@ -178,7 +178,7 @@ the `SunPy issue tracker <https://github.com/sunpy/sunpy/issues>`_.
 
 
 Installing the Development Version of SunPy
--------------------------------------------
+*******************************************
 
 The latest (bleeding-edge) development version of SunPy can be cloned from github
 using this command::
@@ -201,7 +201,7 @@ SunPy using::
     SunPy into your home directory.
 
 Troubleshooting
----------------
+***************
 
 If you get an error mentioning that you do not have the correct permissions to
 install SunPy into the default ``site-packages`` directory, you should try
@@ -212,7 +212,7 @@ installing with::
 which will install into a default directory in your home directory.
 
 Building documentation
-----------------------
+**********************
 
 .. note::
     Building the documentation is in general not necessary unless you

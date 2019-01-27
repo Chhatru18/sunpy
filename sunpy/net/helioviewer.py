@@ -11,16 +11,17 @@ from collections import OrderedDict
 from astropy.utils.decorators import lazyproperty
 
 import sunpy
-from sunpy.util.xml import xml_to_dict
 from sunpy.time import parse_time
 from sunpy.util.net import download_fileobj
-
+from sunpy.util.xml import xml_to_dict
 
 __all__ = ['HelioviewerClient']
 
 
 class HelioviewerClient(object):
-    """Helioviewer.org Client"""
+    """
+    Helioviewer.org Client.
+    """
     def __init__(self, url="https://api.helioviewer.org/"):
         """
         Parameters
@@ -33,8 +34,8 @@ class HelioviewerClient(object):
     @lazyproperty
     def data_sources(self):
         """
-        We trawl through the return from `getDataSources` to create a clean
-        dictionary for all available sourceIDs.
+        We trawl through the return from `getDataSources` to create a clean dictionary for all
+        available sourceIDs.
 
         Here is a list of all of them: https://api.helioviewer.org/docs/v2/#appendix_datasources
         """
@@ -75,6 +76,7 @@ class HelioviewerClient(object):
                           detector=None, measurement=None, source_id=None):
         """
         Finds the closest image available for the specified source and date.
+
         **This does not download any file.**
 
         This uses `getClosestImage <https://api.helioviewer.org/docs/v2/#OfficialClients>`_ from the Helioviewer API.
@@ -133,8 +135,7 @@ class HelioviewerClient(object):
     def download_jp2(self, date, observatory=None, instrument=None, detector=None,
                      measurement=None, source_id=None, directory=None, overwrite=False):
         """
-        Downloads the JPEG 2000 that most closely matches the specified time and
-        data source.
+        Downloads the JPEG 2000 that most closely matches the specified time and data source.
 
         This uses `getJP2Image <https://api.helioviewer.org/docs/v2/#JPEG2000>`_ from the Helioviewer API.
 
@@ -193,8 +194,8 @@ class HelioviewerClient(object):
 
     def get_jp2_header(self, date, observatory=None, instrument=None, detector=None, measurement=None, jp2_id=None):
         """
-        Get the XML header embedded in a JPEG2000 image. Includes the FITS header as well as a section 
-        of Helioviewer-specific metadata.
+        Get the XML header embedded in a JPEG2000 image. Includes the FITS header as well as a
+        section of Helioviewer-specific metadata.
 
         This uses `getJP2Header <https://api.helioviewer.org/docs/v2/#JPEG2000>`_ from the Helioviewer API.
 
@@ -257,8 +258,7 @@ class HelioviewerClient(object):
                      width=4096, height=4096, x0=0, y0=0,
                      x1=None, y1=None, x2=None, y2=None):
         """
-        Downloads the PNG that most closely matches the specified time and
-        data source.
+        Downloads the PNG that most closely matches the specified time and data source.
 
         This function is different to `~sunpy.net.helioviewer.HelioviewerClient.download_jp2`.
         Here you get PNG images and return more complex images.
@@ -394,7 +394,9 @@ class HelioviewerClient(object):
         return self._get_file(params, directory=directory, overwrite=overwrite)
 
     def is_online(self):
-        """Returns True if Helioviewer is online and available."""
+        """
+        Returns True if Helioviewer is online and available.
+        """
         try:
             self.get_data_sources()
         except urllib.error.URLError:
@@ -403,13 +405,17 @@ class HelioviewerClient(object):
         return True
 
     def _get_json(self, params):
-        """Returns a JSON result as a string."""
+        """
+        Returns a JSON result as a string.
+        """
         reader = codecs.getreader("utf-8")
         response = self._request(params)
         return json.load(reader(response))
 
     def _get_file(self, params, directory=None, overwrite=False):
-        """Downloads a file and return the filepath to that file."""
+        """
+        Downloads a file and return the filepath to that file.
+        """
         if directory is None:
             directory = sunpy.config.get('downloads', 'download_dir')
         else:
@@ -448,5 +454,7 @@ class HelioviewerClient(object):
         return response
 
     def _format_date(self, date):
-        """Formats a date for Helioviewer API requests"""
+        """
+        Formats a date for Helioviewer API requests.
+        """
         return parse_time(date).isot + "Z"

@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-import numpy as np
 import os
 
-import sunpy
-import sunpy.io
-import sunpy.data.test
+import numpy as np
 
-from sunpy.tests.helpers import skip_glymur, skip_ana
+import sunpy
+import sunpy.data.test
+import sunpy.io
+from sunpy.tests.helpers import skip_ana, skip_glymur
 
 testpath = sunpy.data.test.rootdir
 

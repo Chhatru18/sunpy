@@ -1,11 +1,14 @@
-.. _sun_code_ref:
+.. _sunpy-sun:
 
+*********
 SunPy sun
-=========
+*********
 
-The sun submodule contains constants, parameters and models of the Sun.
+This package provides physical constants, parameters and models of the Sun.
 
 .. automodapi:: sunpy.sun
+
+.. automodapi:: sunpy.sun.sun
 
 .. automodapi:: sunpy.sun.constants
 

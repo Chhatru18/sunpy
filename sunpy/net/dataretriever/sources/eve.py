@@ -1,15 +1,13 @@
-# Author: Rishabh Sharma <rishabh.sharma.gunner@gmail.com>
-# This module was developed under funding by
-# Google Summer of Code 2014
-
-from astropy.time import TimeDelta
+"""
+This module provides the downloader client for EVE data.
+"""
 import astropy.units as u
+from astropy.time import TimeDelta
 
 from sunpy.time import TimeRange
 from sunpy.util.scraper import Scraper
 
 from ..client import GenericClient
-
 
 __all__ = ['EVEClient']
 
@@ -19,8 +17,8 @@ BASEURL = ('http://lasp.colorado.edu/eve/data_access/evewebdata/quicklook/'
 
 class EVEClient(GenericClient):
     """
-    This EVEClient is for the Level 0C data
-    from http://lasp.colorado.edu/home/eve/data/data-access/.
+    This EVEClient is for the Level 0C data from http://lasp.colorado.edu/home/eve/data/data-
+    access/.
 
     To use this client you must request Level 0 data.
 
@@ -42,7 +40,6 @@ class EVEClient(GenericClient):
     2016-01-02 00:00:00 2016-01-03 00:00:00    SDO        eve        nan
     <BLANKLINE>
     <BLANKLINE>
-
     """
 
     def _get_url_for_timerange(self, timerange, **kwargs):
@@ -58,7 +55,6 @@ class EVEClient(GenericClient):
         -------
         urls : list
             list of URLs corresponding to the requested time range
-
         """
         # If start of time range is before 00:00, converted to such, so
         # files of the requested time ranger are included.

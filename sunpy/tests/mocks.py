@@ -1,18 +1,16 @@
 """
-Support for creating our own mocked objects
-
-Author: Michael Charlton <m.charlton@mac.com>
+Provides classes for creating mocked objects.
 """
 
 import io
-
 from collections import MutableMapping, defaultdict
+
+__all__ = ["MockObject", "MockHTTPResponse", "MockOpenTextFile"]
 
 
 class MockObject(MutableMapping):
     """
-    Object from which we can construct other 'mocked' objects. See
-    following examples.
+    Object from which we can construct other 'mocked' objects. See following examples.
 
     Limitations
     -----------
@@ -96,8 +94,8 @@ class MockObject(MutableMapping):
 
 class MockHTTPResponse(MockObject):
     """
-    The result of calling `urlopen(...)`. For this implementation we are only interested in
-    querying the 'headers' attribute, which is a http.client.HTTPMessage object.
+    The result of calling `urlopen(...)`. For this implementation we are only interested in querying
+    the 'headers' attribute, which is a http.client.HTTPMessage object.
 
     Parameters
     ----------
@@ -135,8 +133,9 @@ class MockHTTPResponse(MockObject):
 
 class MockOpenTextFile(MockObject):
     """
-    Partial implementation of a file like object for reading/wrtiing text files. Binary files
-    are *not* supported.
+    Partial implementation of a file like object for reading/wrtiing text files. Binary files are.
+
+    *not* supported.
 
     Many methods not implemented, no attempt is made to keep track of where we are
     in the file say in regards to any read operation.

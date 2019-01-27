@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
 
-import pytest
 import sys
 
-from sunpy.util.multimethod import MultiMethod, FAIL, WARN, TypeWarning
+import pytest
+
+from sunpy.util.multimethod import FAIL, WARN, MultiMethod, TypeWarning
 
 
 def test_super():

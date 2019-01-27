@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-
-from .vso import attrs as vso
-from .jsoc import attrs as jsoc
+"""
+This module provides a cleaner import namespace for all attrs.
+"""
 from .dataretriever.attrs import goes
-
-from .vso.attrs import Time, Instrument, Wavelength, Level, Sample
+from .jsoc import attrs as jsoc
+from .vso import attrs as vso
+from .vso.attrs import Instrument, Level, Sample, Time, Wavelength
 
 __all__ = ['Time', 'Instrument', 'Wavelength', 'Level', 'Sample', 'vso', 'jsoc', 'goes']

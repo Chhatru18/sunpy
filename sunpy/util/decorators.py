@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-# Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Sundry function and class decorators."""
-
-
-import functools
+"""
+This module provides decorators.
+"""
+import types
 import inspect
 import textwrap
-import types
 import warnings
+import functools
 
 from sunpy.util.exceptions import SunpyDeprecationWarning
 
@@ -18,14 +16,13 @@ def deprecated(since, message='', name='', alternative=''):
     """
     Used to mark a function or class as deprecated.
 
-
     Parameters
     ------------
-    since : str
+    since : `str`
         The release at which this API became deprecated.  This is
         required.
 
-    message : str, optional
+    message : `str`, optional
         Override the default deprecation message.  The format
         specifier ``func`` may be used for the name of the function,
         and ``alternative`` may be used in the deprecation message
@@ -33,7 +30,7 @@ def deprecated(since, message='', name='', alternative=''):
         function. ``obj_type`` may be used to insert a friendly name
         for the type of object being deprecated.
 
-    name : str, optional
+    name : `str`, optional
         The name of the deprecated function or class; if not provided
         the name is automatically determined from the passed in
         function or class, though this is useful in the case of
@@ -44,19 +41,17 @@ def deprecated(since, message='', name='', alternative=''):
                 ...
             oldFunction = new_function
 
-    alternative : str, optional
+    alternative : `str`, optional
         An alternative function or class name that the user may use in
-        place of the deprecated object.  The deprecation warning will
+        place of the deprecated object. The deprecation warning will
         tell the user about this alternative if provided.
-
     """
 
     method_types = (classmethod, staticmethod, types.MethodType)
 
     def deprecate_doc(old_doc, message):
         """
-        Returns a given docstring with a deprecation message prepended
-        to it.
+        Returns a given docstring with a deprecation message prepended to it.
         """
         if not old_doc:
             old_doc = ''
@@ -72,8 +67,7 @@ def deprecated(since, message='', name='', alternative=''):
 
     def get_function(func):
         """
-        Given a function or classmethod (or other function wrapper type), get
-        the function object.
+        Given a function or classmethod (or other function wrapper type), get the function object.
         """
         if isinstance(func, method_types):
             func = func.__func__
@@ -81,8 +75,7 @@ def deprecated(since, message='', name='', alternative=''):
 
     def deprecate_function(func, message):
         """
-        Returns a wrapped function that displays an
-        ``AstropyDeprecationWarning`` when it is called.
+        Returns a wrapped function that displays an ``AstropyDeprecationWarning`` when it is called.
         """
 
         if isinstance(func, method_types):
@@ -114,9 +107,8 @@ def deprecated(since, message='', name='', alternative=''):
 
     def deprecate_class(cls, message):
         """
-        Returns a wrapper class with the docstrings updated and an
-        __init__ function that will raise an
-        ``AstropyDeprectationWarning`` warning when called.
+        Returns a wrapper class with the docstrings updated and an ``__init__`` function that will
+        raise an ``AstropyDeprectationWarning`` warning when called.
         """
         # Creates a new class with the same name and bases as the
         # original class, but updates the dictionary with a new
@@ -184,9 +176,8 @@ def deprecated(since, message='', name='', alternative=''):
 
 class add_common_docstring:
     """
-    A function decorator that will append and/or prepend an addendum
-    to the docstring of the target function.
-
+    A function decorator that will append and/or prepend an addendum to the docstring of the target
+    function.
 
     Parameters
     ----------

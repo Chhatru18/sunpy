@@ -1,9 +1,6 @@
-"""PROBA2 Map subclass definitions"""
-#pylint: disable=W0221,W0222,E1101,E1121
-
-__author__ = "Keith Hughitt"
-__email__ = "keith.hughitt@nasa.gov"
-
+"""
+This module provides the PROBA2 Map subclass definitions.
+"""
 import matplotlib.pyplot as plt
 
 from sunpy.map import GenericMap
@@ -12,7 +9,8 @@ __all__ = ['SWAPMap']
 
 
 class SWAPMap(GenericMap):
-    """PROBA2 SWAP Image Map.
+    """
+    PROBA2 SWAP Image Map.
 
     The Sun Watcher using Active Pixel System detector and Image Processing (SWAP)
     SWAP provides images of the solar corona at about 17.4 nm, a bandpass
@@ -43,5 +41,7 @@ class SWAPMap(GenericMap):
 
     @classmethod
     def is_datasource_for(cls, data, header, **kwargs):
-        """Determines if header corresponds to an SWAP image"""
+        """
+        Determines if header corresponds to an SWAP image.
+        """
         return header.get('instrume') == 'SWAP'

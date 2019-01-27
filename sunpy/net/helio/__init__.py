@@ -1,10 +1,6 @@
 """
-A Module for accessing the HELIO web service
-
-.. warning::
-    This module is still in beta and may be unstable
-
+A module for accessing the HELIO web service.
 """
 
-from .parser import *
 from .hec import *
+from .parser import *

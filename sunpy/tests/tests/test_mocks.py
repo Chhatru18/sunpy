@@ -3,7 +3,7 @@ import re
 
 import pytest
 
-from ..mocks import MockObject, MockOpenTextFile, MockHTTPResponse
+from ..mocks import MockHTTPResponse, MockObject, MockOpenTextFile
 
 
 @pytest.fixture
@@ -13,8 +13,8 @@ def mocked_mockobject():
 
 def test_MockObject_illegal_kwargs(mocked_mockobject):
     """
-    Any attempt to use a kwarg which has the same name as an attribute/method of the
-    underlying object or datastore will raise a ValueError.
+    Any attempt to use a kwarg which has the same name as an attribute/method of the underlying
+    object or datastore will raise a ValueError.
     """
     with pytest.raises(ValueError):
         MockObject(records=[], values=1)
@@ -32,8 +32,7 @@ def test_MockObject_illegal_kwargs(mocked_mockobject):
 
 def test_MockObject_attr(mocked_mockobject):
     """
-    builtin hasattr & getattr functions, these don't work on dictionaries
-    but they do on classes.
+    builtin hasattr & getattr functions, these don't work on dictionaries but they do on classes.
     """
     assert hasattr(mocked_mockobject, 'records') is True
     assert hasattr(mocked_mockobject, 'cost') is False
@@ -60,8 +59,7 @@ def test_MockObject_get(mocked_mockobject):
 
 def test_MockObject_set_get(mocked_mockobject):
     """
-    Setting attributes in `MockObject` using bracket notation *not*
-    dot notation.
+    Setting attributes in `MockObject` using bracket notation *not* dot notation.
     """
 
     # Only change the value of existing & new items using 'bracket' notation

@@ -1,5 +1,5 @@
 """
-Access the Helio Event Catalogue
+This module provides access to the Helio Event Catalogue.
 """
 import io
 
@@ -8,15 +8,15 @@ from lxml import etree
 
 from astropy.io.votable.table import parse_single_table
 
-from sunpy.time import parse_time
 from sunpy.net.helio import parser
+from sunpy.time import parse_time
 
 __all__ = ['HECClient']
 
 
 def votable_handler(xml_table):
     """
-    Returns a VOtable object from a VOtable style xml string
+    Returns a VOtable object from a VOtable style xml string.
 
     In order to get a VOtable object, it has to be parsed from an xml file or
     file-like object. This function creates a file-like object via the
@@ -33,7 +33,6 @@ def votable_handler(xml_table):
     -------
     votable : `astropy.io.votable.tree.Table`
         A properly formatted VOtable object
-
     """
     fake_file = io.BytesIO()
     fake_file.write(xml_table)
@@ -49,7 +48,7 @@ class HECClient(object):
 
     def __init__(self, link=None):
         """
-        The constructor; establishes the webservice link for the client
+        The constructor; establishes the webservice link for the client.
 
         Initializes the client with a weblink
 
@@ -62,7 +61,6 @@ class HECClient(object):
         --------
         >>> from sunpy.net.helio import hec
         >>> hc = hec.HECClient()  # doctest: +REMOTE_DATA
-
         """
         if link is None:
             # The default wsdl file
@@ -104,7 +102,6 @@ class HECClient(object):
         >>> start = '2005/01/03'
         >>> end = '2005/12/03'
         >>> temp = hc.time_query(start, end, max_records=10)   # doctest: +REMOTE_DATA +SKIP
-
         """
         while table is None:
             table = self.make_table_list()
@@ -139,7 +136,6 @@ class HECClient(object):
          ...
          (b'rhessi_hxr_flare',) (b'cactus_soho_flow',) (b'cactus_soho_cme',)
          (b'stereob_het_sep',)]
-
         """
         results = self.hec_client.service.getTableNames()
         tables = votable_handler(etree.tostring(results))
@@ -147,7 +143,7 @@ class HECClient(object):
 
     def make_table_list(self):
         """
-        Creates a list of table names and prompts the user for a choice
+        Creates a list of table names and prompts the user for a choice.
 
         This takes the table of table names from get_table_names(), creates a
         list of the names, sorts them, then presents the tables in a
@@ -164,7 +160,6 @@ class HECClient(object):
         >>> from sunpy.net.helio import hec
         >>> hc = hec.HECClient()  # doctest: +REMOTE_DATA
         >>> hc.make_table_list()  # doctest: +REMOTE_DATA +SKIP
-
         """
         table_list = []
         tables = self.get_table_names()

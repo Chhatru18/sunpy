@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 """
-SunPy sample data files
-
-The following files are available in this submodule:
-
+The following files are available in this module:
 """
 import sys
+
 from ._sample import _base_urls, _sample_files, get_sample_file
 
 file_list = []

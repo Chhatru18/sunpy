@@ -1,18 +1,11 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-
-#pylint: disable=W0613
-
-import pytest
-
 import os
 import tempfile
 import threading
-
 from functools import partial
 
-import sunpy
+import pytest
 
+import sunpy
 from sunpy.net.download import Downloader, default_name
 
 
@@ -79,7 +72,7 @@ def test_download_http():
     items = []
     lck = threading.Lock()
 
-    def wait_for(n, callback):  # pylint: disable=W0613
+    def wait_for(n, callback):
         def _fun(handler):
             with lck:
                 items.append(handler)

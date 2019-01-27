@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 
 import pytest
 
 import astropy.units as u
-from astropy.time import TimeDelta
-from astropy.time import Time
+from astropy.time import Time, TimeDelta
 
 import sunpy.time
 from sunpy.time import is_time_equal
@@ -35,8 +33,9 @@ def test_timerange_inputs(inputs):
 
 def test_timerange_invalid_range():
     """
-    TimeRange can expect a range of two times. if this is not the case then
-    raise an exception
+    TimeRange can expect a range of two times.
+
+    if this is not the case then raise an exception
     """
     lower = '2016/01/04 09:30'
     mid = '2016/06/04 09:30'
@@ -51,7 +50,7 @@ def test_timerange_invalid_range():
 
 def test_equals():
     """
-    Test the __eq__ operator
+    Test the __eq__ operator.
     """
     lower = '2016/01/04T09:30:00.000'
     upper = '2016/06/04T09:30:00.000'
@@ -84,7 +83,7 @@ def test_equals():
 
 def test_not_equals():
     """
-    Test __ne__ operator
+    Test __ne__ operator.
     """
     a_st = '2016/01/04T09:30:00.000'
     a_et = '2016/06/04T09:30:00.000'
@@ -147,8 +146,9 @@ def test_timerange_input(ainput):
     (tfin_str, tbegin_str)
     ])
 def test_start_lessthan_end(ainput):
-    """Test that the start and end time for a timerange is always in the
-    right order"""
+    """
+    Test that the start and end time for a timerange is always in the right order.
+    """
     timerange = sunpy.time.TimeRange(ainput)
     t1 = timerange.start
     t2 = timerange.end

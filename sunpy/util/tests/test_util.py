@@ -1,7 +1,3 @@
-"""
-This module tests the functions implemented in sunpy.util.util.
-"""
-
 import numpy as np
 import pytest
 
@@ -10,9 +6,8 @@ from sunpy.util import util
 
 def test_to_signed():
     """
-    This should return a signed type that can hold uint32 and ensure that
-    an exception is raised when attempting to convert an unsigned 64 bit integer
-    to an integer
+    This should return a signed type that can hold uint32 and ensure that an exception is raised
+    when attempting to convert an unsigned 64 bit integer to an integer.
     """
     assert util.to_signed(np.dtype('uint32')) == np.dtype('int64')
 
@@ -33,8 +28,8 @@ def test_unique():
 
 def test_unique_key():
     """
-    This should add each element of itr to unique_list if no preceding
-    element is congruent to it in mod 10.
+    This should add each element of itr to unique_list if no preceding element is congruent to it in
+    mod 10.
     """
     itr = [7, 3, 17, 104, 6, 1006, 117, 14, 10]
     unique_list = []
@@ -45,8 +40,8 @@ def test_unique_key():
 
 def test_print_table():
     """
-    This should return a string representation of lst with table elements
-    left-justified and with columns separated by dashes.
+    This should return a string representation of lst with table elements left-justified and with
+    columns separated by dashes.
     """
     lst = [['n', 'sqrt(n)', 'n^2'],
            ['1', '1', '1'],
@@ -61,8 +56,8 @@ def test_print_table():
 
 def test_minimal_pairs():
     """
-    This should return the pairs of elements from list1 and list2 with
-    minimal difference between their values.
+    This should return the pairs of elements from list1 and list2 with minimal difference between
+    their values.
     """
     list1 = [0, 5, 10, 15, 20, 25]
     list2 = [3, 12, 19, 21, 26, 29]
@@ -72,9 +67,8 @@ def test_minimal_pairs():
 
 def test_find_next():
     """
-    This should return a generator yielding the nearest larger element in
-    list2 for each element in list1 (or None if none exists after the
-    previous element yielded from list2).
+    This should return a generator yielding the nearest larger element in list2 for each element in
+    list1 (or None if none exists after the previous element yielded from list2).
     """
     list1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     list2 = [0, 2, 3, 5, 0, 0, 5, 9, 10, 15]
@@ -87,16 +81,19 @@ def test_common_base():
     This should return the base class common to each object in objs.
     """
     class TestA(object):
-        """Base test class."""
-        pass
+        """
+        Base test class.
+        """
 
     class TestB(TestA):
-        """First inherited class."""
-        pass
+        """
+        First inherited class.
+        """
 
     class TestC(TestA):
-        """Second inherited class."""
-        pass
+        """
+        Second inherited class.
+        """
     inst_b = TestB()
     inst_c = TestC()
     objs = [inst_b, inst_c]
@@ -105,8 +102,7 @@ def test_common_base():
 
 def test_merge():
     """
-    This should return a sorted (from greatest to least) merged list
-    from list1 and list2.
+    This should return a sorted (from greatest to least) merged list from list1 and list2.
     """
     list1 = [13, 11, 9, 7, 5, 3, 1]
     list2 = [14, 12, 10, 8, 6, 4, 2]
@@ -125,7 +121,7 @@ def test_replacement_filename():
 
 def test_replacement_filename_path_not_exists(mocker):
     """
-    If a candidate path does not exist, then just return it as it is OK to use
+    If a candidate path does not exist, then just return it as it is OK to use.
     """
     path_not_exists = '/tmp'
     mocker.patch('os.path.exists', return_value=False)

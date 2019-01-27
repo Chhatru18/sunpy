@@ -1,6 +1,5 @@
-import pytest
-
 import numpy as np
+import pytest
 from numpy.testing import assert_allclose
 
 from sunpy.image.util import to_norm, un_norm

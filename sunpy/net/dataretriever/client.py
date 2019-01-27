@@ -1,22 +1,24 @@
-# -*- coding: utf-8 -*-
-import copy
+"""
+This module provides the generic downloader client.
+"""
 import os
-from collections import OrderedDict, namedtuple
-from functools import partial
+import copy
 import pathlib
+from functools import partial
+from collections import OrderedDict, namedtuple
 
 import numpy as np
+
 import astropy.table
 import astropy.units as u
 
 import sunpy
-from sunpy.time import TimeRange
-from sunpy.util import replacement_filename
 from sunpy import config
-
 from sunpy.net.base_client import BaseClient
 from sunpy.net.download import Downloader, Results
 from sunpy.net.vso.attrs import Time, Wavelength, _Range
+from sunpy.time import TimeRange
+from sunpy.util import replacement_filename
 
 TIME_FORMAT = config.get("general", "time_format")
 
@@ -29,7 +31,7 @@ def simple_path(path, sock, url):
 
 class QueryResponseBlock(object):
     """
-    Represents url, source along with other information
+    Represents url, source along with other information.
     """
 
     def __init__(self, map0, url, time=None):
@@ -51,7 +53,9 @@ class QueryResponseBlock(object):
 
 
 def iter_urls(amap, url_list, time):
-    """Helper Function"""
+    """
+    Helper Function.
+    """
     for aurl, t in zip(url_list, time):
         tmp = QueryResponseBlock(amap, aurl, t)
         yield tmp
@@ -59,7 +63,7 @@ def iter_urls(amap, url_list, time):
 
 class QueryResponse(list):
     """
-    Container of QueryResponseBlocks
+    Container of QueryResponseBlocks.
     """
 
     def __init__(self, lst):
@@ -73,7 +77,7 @@ class QueryResponse(list):
 
     def time_range(self):
         """
-        Returns the time-span for which records are available
+        Returns the time-span for which records are available.
         """
         return TimeRange(min(qrblock.time.start for qrblock in self),
                          max(qrblock.time.end for qrblock in self))
@@ -116,10 +120,9 @@ class QueryResponse(list):
 
 class GenericClient(BaseClient):
     """
-    Base class for simple web clients for the data retriever module. This class
-    is mainly designed for downloading data from FTP and HTTP type data
-    sources, although should in theory be general enough to get data from any
-    web service.
+    Base class for simple web clients for the data retriever module. This class is mainly designed
+    for downloading data from FTP and HTTP type data sources, although should in theory be general
+    enough to get data from any web service.
 
     This class has two user facing methods
     `~sunpy.net.dataretriever.client.GenericClient.search` and
@@ -148,7 +151,6 @@ class GenericClient(BaseClient):
         ----------
         \\*args: `tuple`
             The query attributes.
-
         """
         for elem in args:
             if isinstance(elem, Time):
@@ -184,8 +186,7 @@ class GenericClient(BaseClient):
     @classmethod
     def _get_url_for_timerange(cls, timerange, **kwargs):
         """
-        Method which generates URL results from a timerange and the `map\\_`
-        dictionary.
+        Method which generates URL results from a timerange and the `map\\_` dictionary.
 
         Parameters
         ----------
@@ -203,17 +204,15 @@ class GenericClient(BaseClient):
         """
         Add client specific information to the _map dict.
 
-        Normally this is extra metadata which is not downloaded, but known
-        a priori.
+        Normally this is extra metadata which is not downloaded, but known a priori.
         """
         raise NotImplementedError
 
     @classmethod
     def _can_handle_query(cls, *query):
         """
-        Method the
-        `sunpy.net.fido_factory.UnifiedDownloaderFactory`
-        class uses to dispatch queries to this Client.
+        Method the `sunpy.net.fido_factory.UnifiedDownloaderFactory` class uses to dispatch queries
+        to this Client.
         """
         raise NotImplementedError
 
@@ -262,8 +261,7 @@ class GenericClient(BaseClient):
 
     def _get_time_for_url(self, urls):
         """
-        This method allows clients to customise the timerange displayed for
-        each URL.
+        This method allows clients to customise the timerange displayed for each URL.
 
         It should return a sunpy.time.TimeRange object per URL.
         """
@@ -337,7 +335,9 @@ class GenericClient(BaseClient):
         return res
 
     def _link(self, map_):
-        """Helper Function"""
+        """
+        Helper Function.
+        """
         paths = []
         for k, v in map_.items():
             paths.append(map_[k]['path'])

@@ -1,16 +1,19 @@
-# -*- coding: utf-8 -*-
-"""RHESSI TimeSeries subclass definitions."""
-from collections import OrderedDict
+"""
+This module provies RHESSI TimeSeries subclass definitions.
+"""
 import datetime
+from collections import OrderedDict
+
 import matplotlib.dates
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 
+from astropy import units as u
+
+import sunpy.io
+from sunpy.instr import rhessi
 from sunpy.timeseries.timeseriesbase import GenericTimeSeries
 from sunpy.util.metadata import MetaDict
-from sunpy.instr import rhessi
-import sunpy.io
-from astropy import units as u
 
 __all__ = ['RHESSISummaryTimeSeries']
 
@@ -58,7 +61,8 @@ class RHESSISummaryTimeSeries(GenericTimeSeries):
     _source = 'rhessi'
 
     def peek(self, title="RHESSI Observing Summary Count Rate", **kwargs):
-        """Plots RHESSI Count Rate light curve. An example is shown below.
+        """
+        Plots RHESSI Count Rate light curve. An example is shown below.
 
         .. plot::
 
@@ -71,7 +75,6 @@ class RHESSISummaryTimeSeries(GenericTimeSeries):
         ----------
         title : `str`
             The title of the plot.
-
         **kwargs : `dict`
             Any additional plot arguments that should be used
             when plotting.
@@ -107,13 +110,17 @@ class RHESSISummaryTimeSeries(GenericTimeSeries):
 
     @classmethod
     def _parse_file(cls, filepath):
-        """Parses rhessi FITS data files to create TimeSeries."""
+        """
+        Parses rhessi FITS data files to create TimeSeries.
+        """
         hdus = sunpy.io.read_file(filepath)
         return cls._parse_hdus(hdus)
 
     @classmethod
     def _parse_hdus(cls, hdulist):
-        """Parses a RHESSI FITS HDU list form a FITS file."""
+        """
+        Parses a RHESSI FITS HDU list form a FITS file.
+        """
         header, d = rhessi.parse_observing_summary_hdulist(hdulist)
         # The time of dict d is astropy Time. But dataframe can only take datetime
         d['time'] = d['time'].datetime
@@ -134,7 +141,9 @@ class RHESSISummaryTimeSeries(GenericTimeSeries):
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if the file corresponds to a RHESSI X-ray Summary lightcurve"""
+        """
+        Determines if the file corresponds to a RHESSI X-ray Summary lightcurve.
+        """
         # Check if source is explicitly assigned
         if 'source' in kwargs.keys():
             if kwargs.get('source', ''):

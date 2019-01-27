@@ -1,5 +1,5 @@
 """
-Helper functions for image manipulation
+Helper functions for image manipulation.
 """
 import numpy as np
 from skimage.util import img_as_float
@@ -9,8 +9,8 @@ __all__ = ['to_norm', 'un_norm']
 
 def to_norm(arr):
     """
-    Helper function to normalise/scale an array.  This is needed for example
-    for scikit-image which uses floats between 0 and 1.
+    Helper function to normalise/scale an array.  This is needed for example for scikit-image which
+    uses floats between 0 and 1.
 
     Parameters
     ----------
@@ -40,8 +40,8 @@ def to_norm(arr):
 
 def un_norm(arr, original):
     """
-    Helper function to un-normalise (or re-scale) an array based in
-    the values of the original array.
+    Helper function to un-normalise (or re-scale) an array based in the values of the original
+    array.
 
     Parameters
     ----------

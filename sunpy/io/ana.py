@@ -1,29 +1,19 @@
 """
-ANA File Reader
+This module provides an ANA file Reader.
 
-.. warning::
-    The reading and writing of ana file is not supported under Windows.
-    The C extensions are not built on Windows.
-
-Notes
------
-ANA is a script that allows people to access compressed ana files.
-It accesses a C library, based on Michiel van Noort's
-IDL DLM library 'f0' which contains a cleaned up version of the original
-anarw routines.
-
-Created by Tim van Werkhoven (t.i.m.vanwerkhoven@gmail.com) on 2009-02-11.
-Copyright (c) 2009--2011 Tim van Werkhoven.
+.. warning::     The reading and writing of ana file is not supported under Windows.     The C
+extensions are not built on Windows.
 """
 import os
 import collections
+
+from sunpy.io.header import FileHeader
 
 try:
     from sunpy.io import _pyana
 except ImportError:  # pragma: no cover
     _pyana = None  # pragma: no cover
 
-from sunpy.io.header import FileHeader
 
 __all__ = ['read', 'get_header', 'write']
 
@@ -32,8 +22,7 @@ HDPair = collections.namedtuple('HDPair', ['data', 'header'])
 
 def read(filename, debug=False, **kwargs):
     """
-    Loads an ANA file and returns the data and a header in a list of (data,
-    header) tuples.
+    Loads an ANA file and returns the data and a header in a list of (data, header) tuples.
 
     Parameters
     ----------
@@ -50,7 +39,6 @@ def read(filename, debug=False, **kwargs):
     Examples
     --------
     >>> data = sunpy.io.ana.read(filename)   # doctest: +SKIP
-
     """
     if not os.path.isfile(filename):
         raise IOError("File does not exist!")
@@ -64,9 +52,9 @@ def read(filename, debug=False, **kwargs):
 
 def get_header(filename, debug=False):
     """
-    Loads an ANA file and only return the header consisting of the dimensions,
-    size (defined as the product of all dimensions times the size of the
-    datatype, this not relying on actual filesize) and comments.
+    Loads an ANA file and only return the header consisting of the dimensions, size (defined as the
+    product of all dimensions times the size of the datatype, this not relying on actual filesize)
+    and comments.
 
     Parameters
     ----------
@@ -92,7 +80,7 @@ def get_header(filename, debug=False):
 
 def write(filename, data, comments=False, compress=1, debug=False):
     """
-    Saves a 2D numpy array as an ANA file and returns the bytes written or NULL
+    Saves a 2D numpy array as an ANA file and returns the bytes written or NULL.
 
     Parameters
     ----------

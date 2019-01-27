@@ -1,22 +1,24 @@
+"""
+This module implements  a basic region of interest class.
+"""
 import textwrap
 
-from sunpy.time import TimeRange
-from sunpy.time import parse_time
+from sunpy.time import TimeRange, parse_time
 
 __all__ = ['roi']
 
 
 class roi(object):
     """
-    A generalized region of interest (ROI) object
+    A generalized region of interest (ROI) object.
 
     Parameters
     ----------
-    times : list (optional)
+    times : `list`, optional
         A list of 1 or 2 parse_time-readable times
-    description : str (optional)
+    description : `str`, optional
         A text description of the ROI
-    source : str (optional)
+    source : `str`, optional
         A description of where this ROI comes from
         (e.g. the instrument, 'RHESSI', 'LYRA LYTAF')
 
@@ -76,12 +78,16 @@ class roi(object):
             self.source = source
 
     def time_range(self):
-        """Returns a TimeRange using the start and end times"""
+        """
+        Returns a TimeRange using the start and end times.
+        """
         if self.start_time and self.end_time:
             return TimeRange(self.start_time, self.end_time)
 
     def __repr__(self):
-        """Print out info on the ROI"""
+        """
+        Print out info on the ROI.
+        """
         if not self.start_time:
             startstring = 'None'
         else:

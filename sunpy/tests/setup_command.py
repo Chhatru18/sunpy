@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 """
-This file is designed to be imported and ran only via setup.py, hence it's
-dependency on astropy_helpers which will be available in that context.
+This file is designed to be imported and ran only via setup.py, hence it's dependency on
+astropy_helpers which will be available in that context.
 """
 import os
 import copy

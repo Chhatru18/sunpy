@@ -1,4 +1,10 @@
+"""
+This module provides the base registration factory used for all SunPy data types.
+"""
 import inspect
+
+__all__ = ["BasicRegistrationFactory", "NoMatchError",
+           "MultipleMatchError", "ValidationFunctionError"]
 
 
 class BasicRegistrationFactory(object):
@@ -12,33 +18,25 @@ class BasicRegistrationFactory(object):
 
     Attributes
     ----------
-
-    registry : dict
+    registry : `dict`
         Dictionary mapping classes (key) to function (value) which validates
         input.
-
-    default_widget_type : type
+    default_widget_type : `type`
         Class of the default widget.  Defaults to None.
-
-    validation_functions : list of strings
+    validation_functions : `list` of `str`
         List of function names that are valid validation functions.
 
     Parameters
     ----------
-
-    default_widget_type : type, optional
-
-    additional_validation_functions : list of strings, optional
+    default_widget_type : `type`, optional
+    additional_validation_functions : `list` of `str`, optional
         List of strings corresponding to additional validation function names.
 
     Notes
     -----
-
     * A valid validation function must be a classmethod of the registered widget
       and it must return True or False.
-
     """
-
     def __init__(self, default_widget_type=None,
                  additional_validation_functions=[], registry=None):
 
@@ -53,10 +51,11 @@ class BasicRegistrationFactory(object):
                                      additional_validation_functions)
 
     def __call__(self, *args, **kwargs):
-        """ Method for running the factory.
+        """
+        Method for running the factory.
 
-        Arguments args and kwargs are passed through to the validation
-        function and to the constructor for the final type.
+        Arguments args and kwargs are passed through to the validation function and to the
+        constructor for the final type.
         """
 
         # Any preprocessing and massaging of inputs can happen here
@@ -64,7 +63,9 @@ class BasicRegistrationFactory(object):
         return self._check_registered_widget(*args, **kwargs)
 
     def _check_registered_widget(self, *args, **kwargs):
-        """ Implementation of a basic check to see if arguments match a widget."""
+        """
+        Implementation of a basic check to see if arguments match a widget.
+        """
 
         candidate_widget_types = list()
 
@@ -92,7 +93,8 @@ class BasicRegistrationFactory(object):
         return WidgetType(*args, **kwargs)
 
     def register(self, WidgetType, validation_function=None, is_default=False):
-        """ Register a widget with the factory.
+        """
+        Register a widget with the factory.
 
         If `validation_function` is not specified, tests `WidgetType` for
         existence of any function in in the list `self.validation_functions`,
@@ -100,17 +102,13 @@ class BasicRegistrationFactory(object):
 
         Parameters
         ----------
-
-        WidgetType : type
+        WidgetType : `type`
             Widget to register.
-
         validation_function : function, optional
             Function to validate against.  Defaults to None, which indicates
             that a classmethod in validation_functions is used.
-
-        is_default : bool, optional
+        is_default : `bool`, optional
             Sets WidgetType to be the default widget.
-
         """
         if is_default:
             self.default_widget_type = WidgetType
@@ -143,17 +141,25 @@ class BasicRegistrationFactory(object):
                                               "found.".format(WidgetType.__name__))
 
     def unregister(self, WidgetType):
-        """ Remove a widget from the factory's registry."""
+        """
+        Remove a widget from the factory's registry.
+        """
         self.registry.pop(WidgetType)
 
 
 class NoMatchError(Exception):
-    """Exception for when no candidate class is found."""
+    """
+    Exception for when no candidate class is found.
+    """
 
 
 class MultipleMatchError(Exception):
-    """Exception for when too many candidate classes are found."""
+    """
+    Exception for when too many candidate classes are found.
+    """
 
 
 class ValidationFunctionError(AttributeError):
-    """Exception for when no candidate class is found."""
+    """
+    Exception for when no candidate class is found.
+    """

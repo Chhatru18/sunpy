@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Test Generic TimeSeries
-
-Created on Thu Jun 23 12:29:55 2016
-
-@author: alex_
-"""
-
 import os
 import copy
 import glob
@@ -20,16 +11,16 @@ from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
 
 import astropy.units as u
-from astropy.time import TimeDelta
 from astropy.table import Table
 from astropy.tests.helper import assert_quantity_allclose
+from astropy.time import TimeDelta
 
 import sunpy
 import sunpy.data.test
 import sunpy.timeseries
+from sunpy.tests.helpers import figure_test
 from sunpy.time import TimeRange, parse_time
 from sunpy.timeseries import TimeSeriesMetaData
-from sunpy.tests.helpers import figure_test
 from sunpy.util.metadata import MetaDict
 
 #==============================================================================

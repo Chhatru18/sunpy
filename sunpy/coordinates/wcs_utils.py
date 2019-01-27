@@ -1,16 +1,19 @@
-# -*- coding: utf-8 -*-
+"""
+This module implements utility functions for Astropy WCS module.
+"""
+
 import astropy.wcs.utils
 from astropy.wcs import WCSSUB_CELESTIAL
 
-from .frames import Helioprojective, Heliocentric, HeliographicStonyhurst, HeliographicCarrington
+from .frames import Heliocentric, HeliographicCarrington, HeliographicStonyhurst, Helioprojective
 
 __all__ = ['solar_wcs_frame_mapping']
 
 
 def solar_wcs_frame_mapping(wcs):
     """
-    This function registers the coordinates frames to their FITS-WCS coordinate
-    type values in the `astropy.wcs.utils.wcs_to_celestial_frame` registry.
+    This function registers the coordinates frames to their FITS-WCS coordinate type values in the
+    `astropy.wcs.utils.wcs_to_celestial_frame` registry.
     """
 
     dateobs = wcs.wcs.dateobs if wcs.wcs.dateobs else None

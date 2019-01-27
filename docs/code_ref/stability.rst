@@ -1,8 +1,11 @@
-Current status of sub-packages
-==============================
+.. _sun-status:
 
-SunPy has in variations in stability across sub-packages.
-This document summarizes the current status of the SunPy sub-packages, so that users understand where they might expect changes in future, and which sub-packages they can safely use for production code.
+******************
+Status of packages
+******************
+
+SunPy has variations in the stability our packages and their API.
+This document summarizes the current status of the SunPy packages, so that users understand where they might expect changes in future, and which packages they can safely use for production code.
 
 The classification is as follows:
 
@@ -90,7 +93,7 @@ The current planned and existing sub-packages are:
     {% for module, prop in sunpy_modules.items() %}
         <tr>
             <td>
-                <a href="../code_ref/{{ module }}.html">sunpy.{{ module }}</a>
+                <a href="{{ module }}.html">sunpy.{{ module }}</a>
             </td>
             <td align='center'>
                 <span class="{{ prop['status'] }}"></span>

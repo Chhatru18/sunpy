@@ -1,26 +1,14 @@
-# -*- coding: utf-8 -*-
-# Author:   Michael Malocha <mjm159@humboldt.edu>
-# Last Edit:  August 10th, 2013
-#
-# This module was developed with funding from the GSOC 2013 summer of code
-#
-#pylint: disable=W0142
-
 """
-This module translates the results of a HEK query into a VSO query
-and returns the results from the VSO query to the user.
+This module provides functions that translates the results of a HEK query into a VSO query and
+returns the results from the VSO query to the user.
 """
-
 import sys
+
 from astropy import units
 from astropy.table import Table
 
-from sunpy.net import hek
-from sunpy.net import vso
+from sunpy.net import hek, vso
 from sunpy.util.progressbar import TTYProgressBar
-
-__author__ = 'Michael Malocha'
-__version__ = 'Aug 10th, 2013'
 
 __all__ = ['translate_results_to_query', 'vso_attribute_parse', 'H2VClient']
 
@@ -105,7 +93,7 @@ def vso_attribute_parse(phrase):
 
 class H2VClient(object):
     """
-    Class to handle HEK to VSO translations
+    Class to handle HEK to VSO translations.
 
     Though the single step functions exists outside this class where
     translation is also possible, this class provides a framework where
@@ -128,7 +116,7 @@ class H2VClient(object):
 
     def full_query(self, client_query, limit=None, progress=False):
         """
-        An encompassing method that takes a HEK query and returns a VSO result
+        An encompassing method that takes a HEK query and returns a VSO result.
 
         Takes a list containing a HEK style query, passes it to a HEKClient
         instance, translates it, queries the VSO webservice, then returns
@@ -211,8 +199,7 @@ class H2VClient(object):
         """
         A simple method to quickly sterilize the instance variables.
 
-        Used to bleach local variables before a new query is made. Not
-        intended to be run by user.
+        Used to bleach local variables before a new query is made. Not intended to be run by user.
         """
         self.vso_results = []
         self.num_of_records = 0

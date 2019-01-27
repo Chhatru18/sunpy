@@ -1,31 +1,27 @@
 """
-FITS File Reader
+This module provides a FITS file reader.
 
 Notes
 -----
-FITS
-    [1] FITS files allow comments to be attached to every value in the header.
-    This is implemented in this module as a KEYCOMMENTS dictionary in the
-    sunpy header. To add a comment to the file on write, add a comment to this
-    dictionary with the same name as a key in the header (upcased).
 
-    [2] Due to the way `~astropy.io.fits` works with images the header dictionary may
-    differ depending on whether is accessed before or after the fits[0].data
-    is requested. If the header is read before the data then the original
-    header will be returned. If the header is read after the data has been
-    accessed then the data will have been scaled and a modified header
-    reflecting these changes will be returned: BITPIX may differ and
-    BSCALE and B_ZERO may be dropped in the modified version.
+1. FITS files allow comments to be attached to every value in the header.
+This is implemented in this module as a KEYCOMMENTS dictionary in the
+sunpy header. To add a comment to the file on write, add a comment to this
+dictionary with the same name as a key in the header (upcased).
 
-    [3] The verify('fix') call attempts to handle violations of the FITS
-    standard. For example, nan values will be converted to "nan" strings.
-    Attempting to cast a pyfits header to a dictionary while it contains
-    invalid header tags will result in an error so verifying it early on
-    makes the header easier to work with later.
+2. Due to the way `~astropy.io.fits` works with images, the header dictionary may
+differ depending on whether is accessed before or after the fits[0].data
+is requested. If the header is read before the data then the original
+header will be returned. If the header is read after the data has been
+accessed then the data will have been scaled and a modified header
+reflecting these changes will be returned: BITPIX may differ and
+BSCALE and B_ZERO may be dropped in the modified version.
 
-References
-----------
-| https://stackoverflow.com/questions/456672/class-factory-in-python
+3. The verify('fix') call attempts to handle violations of the FITS
+standard. For example, nan values will be converted to "nan" strings.
+Attempting to cast a pyfits header to a dictionary while it contains
+invalid header tags will result in an error so verifying it early on
+makes the header easier to work with later.
 """
 import os
 import re
@@ -40,15 +36,12 @@ from sunpy.io.header import FileHeader
 
 __all__ = ['header_to_fits', 'read', 'get_header', 'write', 'extract_waveunit']
 
-__author__ = "Keith Hughitt, Stuart Mumford, Simon Liedtke"
-__email__ = "keith.hughitt@nasa.gov"
-
 HDPair = collections.namedtuple('HDPair', ['data', 'header'])
 
 
 def read(filepath, hdus=None, memmap=None, **kwargs):
     """
-    Read a fits file
+    Read a fits file.
 
     Parameters
     ----------
@@ -97,9 +90,8 @@ def read(filepath, hdus=None, memmap=None, **kwargs):
 
 def get_header(afile):
     """
-    Read a fits file and return just the headers for all HDU's. In each header,
-    the key WAVEUNIT denotes the wavelength unit which is used to describe the
-    value of the key WAVELNTH.
+    Read a fits file and return just the headers for all HDU's. In each header, the key WAVEUNIT
+    denotes the wavelength unit which is used to describe the value of the key WAVELNTH.
 
     Parameters
     ----------
@@ -165,7 +157,6 @@ def write(fname, data, header, hdu_type=None, **kwargs):
     hdu_type: `None`, `~fits.CompImageHDU`
         `None` will return a normal FITS files.
         `~fits.CompImageHDU` will rice compress the FITS file.
-
     """
     # Copy header so the one in memory is left alone while changing it for
     # write.
@@ -231,7 +222,8 @@ def header_to_fits(header):
     return fits_header
 
 def extract_waveunit(header):
-    """Attempt to read the wavelength unit from a given FITS header.
+    """
+    Attempt to read the wavelength unit from a given FITS header.
 
     Parameters
     ----------
@@ -256,7 +248,6 @@ def extract_waveunit(header):
         >>> waveunit = extract_waveunit(header)
         >>> if waveunit is not None:
         ...     unit = astropy.units.Unit(waveunit)
-
     """
     # algorithm: try the following procedures in the following order and return
     # as soon as a waveunit could be detected

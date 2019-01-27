@@ -1,7 +1,6 @@
 """
-General utility functions.
+This module provides general utility functions.
 """
-
 import os
 from itertools import count
 
@@ -14,8 +13,8 @@ __all__ = ['to_signed', 'unique', 'print_table', 'replacement_filename',
 
 def to_signed(dtype):
     """
-    Return dtype that can hold data of passed dtype but is signed.
-    Raise ValueError if no such dtype exists.
+    Return `numpy.dtype` that can hold data of passed `numpy.dtype` but is signed. Raises a
+    `ValueError` if no such `numpy.dtype` exists.
 
     Parameters
     ----------
@@ -25,7 +24,7 @@ def to_signed(dtype):
     Returns
     -------
     `numpy.dtype`
-
+        The new `numpy.dtype`.
     """
     if dtype.kind == "u":
         if dtype.itemsize == 8:
@@ -36,15 +35,7 @@ def to_signed(dtype):
 
 def unique(itr, key=None):
     """
-    not documented yet
-
-    Parameters
-    ----------
-    itr : iterable
-        Object to be iterated over
-
-    key : object
-        not documented yet
+    Return only unique elements of a sequence.
     """
     items = set()
     if key is None:
@@ -67,18 +58,19 @@ def print_table(lst, colsep=' ', linesep='\n'):
 
 
 def minimal_pairs(one, other):
-    """ Find pairs of values in one and other with minimal distance.
-    Assumes one and other are sorted in the same sort sequence.
+    """
+    Find pairs of values in one and other with minimal distance. Assumes one and other are sorted in
+    the same sort sequence.
 
     Parameters
     ----------
-    one, other : sequence
+    one, other : `sequence`
         Sequence of scalars to find pairs from.
 
     Returns
     -------
     `tuple`
-         Pairs of values in `one` and `other` with minimal distance
+         Pairs of values in ``one`` and ``other`` with minimal distance
     """
     lbestdiff = bestdiff = bestj = besti = None
     for i, freq in enumerate(one):
@@ -111,8 +103,9 @@ DONT = object()
 
 def find_next(one, other, pad=DONT):
     """
-    Given two sorted sequences one and other, for every element
-    in one, return the one larger than it but nearest to it in other.
+    Given two sorted sequences one and other, for every element in one, return the one larger than
+    it but nearest to it in other.
+
     If no such exists and pad is not DONT, return value of pad as "partner".
     """
     n = 0
@@ -139,8 +132,8 @@ def common_base(objs):
 
 def merge(items, key=(lambda x: x)):
     """
-    Given sorted lists of iterables, return new iterable that returns
-    elements of all iterables sorted with respect to key.
+    Given sorted lists of iterables, return new iterable that returns elements of all iterables
+    sorted with respect to key.
     """
     state = {}
     for item in map(iter, items):
@@ -167,10 +160,10 @@ def merge(items, key=(lambda x: x)):
 
 def replacement_filename(path):
     """
-    Return replacement path for already used path. Enumerates
-    until an unused filename is found. E.g., "/home/florian/foo.fits"
-    becomes "/home/florian/foo.0.fits", if that is used
-    "/home/florian/foo.1.fits", etc.
+    Return replacement path for already used path.
+
+    Enumerates until an unused filename is found. E.g., "/home/florian/foo.fits" becomes
+    "/home/florian/foo.0.fits", if that is used "/home/florian/foo.1.fits", etc.
     """
     if not os.path.exists(path):
         return path
@@ -199,8 +192,7 @@ def expand_list(inp):
 
     References
     ----------
-    Taken from :https://stackoverflow.com/questions/2185822/expanding-elements-in-a-list/2185971#2185971
-
+    Taken from `here. <https://stackoverflow.com/questions/2185822/expanding-elements-in-a-list/2185971#2185971>`_
     """
     return [item for item in expand_list_generator(inp)]
 

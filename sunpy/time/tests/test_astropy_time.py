@@ -3,15 +3,15 @@ from datetime import datetime, timedelta
 import numpy as np
 import pytest
 
-from astropy.time import TimeDelta
-from astropy.time import Time
 import astropy.units as u
+from astropy.time import Time, TimeDelta
 
 from sunpy.time import is_time_equal
 
 
 def test_strftime_scalar():
-    """Test of Time.strftime
+    """
+    Test of Time.strftime.
     """
     time_string = '2010-09-03 06:00:00'
     t = Time(time_string)
@@ -53,7 +53,8 @@ def test_strftime_leapsecond():
 
 
 def test_strptime_scalar():
-    """Test of Time.strptime
+    """
+    Test of Time.strptime.
     """
     time_string = '2007-May-04 21:08:12'
     time_object = Time('2007-05-04 21:08:12')
@@ -63,7 +64,8 @@ def test_strptime_scalar():
 
 
 def test_strptime_array():
-    """Test of Time.strptime
+    """
+    Test of Time.strptime.
     """
     tstrings = [['1998-Jan-01 00:00:01', '1998-Jan-01 00:00:02'],
                 ['1998-Jan-01 00:00:03', '1998-Jan-01 00:00:04']]

@@ -1,19 +1,14 @@
-# Author: Simon Liedtke <liedtke.simon@googlemail.com>
-#
-# This module was developed with funding provided by
-# the Google Summer of Code (2013).
-
 from datetime import datetime
 
 import pytest
+
 from astropy import units as u
 
-from sunpy.database.database import Database
 from sunpy.database import tables
-from sunpy.database.attrs import walker, Starred, Tag, Path, DownloadTime,\
-    FitsHeaderEntry
-from sunpy.net.attr import DummyAttr, AttrAnd, AttrOr
+from sunpy.database.attrs import DownloadTime, FitsHeaderEntry, Path, Starred, Tag, walker
+from sunpy.database.database import Database
 from sunpy.net import vso
+from sunpy.net.attr import AttrAnd, AttrOr, DummyAttr
 
 
 @pytest.fixture

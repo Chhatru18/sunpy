@@ -1,9 +1,9 @@
-=====
+*****
 Linux
-=====
+*****
 
 Overview
---------
+========
 
 .. warning::
     We highly recommend that users use the Anaconda python distribution.
@@ -18,7 +18,7 @@ depending on your linux distro.
 Anything like `python-dev` provides you the required Python development headers.
 
 Debian based (eg. Ubuntu)
--------------------------
+=========================
 On Ubuntu, most of the pre-reqs are available in the Ubuntu software repos and
 can be installed using :command:`apt-get`: ::
 

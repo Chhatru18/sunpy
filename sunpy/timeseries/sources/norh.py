@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
-"""Nobeyama Radioheliograph TimeSeries subclass definitions."""
+"""
+This module provies Nobeyama Radioheliograph TimeSeries subclass definitions.
+"""
 from collections import OrderedDict
 
-import pandas
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas
 
 import astropy.units as u
 from astropy.time import TimeDelta
@@ -12,13 +13,8 @@ from astropy.time import TimeDelta
 import sunpy.io
 from sunpy import config
 from sunpy.time import parse_time
-from sunpy.util.metadata import MetaDict
 from sunpy.timeseries.timeseriesbase import GenericTimeSeries
-
-
-import astropy.units as u
-from astropy.time import TimeDelta
-
+from sunpy.util.metadata import MetaDict
 
 TIME_FORMAT = config.get("general", "time_format")
 
@@ -61,7 +57,7 @@ class NoRHTimeSeries(GenericTimeSeries):
 
     def peek(self, **kwargs):
         """
-        Plots the NoRH lightcurve TimeSeries
+        Plots the NoRH lightcurve TimeSeries.
 
         .. plot::
 
@@ -94,13 +90,17 @@ class NoRHTimeSeries(GenericTimeSeries):
 
     @classmethod
     def _parse_file(cls, filepath):
-        """This method parses NoRH tca and tcz correlation FITS files."""
+        """
+        This method parses NoRH tca and tcz correlation FITS files.
+        """
         hdus = sunpy.io.read_file(filepath)
         return cls._parse_hdus(hdus)
 
     @classmethod
     def _parse_hdus(cls, hdulist):
-        """This method parses NoRH tca and tcz correlation FITS files."""
+        """
+        This method parses NoRH tca and tcz correlation FITS files.
+        """
         header = MetaDict(OrderedDict(hdulist[0].header))
         # For these NoRH files, the time series data is recorded in the primary
         # HDU
@@ -125,7 +125,9 @@ class NoRHTimeSeries(GenericTimeSeries):
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if header corresponds to a Nobeyama Radioheliograph Correlation lightcurve"""
+        """
+        Determines if header corresponds to a Nobeyama Radioheliograph Correlation lightcurve.
+        """
         if 'source' in kwargs.keys():
             if kwargs.get('source', ''):
                 return kwargs.get('source', '').lower().startswith(cls._source)

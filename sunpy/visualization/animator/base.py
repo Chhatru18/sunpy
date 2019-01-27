@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
-
+"""
+This module provides the base animator classes.
+"""
 import abc
 from functools import partial
 
-import numpy as np
+import matplotlib.animation as mplanim
 import matplotlib.pyplot as plt
 import matplotlib.widgets as widgets
-import matplotlib.animation as mplanim
 import mpl_toolkits.axes_grid1.axes_size as Size
+import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 __all__ = ['BaseFuncAnimator', 'ArrayAnimator']
@@ -15,54 +16,48 @@ __all__ = ['BaseFuncAnimator', 'ArrayAnimator']
 
 class BaseFuncAnimator:
     """
-    Create a matplotlib backend independent data explorer which allows
-    definition of figure update functions for each slider.
+    Create a matplotlib backend independent data explorer which allows definition of figure update
+    functions for each slider.
 
     The following keyboard shortcuts are defined in the viewer:
 
-    - 'left': previous step on active slider
-    - 'right': next step on active slider
-    - 'top': change the active slider up one
-    - 'bottom': change the active slider down one
-    - 'p': play/pause active slider
+    * 'left': previous step on active slider
+    * 'right': next step on active slider
+    * 'top': change the active slider up one
+    * 'bottom': change the active slider down one
+    * 'p': play/pause active slider
 
     This viewer can have user defined buttons added by specifying the labels
     and functions called when those buttons are clicked as keyword arguments.
 
-    To make this class useful the subclass must implement `_plot_start_image`
-    which must define a `self.im` attribute which is an instance of AxesImage
+    To make this class useful the subclass must implement `~BaseFuncAnimator._plot_start_image`
+    which must define a ``self.im`` attribute which is an instance of AxesImage.
 
     Parameters
     ----------
-    data: iterable
-        Some arbitrary data
-
-    slider_functions: list
+    data: `iterable`
+        Some arbitrary data.
+    slider_functions: `list`
         A list of functions to call when that slider is changed.
-        These functions will have `val`, the axes image object and the slider
-        widget instance passed to them, i.e.: update_slider(val, im, slider)
-
-    slider_ranges: list
-        list of [min,max] pairs to set the ranges for each slider or an array
+        These functions will have ``val``, the axes image object and the slider
+        widget instance passed to them, i.e.: ``update_slider(val, im, slider)``
+    slider_ranges: `list`
+        list of ``[min,max]`` pairs to set the ranges for each slider or an array
         of values for all points of the slider.
         (The slider update function decides which to support.)
-    fig: mpl.figure
-        Figure to use
-    interval: int
-        Animation interval in ms
+    fig: `matplotlib.figure.Figure`
+        Figure to use.
+    interval: `int`
+        Animation interval in ms.
+    colorbar: `bool`
+        Plot colorbar.
+    button_labels: `list`
+        List of strings to label buttons.
+    button_func: `list`
+        List of functions to map to the buttons.
 
-    colorbar: bool
-        Plot colorbar
-
-    button_labels: list
-        List of strings to label buttons
-
-    button_func: list
-        List of functions to map to the buttons
-
-    Extra keywords are passed to imshow.
+    Extra keywords are passed to ``matplotlib.pyplot.imshow``.
     """
-
     def __init__(self, data, slider_functions, slider_ranges, fig=None,
                  interval=200, colorbar=False, button_func=None, button_labels=None,
                  start_image_func=None, **kwargs):
@@ -111,39 +106,34 @@ class BaseFuncAnimator:
 
     def label_slider(self, i, label):
         """
-        Change the Slider label
+        Change the Slider label.
 
         Parameters
         ----------
-        i: int
-            The index of the slider to change (0 is bottom)
-        label: str
-            The label to set
+        i: `int`
+            The index of the slider to change (0 is bottom).
+        label: `str`
+            The label to set.
         """
         self.sliders[i]._slider.label.set_text(label)
 
     def get_animation(self, axes=None, slider=0, startframe=0, endframe=None,
                       stepframe=1, **kwargs):
         """
-        Return a matplotlib.animation.FuncAnimation instance for the selected
-        slider.
+        Return a `matplotlib.animation.FuncAnimation` instance for the selected slider.
 
         This will allow easy saving of the animation to a file.
 
         Parameters
         ----------
-
-        slider: int
-            The slider to animate along
-
-        startframe: int
-            The frame to start the animation
-
-        endframe: int
-            The frame to end the animation
-
-        stepframe: int
-            The step between frames
+        slider: `int`
+            The slider to animate along.
+        startframe: `int`
+            The frame to start the animation.
+        endframe: `int`
+            The frame to end the animation.
+        stepframe: `int`
+            The step between frames.
         """
         if not axes:
             axes = plt.gca()
@@ -165,21 +155,20 @@ class BaseFuncAnimator:
 
     def plot_start_image(self, ax):
         """
-        This method creates the initial image on the mpl axes
+        This method creates the initial image on the matplotlib axes.
 
         .. warning::
-            This method needs to be implemented in subclasses
+            This method needs to be implemented in subclasses.
 
         Parameters
         ----------
-        ax: mpl axes
+        ax: `matplotlib.axes.Axes`
             This is the axes on which to plot the image
 
         Returns
         -------
-        AxesImage:
-            An AxesImage object, the instance returned from a plt.imshow()
-            command.
+        AxesImage: `AxesImage`
+            The instance returned from a `matplotlib.pyplot.imshow` command.
         """
         raise NotImplementedError("Please define your setup function")
 
@@ -233,7 +222,9 @@ class BaseFuncAnimator:
 #   Build the figure and place the widgets
 # =============================================================================
     def _get_main_axes(self):
-        """ Allow replacement of main axes by subclassing """
+        """
+        Allow replacement of main axes by subclassing.
+        """
         return self.fig.add_subplot(111)
 
     def _make_axes_grid(self):
@@ -376,56 +367,46 @@ class BaseFuncAnimator:
 
 class ArrayAnimator(BaseFuncAnimator, metaclass=abc.ABCMeta):
     """
-    Create a matplotlib backend independent data explorer
+    Create a matplotlib backend independent data explorer.
 
     The following keyboard shortcuts are defined in the viewer:
 
-    - 'left': previous step on active slider
-    - 'right': next step on active slider
-    - 'top': change the active slider up one
-    - 'bottom': change the active slider down one
-    - 'p': play/pause active slider
+    * 'left': previous step on active slider
+    * 'right': next step on active slider
+    * 'top': change the active slider up one
+    * 'bottom': change the active slider down one
+    * 'p': play/pause active slider
 
     This viewer can have user defined buttons added by specifying the labels
     and functions called when those buttons are clicked as keyword arguments.
 
     Parameters
     ----------
-    data: ndarray
-        The data to be visualized
-
-    image_axes: list
-        The axes that make the image
-
-    fig: mpl.figure
-        Figure to use
-
-    axis_ranges: list of physical coordinates for array or None
-        If None array indices will be used for all axes.
-        If a list it should contain one element for each axis of the numpy array.
-        For the image axes a [min, max] pair should be specified which will be
-        passed to :func:`matplotlib.pyplot.imshow` as extent.
-        For the slider axes a [min, max] pair can be specified or an array the
+    data: `numpy.ndarray`
+        The data to be visualized.
+    image_axes: `list`
+        The axes that make the image.
+    fig: `matplotlib.figure.Figure`
+        Figure to use.
+    axis_ranges: `list` of physical coordinates for array or `None`
+        If `None` array indices will be used for all axes.
+        If a list it should contain one element for each axis of the `numpy.array`.
+        For the image axes a ``[min, max]`` pair should be specified which will be
+        passed to `matplotlib.pyplot.imshow` as extent.
+        For the slider axes a ``[min, max]`` pair can be specified or an array the
         same length as the axis which will provide all values for that slider.
-        If None is specified for an axis then the array indices will be used
+        If `None` is specified for an axis then the array indices will be used
         for that axis.
-
-    interval: int
-        Animation interval in ms
-
-    colorbar: bool
-        Plot colorbar
-
-    button_labels: list
-        List of strings to label buttons
-
-    button_func: list
+    interval: `int`
+        Animation interval in ms.
+    colorbar: `bool`
+        Plot colorbar.
+    button_labels: `list`
+        List of strings to label buttons.
+    button_func: `list`
         List of functions to map to the buttons
-
     """
-
     def __init__(self, data, image_axes=[-2, -1], axis_ranges=None, **kwargs):
-
         all_axes = list(range(self.naxis))
         # Handle negative indexes
         self.image_axes = [all_axes[i] for i in image_axes]
@@ -489,36 +470,36 @@ class ArrayAnimator(BaseFuncAnimator, metaclass=abc.ABCMeta):
 
     def label_slider(self, i, label):
         """
-        Change the Slider label
+        Change the Slider label.
 
         Parameters
         ----------
-        i: int
-            The index of the slider to change (0 is bottom)
-        label: str
-            The label to set
+        i: `int`
+            The index of the slider to change (0 is bottom).
+        label: `str`
+            The label to set.
         """
         self.sliders[i]._slider.label.set_text(label)
 
     def _sanitize_axis_ranges(self, axis_ranges, data):
         """
-        This method takes the various allowed values of axis_ranges and returns
-        them in a standardized way for the rest of the class to use.
+        This method takes the various allowed values of axis_ranges and returns them in a
+        standardized way for the rest of the class to use.
 
         The outputted axis range describes the physical coordinates of the
         array axes.
 
-        The allowed values of axis range is either None or a list.
-        If axis_ranges is None then all axis are assumed to be not scaled and
+        The allowed values of axis range is either `None` or a `list`.
+        If axis_ranges is `None` then all axis are assumed to be not scaled and
         use array indices.
 
         Where axis_ranges is a list it must have the same length as the number
         of axis as the array and each element must be one of the following:
 
-            * None: Build a min,max pair or linspace array of array indices
-            * [min, max]: leave for image axes or convert to a array for slider axes
+            * ``None``: Build a min,max pair or linspace array of array indices
+            * ``[min, max]``: leave for image axes or convert to a array for slider axes
             (from min to max in axis length steps)
-            * [min, max] pair where min == max: convert to array indies min, max pair or array.
+            * ``[min, max]`` pair where min == max: convert to array indies min, max pair or array.
             * array of axis length, check that it was passed for a slider axes and do nothing
             if it was, error if it is not.
         """
@@ -563,7 +544,6 @@ class ArrayAnimator(BaseFuncAnimator, metaclass=abc.ABCMeta):
         Abstract method for plotting first slice of array.
 
         Must exists here but be defined in subclass.
-
         """
 
     @abc.abstractmethod
@@ -572,5 +552,4 @@ class ArrayAnimator(BaseFuncAnimator, metaclass=abc.ABCMeta):
         Abstract method for updating plot.
 
         Must exists here but be defined in subclass.
-
         """

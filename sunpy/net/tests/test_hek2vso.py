@@ -1,25 +1,10 @@
-# -*- coding: utf-8 -*-
-# Author: Michael Malocha
-# e-mail: mmalocha13@gmail.com
-# Version: June 11th, 2013
-#
-
-"""
-This module was built to test the HEK2VSO class.
-"""
-
-__author__ = 'Michael Malocha'
-__version__ = 'June 11th, 2013'
-
 import pytest
 
-from astropy import units as u
 from astropy import table
-from sunpy.time import parse_time
-from sunpy.net import hek
-from sunpy.net import vso
-from sunpy.net import hek2vso
+from astropy import units as u
 
+from sunpy.net import hek, hek2vso, vso
+from sunpy.time import parse_time
 
 startTime = '2011/08/09 07:23:56'
 endTime = '2011/08/09 12:40:29'
@@ -47,7 +32,9 @@ def vso_client():
 
 @pytest.mark.remote_data
 def test_translate_results_to_query():
-    """Make sure that conversion of HEK results to VSO queries is accurate"""
+    """
+    Make sure that conversion of HEK results to VSO queries is accurate.
+    """
     h = hek.HEKClient()
     hek_query = h.search(hekTime, hekEvent)
     vso_query = hek2vso.translate_results_to_query(hek_query)
@@ -62,7 +49,9 @@ def test_translate_results_to_query():
 
 @pytest.mark.remote_data
 def test_vso_attribute_parse():
-    """Make sure that Parsing of VSO attributes from HEK queries is accurate"""
+    """
+    Make sure that Parsing of VSO attributes from HEK queries is accurate.
+    """
     h = hek.HEKClient()
     hek_query = h.search(hekTime, hekEvent)
     vso_query = hek2vso.vso_attribute_parse(hek_query[0])
@@ -84,5 +73,7 @@ def test_vso_attribute_parse():
 
 
 class TestH2VClient(object):
-    """Tests the H2V class"""
+    """
+    Tests the H2V class.
+    """
     # TODO

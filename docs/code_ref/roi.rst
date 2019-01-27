@@ -1,10 +1,13 @@
+.. _sunpy-roi:
+
+*********
 SunPy roi
-=========
+*********
 
-.. warning::
-
-   The roi module is still in development, the API is subject to change.
+This package provides basic region of interest support.
 
 .. automodapi:: sunpy.roi
+   :no-inheritance-diagram:
 
 .. automodapi:: sunpy.roi.chaincode
+   :no-inheritance-diagram:

@@ -2,14 +2,14 @@ from unittest import mock
 
 import pytest
 
-from sunpy.time import parse_time
-from sunpy.time.timerange import TimeRange
-from sunpy.net.vso.attrs import Time, Instrument
-from sunpy.net.dataretriever.client import QueryResponse
 import sunpy.net.dataretriever.sources.noaa as noaa
-from sunpy.net.fido_factory import UnifiedResponse
 from sunpy.net import Fido
 from sunpy.net import attrs as a
+from sunpy.net.dataretriever.client import QueryResponse
+from sunpy.net.fido_factory import UnifiedResponse
+from sunpy.net.vso.attrs import Instrument, Time
+from sunpy.time import parse_time
+from sunpy.time.timerange import TimeRange
 
 LCClient = noaa.NOAAIndicesClient()
 
@@ -17,8 +17,8 @@ LCClient = noaa.NOAAIndicesClient()
 
 def mock_query_object(start_date, end_date):
     """
-    Creation of a QueryResponse object, and prefill some
-    downloaded data from noaa.NOAAIndicesClient().fetch(Time('20 ..)
+    Creation of a QueryResponse object, and prefill some downloaded data from
+    noaa.NOAAIndicesClient().fetch(Time('20 ..)
     """
     # Create a mock QueryResponse object
     map_ = {
@@ -41,6 +41,7 @@ def mock_query_object(start_date, end_date):
 def test_fetch_working():
     """
     Tests if the online server for noaa is working.
+
     Uses the url : ftp://ftp.swpc.noaa.gov/pub/weekly/RecentIndices.txt
     """
     qr1 = LCClient.search(Time('2012/10/4', '2012/10/6'),

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import os
 
@@ -6,7 +5,6 @@ import numpy as np
 
 import sunpy.data.test
 import sunpy.map
-
 from sunpy.instr import iris
 
 

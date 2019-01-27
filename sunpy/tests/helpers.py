@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 # Lovingly borrowed from Astropy
 # Licensed under a 3-clause BSD style license - see licences/ASTROPY.rst
 
 import os
-import pathlib
-import platform
 import urllib
+import platform
 import warnings
 
-import pytest
 import matplotlib.pyplot as plt
+import pytest
 from matplotlib.testing import compare
 
 from astropy.utils.decorators import wraps
@@ -55,10 +53,9 @@ new_hash_library = {}
 
 def figure_test(test_function):
     """
-    A decorator for a test that verifies the hash of the current figure or the returned figure,
-    with the name of the test function as the hash identifier in the library.
-    A PNG is also created in the 'result_image' directory, which is created
-    on the current path.
+    A decorator for a test that verifies the hash of the current figure or the returned figure, with
+    the name of the test function as the hash identifier in the library. A PNG is also created in
+    the 'result_image' directory, which is created on the current path.
 
     All such decorated tests are marked with `pytest.mark.figure` for
     convenient filtering.
@@ -110,9 +107,9 @@ def figure_test(test_function):
 # Skip coverage on this because we test it every time the CI runs --coverage!
 def _patch_coverage(testdir, sourcedir):  # pragma: no cover
     """
-    This function is used by the ``setup.py test`` command to change the
-    filepath of the source code from the temporary directory setup.py installs
-    the code into to the actual directory setup.py was executed in.
+    This function is used by the ``setup.py test`` command to change the filepath of the source code
+    from the temporary directory setup.py installs the code into to the actual directory setup.py
+    was executed in.
     """
     import coverage
 

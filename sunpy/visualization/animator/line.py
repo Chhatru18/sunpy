@@ -1,6 +1,9 @@
+"""
+This module provides a 1D animator.
+"""
 import numpy as np
 
-from . base import ArrayAnimator
+from .base import ArrayAnimator
 
 __all__ = ['LineAnimator']
 
@@ -11,59 +14,49 @@ class LineAnimator(ArrayAnimator):
 
     The following keyboard shortcuts are defined in the viewer:
 
-    - 'left': previous step on active slider
-    - 'right': next step on active slider
-    - 'top': change the active slider up one
-    - 'bottom': change the active slider down one
-    - 'p': play/pause active slider
+    * 'left': previous step on active slider
+    * 'right': next step on active slider
+    * 'top': change the active slider up one
+    * 'bottom': change the active slider down one
+    * 'p': play/pause active slider
 
     This viewer can have user defined buttons added by specifying the labels
     and functions called when those buttons are clicked as keyword arguments.
 
     Parameters
     ----------
-    data: ndarray
-        The y-axis data to be visualized
-
+    data: `numpy.ndarray`
+        The y-axis data to be visualized.
     plot_axis_index: `int`
-        The axis used to plot against xdata.
-        Default = -1, i.e. last dimension of arrary.
-
-    fig: `matplotlib.figure`
-        Figure to use
-
-    axis_ranges: `list` of physical coordinates or None
+        The axis used to plot against x-data.
+        Default = -1, i.e. last dimension of the array.
+    fig: `matplotlib.figure.Figure`
+        Figure to use.
+    axis_ranges: `list` of physical coordinates or `None`
         Each element of axis_ranges provides an array of physical coordinates for the
-        corresponding dimension of the data array.  If an element is None, array indices will be
-        used for that axis.  If axis_range itself is None, array indices will be used for all axes.
+        corresponding dimension of the data array. If an element is None, array indices will be
+        used for that axis. If axis_range itself is None, array indices will be used for all axes.
         For more information, see the Notes section of this docstring.
-
     xlabel: `str`
         Label of x-axis of plot.
-
     ylabel: `str`
         Label of y-axis of plot.
-
     xlim: `tuple`
         Limits of x-axis of plot.
-
     ylim: `tuple`
         Limits of y-axis of plot.
-
     interval: `int`
         Animation interval in ms
-
     button_labels: `list`
         List of strings to label buttons
-
     button_func: `list`
         List of functions to map to the buttons
 
-    Extra keywords are passed to plot.
+    Extra keywords are passed to `matplotlib.pyplot.plot`.
 
     Notes
     -----
-    Additional information on API of axes_ranges kwarg.
+    Additional information on API of axes_ranges kwarg:
 
     #. X-axis values must be supplied (if desired) as an array in the element of
        the axis_ranges list corresponding to the plot_axis_index in the data array, i.e.
@@ -85,7 +78,6 @@ class LineAnimator(ArrayAnimator):
 
     #. For the slider axes the axis range is an array of the same length as the dimension of the
        data array to which that slider corresponds.
-
     """
 
     def __init__(self, data, plot_axis_index=-1, axis_ranges=None, ylabel=None, xlabel=None,
@@ -129,7 +121,9 @@ class LineAnimator(ArrayAnimator):
                                            axis_ranges=axis_ranges, **kwargs)
 
     def plot_start_image(self, ax):
-        """Sets up plot of initial image."""
+        """
+        Sets up plot of initial image.
+        """
         ax.set_xlim(self.xlim)
         ax.set_ylim(self.ylim)
         if self.xlabel is not None:
@@ -148,7 +142,9 @@ class LineAnimator(ArrayAnimator):
         return line
 
     def update_plot(self, val, line, slider):
-        """Updates plot based on slider/array dimension being iterated."""
+        """
+        Updates plot based on slider/array dimension being iterated.
+        """
         val = int(val)
         ax_ind = self.slider_axes[slider.slider_ind]
         ind = int(np.argmin(np.abs(self.axis_ranges[ax_ind] - val)))

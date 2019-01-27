@@ -5,7 +5,7 @@ import datetime
 
 import hypothesis.strategies as st
 from hypothesis import assume
-from hypothesis.strategies import one_of, datetimes, sampled_from
+from hypothesis.strategies import datetimes, one_of, sampled_from
 
 import astropy.time
 import astropy.units as u
@@ -31,8 +31,8 @@ def Times(draw, max_value, min_value):
 @st.composite
 def TimeDelta(draw):
     """
-    Timedelta strategy that limits the maximum timedelta to being positive and
-    abs max is about 100 weeks + 100 days + 100 hours + a bit
+    Timedelta strategy that limits the maximum timedelta to being positive and abs max is about 100
+    weeks + 100 days + 100 hours + a bit.
     """
     keys = st.sampled_from(['days', 'seconds', 'microseconds', 'milliseconds',
                             'minutes', 'hours', 'weeks'])
@@ -46,8 +46,7 @@ def TimeDelta(draw):
 
 def offline_instruments():
     """
-    Returns a strategy for any instrument that does not need the internet to do
-    a query
+    Returns a strategy for any instrument that does not need the internet to do a query.
     """
     offline_instr = ['lyra', 'noaa-indices', 'noaa-predict', 'goes']
     offline_instr = st.builds(a.Instrument, st.sampled_from(offline_instr))
@@ -57,8 +56,7 @@ def offline_instruments():
 
 def online_instruments():
     """
-    Returns a strategy for any instrument that does not need the internet to do
-    a query
+    Returns a strategy for any instrument that does not need the internet to do a query.
     """
     online_instr = ['rhessi']
     online_instr = st.builds(a.Instrument, st.sampled_from(online_instr))
@@ -73,8 +71,7 @@ def time_attr(draw, time=Times(
     ),
               delta=TimeDelta()):
     """
-    Create an a.Time where it's always positive and doesn't have a massive time
-    delta.
+    Create an a.Time where it's always positive and doesn't have a massive time delta.
     """
     t1 = draw(time)
     t2 = t1 + draw(delta)
@@ -90,8 +87,7 @@ def goes_time(draw, time=Times(
     min_value=datetime.datetime(1981, 1, 1, 0, 0)),
               delta=TimeDelta()):
     """
-    Create an a.Time where it's always positive and doesn't have a massive time
-    delta.
+    Create an a.Time where it's always positive and doesn't have a massive time delta.
     """
     t1 = draw(time)
     t2 = t1 + draw(delta)

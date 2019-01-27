@@ -1,17 +1,26 @@
-"""SunPy configuration file functionality"""
+"""
+This module provides the SunPy configuration file functionality.
+"""
 import os
 import tempfile
 import configparser
 
+import appdirs
+from appdirs import AppDirs
+
 import sunpy
+
+dirs = AppDirs("sunpy", "sunpy")
+
 
 __all__ = ['load_config', 'print_config']
 
 
 def load_config():
     """
-    Read the sunpyrc configuration file. If one does not exists in the user's
-    home directory then read in the defaults from module
+    Read the sunpyrc configuration file.
+
+    If one does not exists in the user's home directory then read in the defaults from module
     """
     config = configparser.ConfigParser()
 
@@ -43,9 +52,9 @@ def load_config():
 
 
 def get_and_create_download_dir():
-    '''
+    """
     Get the config of download directory and create one if not present.
-    '''
+    """
     if not os.path.isdir(sunpy.config.get('downloads', 'download_dir')):
         os.makedirs(sunpy.config.get('downloads', 'download_dir'))
 
@@ -53,9 +62,9 @@ def get_and_create_download_dir():
 
 
 def get_and_create_sample_dir():
-    '''
+    """
     Get the config of download directory and create one if not present.
-    '''
+    """
     if not os.path.isdir(sunpy.config.get('downloads', 'sample_dir')):
         os.makedirs(sunpy.config.get('downloads', 'sample_dir'))
 
@@ -63,7 +72,9 @@ def get_and_create_sample_dir():
 
 
 def print_config():
-    """Print current configuration options"""
+    """
+    Print current configuration options.
+    """
     print("FILES USED:")
     for file_ in _find_config_files():
         print("  " + file_)
@@ -77,14 +88,17 @@ def print_config():
 
 
 def _is_writable_dir(p):
-    """Checks to see if a directory is writable"""
+    """
+    Checks to see if a directory is writable.
+    """
     return os.path.isdir(p) and os.access(p, os.W_OK)
 
 
 def _get_home():
-    """Find user's home directory if possible.
-    Otherwise raise error.
+    """
+    Find user's home directory if possible.
 
+    Otherwise raise error.
     """
     path = os.path.expanduser("~")
 
@@ -103,7 +117,9 @@ def _get_home():
 
 
 def _find_config_files():
-    """Finds locations of SunPy configuration files"""
+    """
+    Finds locations of SunPy configuration files.
+    """
     config_files = []
     config_filename = 'sunpyrc'
 
@@ -125,8 +141,9 @@ def _find_config_files():
 def _get_user_configdir():
     """
     Return the string representing the configuration dir.
-    The default is "HOME/.sunpy".  You can override this with the
-    SUNPY_CONFIGDIR environment variable
+
+    The default is "HOME/.sunpy".  You can override this with the SUNPY_CONFIGDIR environment
+    variable
     """
     configdir = os.environ.get('SUNPY_CONFIGDIR')
 
@@ -159,7 +176,9 @@ def _get_user_configdir():
 
 
 def _fix_filepaths(config, filepaths):
-    """Converts relative filepaths to absolute filepaths"""
+    """
+    Converts relative filepaths to absolute filepaths.
+    """
     # Parse working_dir
     working_dir = _expand_filepath(config.get("general", "working_dir"))
     config.set('general', 'working_dir', working_dir)
@@ -175,7 +194,9 @@ def _fix_filepaths(config, filepaths):
 
 
 def _expand_filepath(filepath, working_dir=""):
-    """Checks a filepath and expands it if necessary"""
+    """
+    Checks a filepath and expands it if necessary.
+    """
     # Expand home directory
     if filepath[0] == "~":
         return os.path.abspath(os.path.expanduser(filepath))

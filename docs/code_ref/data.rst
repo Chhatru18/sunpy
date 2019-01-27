@@ -1,8 +1,10 @@
-SunPy data
-==========
+.. _sunpy-data:
 
-The SunPy data module contains ways to access sample data and small test files
-for running the SunPy test suite.
+**********
+SunPy data
+**********
+
+This pacakge provides access to our sample data and the test files used within the SunPy test suite.
 
 .. automodapi:: sunpy.data
 

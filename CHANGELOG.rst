@@ -1,3 +1,128 @@
+Sunpy 0.9.5 (2018-11-27)
+========================
+
+Bug Fixes
+---------
+
+- Timeseries and lightcurve will now respect updated config values for download directory. (`#2844 <https://github.com/sunpy/sunpy/pull/2844>`__)
+- Always use _default_wrap_angle rather than hard coding a wrap angle in the init
+  of a frame (`#2853 <https://github.com/sunpy/sunpy/pull/2853>`__)
+- Ensure imageanimators only slice arrays with integers (`#2856 <https://github.com/sunpy/sunpy/pull/2856>`__)
+
+
+Sunpy 0.9.4 (2018-11-14)
+========================
+
+Features
+--------
+
+- Now able to create a `sunpy.map.Map` using an array and a `astropy.wcs.WCS` object. (`#2793 <https://github.com/sunpy/sunpy/pull/2793>`__)
+
+
+Bug Fixes
+---------
+
+- Fix RHESSI obssum file downloading to include the final day in the time range. (`#2714 <https://github.com/sunpy/sunpy/pull/2714>`__)
+- User can convert between HPC and HCC coordinates with different observers. This is implemented by automatically transforming the coordinate into HGS and then changing observer, and then transforming back to HCC. (`#2754 <https://github.com/sunpy/sunpy/pull/2754>`__)
+- Changed default file type for Helioviewer to prevent decode errors. (`#2771 <https://github.com/sunpy/sunpy/pull/2771>`__)
+- Fixed loading in LASCO C3 data. (`#2775 <https://github.com/sunpy/sunpy/pull/2775>`__)
+- Increase figure size to avoid cutting off longer colormap names in `sunpy.cm.show_colormaps`. (`#2824 <https://github.com/sunpy/sunpy/pull/2824>`__)
+- The sample data directory will no longer be created until files are downloaded
+  to it. (`#2836 <https://github.com/sunpy/sunpy/pull/2836>`__)
+
+
+Improved Documentation
+----------------------
+
+- Minor changes to the developer guide regarding sprint labels. (`#2765 <https://github.com/sunpy/sunpy/pull/2765>`__)
+- Copyedited and corrected the solar cycles example. (`#2770 <https://github.com/sunpy/sunpy/pull/2770>`__)
+- Changed "online" mark to "remote_data" and made formatting of marks consistent. (`#2799 <https://github.com/sunpy/sunpy/pull/2799>`__)
+- Add a missing plot to the end of the units and coordinates guide. (`#2813 <https://github.com/sunpy/sunpy/pull/2813>`__)
+
+
+Trivial/Internal Changes
+------------------------
+
+- Miscellaneous fixes to developer docs about building sunpy's documentation. (`#2825 <https://github.com/sunpy/sunpy/pull/2825>`__)
+- Changed sunpy.instr.aia.aiaprep to update BITPIX keyword to reflect the float64 dtype. (`#2831 <https://github.com/sunpy/sunpy/pull/2831>`__)
+- Fix SunPy Coordinate tests with Astropy 3.1 (`#2838 <https://github.com/sunpy/sunpy/pull/2838>`__)
+
+
+Sunpy 0.9.3 (2018-09-12)
+========================
+
+Bug Fixes
+---------
+
+- Correctly import `~astropy.units.allclose` based on astropy version. This means that `sunpy.coordinates` will import when pytest is not installed. (`#2702 <https://github.com/sunpy/sunpy/pull/2702>`__)
+- Raise an error when transforming between HPC and HCC frames if the observer is not the same. (`#2725 <https://github.com/sunpy/sunpy/pull/2725>`__)
+- Do not attempt to save a FITS header comment for a keyword which is not in the header. This prevents an error on saving some maps after the metadata had been modified but not the comments. (`#2748 <https://github.com/sunpy/sunpy/pull/2748>`__)
+- Add support for `HMIMap` objects as input to `sunpy.instr.aia.aiaprep()`. (`#2749 <https://github.com/sunpy/sunpy/pull/2749>`__)
+
+
+Improved Documentation
+----------------------
+
+- Add contribution guidelines for the sunpy example gallery. (`#2682 <https://github.com/sunpy/sunpy/pull/2682>`__)
+- Clean up the docstring for `sunpy.physics.differential_rotation.solar_rotate_coordinate` to make the example clearer. (`#2708 <https://github.com/sunpy/sunpy/pull/2708>`__)
+
+
+Sunpy 0.9.2 (2018-07-27)
+========================
+
+Bug Fixes
+---------
+
+- Fix the bug which crashes LASCOMap for when 'date-obs' is reformatted agian from a self applied function. (`#2700 <https://github.com/sunpy/sunpy/pull/2700>`__)
+- Correctly import `~astropy.units.allclose` based on astropy version. This means that `sunpy.coordinates` will import when pytest is not installed. (`#2702 <https://github.com/sunpy/sunpy/pull/2702>`__)
+
+
+Sunpy 0.9.1 (2018-07-26)
+========================
+
+Features
+--------
+
+- MapCube has been renamed to MapSequence.
+  MapCube does not actually work on cubes but a sequence of maps.
+  Due to this change, MapCube is now deprecated but will not be removed until SunPy 1.0. (`#2603 <https://github.com/sunpy/sunpy/pull/2603>`__)
+
+
+Bug Fixes
+---------
+
+- parse_time now parses numpy.datetime64 correctly (`#2572 <https://github.com/sunpy/sunpy/pull/2572>`__)
+- Fix the bug that prevented VSO queries for HMI data from downloading file
+  without speicifying `a.Physobs`. (`#2621 <https://github.com/sunpy/sunpy/pull/2621>`__)
+- Fix `sunpy.map.mapcube.MapCube.plot`. The code had not been updated to support the changes to the wcsaxes helper functions. (`#2627 <https://github.com/sunpy/sunpy/pull/2627>`__)
+- Replace all use of the deprecated ``sunpy.cm.get_cmap`` with ``plt.get_cmap`` to prevent deprecation warnings being raised. (`#2635 <https://github.com/sunpy/sunpy/pull/2635>`__)
+- Fix generation of the coordinate transformation graph with Astropy 3.1.dev (`#2636 <https://github.com/sunpy/sunpy/pull/2636>`__)
+- Prevent helioviewer from erroring when downloading file to a directory that
+  does not exist. It will now create the directory when required. (`#2642 <https://github.com/sunpy/sunpy/pull/2642>`__)
+- Fix transformations into/out of Heliographic Stonyhurst frame when
+  the coordinate representation is Cartesian. (`#2646 <https://github.com/sunpy/sunpy/pull/2646>`__)
+- Support passing Python file objects to `sunpy.io.fits.write`. (`#2688 <https://github.com/sunpy/sunpy/pull/2688>`__)
+- Added DRMS to setup.py so sunpy[all] installs it as a dependancy. (`#2693 <https://github.com/sunpy/sunpy/pull/2693>`__)
+- Fix eve 0cs timeseries seperator regex to support Python 3.7 (`#2697 <https://github.com/sunpy/sunpy/pull/2697>`__)
+
+
+Improved Documentation
+----------------------
+
+- Organise the gallery into sections based on example type and tidy up a little. (`#2624 <https://github.com/sunpy/sunpy/pull/2624>`__)
+- Added gallery example showing the conversion of Helioprojective Coordinates to Altitude/Azimuth Coordinates to and back. (`#2656 <https://github.com/sunpy/sunpy/pull/2656>`__)
+
+
+Trivial/Internal Changes
+------------------------
+
+- Revert the handling of ``quantity_allclose`` now that `astropy/astropy#7252 <https://github.com/astropy/astropy/pull/7252>`__ is merged. This also bumps the minimum astropy 3 version to 3.0.2. (`#2598 <https://github.com/sunpy/sunpy/pull/2598>`__). We still support Astropy 2.
+- Sort the ana C source files before building to enable reproducible builds. (`#2637 <https://github.com/sunpy/sunpy/pull/2637>`__)
+- We are now using `towncrier <https://github.com/hawkowl/towncrier>`__ to
+  generate our changelogs. (`#2644 <https://github.com/sunpy/sunpy/pull/2644>`__)
+- Use of ``textwrap`` to keep source code indented when multiline texts is used (`#2671 <https://github.com/sunpy/sunpy/pull/2671>`__)
+
+
 0.9.0
 =====
 
@@ -17,8 +142,9 @@ New Features
 API Changes
 -----------
 
-- `sunpy.coordinates.representation` has been removed. Longitude wrapping is now done in the constructor of the frames. [#2431]
-- Propagation of ``obstime`` in the coordinate frame transformation has changed, this means in general when transforming directly between frames (not `~astropy.coordinates.SkyCoord`) you will have to specify ``obstime`` in more places. [#2461]
+- ``sunpy.coordinates.representation`` has been removed. Longitude wrapping is now done in the constructor of the frames. [#2431]
+- Propagation of ``obstime`` in the coordinate frame transformation has changed, this means in general when transforming directly between frames (not
+  ``SkyCoord``) you will have to specify ``obstime`` in more places. [#2461]
 - Transforming between Heliographic Stonyhurst and Carrington now requires that ``obstime`` be defined and the same on both the input and output frames. [#2461]
 - Removed the figure return from .peek() [#2487]
 

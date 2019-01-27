@@ -1,30 +1,20 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-#
-# This module was developed with funding provided by
-# the ESA Summer of Code (2011).
-#
-# pylint: disable=C0103,R0903
-
 """
-Attributes that can be used to construct VSO queries. Attributes are the
-fundamental building blocks of queries that, together with the two
-operations of AND and OR (and in some rare cases XOR) can be used to
-construct complex queries. Most attributes can only be used once in an
-AND-expression, if you still attempt to do so it is called a collision.
-For a quick example think about how the system should handle
-Instrument('aia') & Instrument('eit').
+This module provides attributes that can be used to construct VSO queries.
+
+Attributes are the fundamental building blocks of queries that, together with the two operations of
+AND and OR (and in some rare cases XOR) can be used to construct complex queries. Most attributes
+can only be used once in an AND-expression, if you still attempt to do so it is called a collision.
+For a quick example think about how the system should handle Instrument('aia') & Instrument('eit').
 """
 import collections
 
 from astropy import units as u
 from astropy.time import Time
 
+from sunpy.net.attr import Attr, AttrAnd, AttrOr, AttrWalker, DummyAttr, SimpleAttr, ValueAttr
 from sunpy.time import TimeRange as _TimeRange
-from sunpy.net.attr import (Attr, AttrWalker, AttrAnd,
-                            AttrOr, DummyAttr, ValueAttr, SimpleAttr)
-from sunpy.util.multimethod import MultiMethod
 from sunpy.time import parse_time
+from sunpy.util.multimethod import MultiMethod
 
 __all__ = ['Wavelength', 'Time', 'Extent', 'Field', 'Provider', 'Source',
            'Instrument', 'Physobs', 'Pixels', 'Level', 'Resolution',
@@ -35,8 +25,9 @@ TIMEFORMAT = '%Y%m%d%H%M%S'
 
 class Field(ValueAttr):
     """
-    A subclass of the value attribute.  Used in defining a decorator for the
-    dummy attribute.
+    A subclass of the value attribute.
+
+    Used in defining a decorator for the dummy attribute.
     """
     def __init__(self, fielditem):
         ValueAttr.__init__(self, {
@@ -140,7 +131,6 @@ class Time(Attr, _Range):
         Return a singular record closest in time to this value as possible,
         inside the start and end window. Note: not all providers support this
         functionality.
-
     """
     def __init__(self, start, end=None, near=None):
         if end is None and not isinstance(start, _TimeRange):
@@ -187,11 +177,10 @@ class Time(Attr, _Range):
 
 class Extent(Attr):
     """
-    Specify the spatial field-of-view of the query. Due to a bug in the VSO,
-    the Extent attribute is not used.
+    Specify the spatial field-of-view of the query.
 
+    Due to a bug in the VSO, the Extent attribute is not used.
     """
-    # pylint: disable=R0913
     def __init__(self, x, y, width, length, atype):
         super().__init__()
 
@@ -219,7 +208,6 @@ class Provider(SimpleAttr):
     For a list of sources see
     http://sdac.virtualsolar.org/cgi/show_details?keyword=PROVIDER.
     """
-    pass
 
 
 class Source(SimpleAttr):
@@ -238,7 +226,6 @@ class Source(SimpleAttr):
     what the VSO Data Model refers to as 'Observatory'.  For a list of sources
     see http://sdac.virtualsolar.org/cgi/show_details?keyword=SOURCE.
     """
-    pass
 
 
 class Instrument(SimpleAttr):
@@ -279,7 +266,6 @@ class Detector(SimpleAttr):
     ----------
     Documentation in SSWIDL routine vso_search.pro.
     """
-    pass
 
 
 class Physobs(SimpleAttr):
@@ -296,13 +282,12 @@ class Physobs(SimpleAttr):
     Registry.  For a list of physical observables see
     http://sdac.virtualsolar.org/cgi/show_details?keyword=PHYSOBS.
     """
-    pass
 
 
 class Level(SimpleAttr):
     """
-    Specifies the data processing level to search for.  The data processing
-    level is specified by the instrument PI.  May not work with all archives.
+    Specifies the data processing level to search for.  The data processing level is specified by
+    the instrument PI.  May not work with all archives.
 
     Parameters
     ----------
@@ -314,22 +299,19 @@ class Level(SimpleAttr):
         #. May be a string of the format '(min) - (max)' for range matching
         #. May be a string of the form '(operator) (number)' where operator is\
         one of: lt gt le ge < > <= >=
-
     """
-    pass
 
 
 class Pixels(SimpleAttr):
     """
-    Pixels are (currently) limited to a single dimension (and only implemented
-    for SDO data)  We hope to change this in the future to support TRACE,
-    Hinode and other investigations where this changed between observations.
+    Pixels are (currently) limited to a single dimension (and only implemented for SDO data)  We
+    hope to change this in the future to support TRACE, Hinode and other investigations where this
+    changed between observations.
 
     References
     ----------
     Documentation in SSWIDL routine vso_search.pro.
     """
-    pass
 
 
 class Resolution(SimpleAttr):
@@ -357,7 +339,6 @@ class Resolution(SimpleAttr):
     ----------
     Documentation in SSWIDL routine vso_search.pro.
     """
-    pass
 
 
 class PScale(SimpleAttr):
@@ -382,7 +363,6 @@ class PScale(SimpleAttr):
     ----------
     Documentation in SSWIDL routine vso_search.pro.
     """
-    pass
 
 
 class Sample(SimpleAttr):
@@ -434,9 +414,7 @@ class Filter(SimpleAttr):
     Parameters
     ----------
     value : str
-
     """
-    pass
 
 
 # The walker specifies how the Attr-tree is converted to a query the
@@ -450,9 +428,11 @@ walker = AttrWalker()
 
 
 @walker.add_creator(ValueAttr, AttrAnd)
-# pylint: disable=E0102,C0103,W0613
+
 def _create(wlk, root, api):
-    """ Implementation detail. """
+    """
+    Implementation detail.
+    """
     api.set_ns_prefix('VSO', 'http://virtualsolar.org/VSO/VSOi')
     value = api.get_type('VSO:QueryRequestBlock')()
     wlk.apply(root, api, value)
@@ -460,9 +440,11 @@ def _create(wlk, root, api):
 
 
 @walker.add_applier(ValueAttr)
-# pylint: disable=E0102,C0103,W0613
+
 def _apply(wlk, root, api, block):
-    """ Implementation detail. """
+    """
+    Implementation detail.
+    """
     for k, v in root.attrs.items():
         name = k[0]
         subkey = k[1:]
@@ -481,17 +463,21 @@ def _apply(wlk, root, api, block):
 
 
 @walker.add_applier(AttrAnd)
-# pylint: disable=E0102,C0103,W0613
+
 def _apply(wlk, root, api, queryblock):
-    """ Implementation detail. """
+    """
+    Implementation detail.
+    """
     for attr in root.attrs:
         wlk.apply(attr, api, queryblock)
 
 
 @walker.add_creator(AttrOr)
-# pylint: disable=E0102,C0103,W0613
+
 def _create(wlk, root, api):
-    """ Implementation detail. """
+    """
+    Implementation detail.
+    """
     blocks = []
     for attr in root.attrs:
         blocks.extend(wlk.create(attr, api))

@@ -1,13 +1,11 @@
 """
-SunPy
-=====
-
-An open-source Python library for Solar Physics data analysis.
+SunPy is an open-source Python library for Solar Physics data analysis and visualization.
 
 Web Links
 ---------
-Homepage: http://sunpy.org
-Documentation: http://docs.sunpy.org/en/stable/
+Homepage: https://sunpy.org
+
+Documentation: https://docs.sunpy.org/en/stable/
 """
 # Enforce Python version check during package import.
 # This is the same check as the one at the top of setup.py
@@ -41,7 +39,7 @@ except ImportError:
     __githash__ = ''
 
 if not _SUNPY_SETUP_:
-    from sunpy.util.config import load_config, print_config
+    from sunpy.util.config import load_config
     from sunpy.util import system_info
     from sunpy.tests.runner import SunPyTestRunner
 

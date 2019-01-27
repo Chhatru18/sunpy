@@ -1,18 +1,18 @@
-# Author: Rishabh Sharma <rishabh.sharma.gunner@gmail.com>
-# This module was developed under funding provided by
-# Google Summer of Code 2014
+"""
+This module provides the downloader client for RHESSI data.
+"""
 import socket
 import posixpath
 from datetime import datetime
 from urllib.error import URLError
 from urllib.request import urlopen, urlretrieve
 
-from dateutil.rrule import rrule, MONTHLY
+from dateutil.rrule import MONTHLY, rrule
 
 import astropy.units as u
 
-from sunpy.time import TimeRange, parse_time
 from sunpy.instr import rhessi
+from sunpy.time import TimeRange, parse_time
 
 from ..client import GenericClient
 
@@ -28,7 +28,7 @@ lc_linecolors = ('black', 'pink', 'green', 'blue', 'brown', 'red',
 
 def get_base_url():
     """
-    Find the first mirror which is online
+    Find the first mirror which is online.
     """
     for server in data_servers:
         try:
@@ -44,13 +44,12 @@ class RHESSIClient(GenericClient):
 
     def get_observing_summary_filename(self, time_range):
         """
-        Download the RHESSI observing summary data from one of the RHESSI
-        servers, parses it, and returns the name of the observing summary files
-        relevant for the time range.
+        Download the RHESSI observing summary data from one of the RHESSI servers, parses it, and
+        returns the name of the observing summary files relevant for the time range.
 
         Parameters
         ----------
-        time_range : str, TimeRange
+        time_range : `str`, `~sunpy.time.TimeRange`
             A TimeRange or time range compatible string
 
         Returns
@@ -91,9 +90,8 @@ class RHESSIClient(GenericClient):
     @staticmethod
     def get_observing_summary_dbase_file(time):
         """
-        Download the RHESSI observing summary database file for the time given.
-        One file covers an entire month.  This file lists the name of observing
-        summary files for specific times.
+        Download the RHESSI observing summary database file for the time given. One file covers an
+        entire month.  This file lists the name of observing summary files for specific times.
 
         Parameters
         ----------
@@ -117,7 +115,6 @@ class RHESSIClient(GenericClient):
 
         .. note::
             This API is currently limited to providing data from whole days only.
-
         """
         _time = parse_time(time)
 

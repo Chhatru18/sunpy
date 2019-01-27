@@ -1,18 +1,16 @@
-# -*- coding: utf-8 -*-
 """
-Ephemeris calculations using SunPy coordinate frames
+This module implements Ephemeris calculations using SunPy coordinate frames.
 """
-import datetime
 import warnings
 
 import numpy as np
+
 import astropy.units as u
-from astropy.time import Time
-from astropy.coordinates import (SkyCoord, Angle, Longitude,
-                                 ICRS, PrecessedGeocentric, AltAz,
-                                 get_body_barycentric)
-from astropy.coordinates.representation import CartesianRepresentation, SphericalRepresentation
 from astropy._erfa.core import ErfaWarning
+from astropy.coordinates import (ICRS, AltAz, Angle, Longitude, PrecessedGeocentric,
+                                 SkyCoord, get_body_barycentric)
+from astropy.coordinates.representation import CartesianRepresentation, SphericalRepresentation
+from astropy.time import Time
 
 from sunpy.time import parse_time
 
@@ -26,8 +24,8 @@ __all__ = ['get_body_heliographic_stonyhurst', 'get_earth',
 
 def get_body_heliographic_stonyhurst(body, time='now'):
     """
-    Return a `~sunpy.coordinates.frames.HeliographicStonyhurst` frame for the location of a
-    solar-system body at a specified time.
+    Return a `~sunpy.coordinates.frames.HeliographicStonyhurst` frame for the location of a solar-
+    system body at a specified time.
 
     Parameters
     ----------
@@ -52,7 +50,8 @@ def get_body_heliographic_stonyhurst(body, time='now'):
 def get_earth(time='now'):
     """
     Return a `~astropy.coordinates.SkyCoord` for the location of the Earth at a specified time in
-    the `~sunpy.coordinates.frames.HeliographicStonyhurst` frame.  The longitude will be 0 by definition.
+    the `~sunpy.coordinates.frames.HeliographicStonyhurst` frame.  The longitude will be 0 by
+    definition.
 
     Parameters
     ----------

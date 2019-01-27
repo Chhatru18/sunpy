@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-"""SunPy sample data files"""
 import socket
 import os.path
 import warnings
@@ -9,11 +7,8 @@ from urllib.parse import urljoin
 
 from astropy.utils.data import download_file
 
-from sunpy.util.net import url_exists
 from sunpy.util.config import get_and_create_sample_dir
-
-__author__ = "Steven Christe"
-__email__ = "steven.christe@nasa.gov"
+from sunpy.util.net import url_exists
 
 _base_urls = (
     'http://data.sunpy.org/sunpy/v1/',
@@ -84,9 +79,8 @@ def download_sample_data(show_progress=True):
 def get_sample_file(filename, url_list, show_progress=True, overwrite=False,
                     timeout=None):
     """
-    Downloads a sample file. Will download  a sample data file and move it to
-    the sample data directory. Also, uncompresses zip files if necessary.
-    Returns the local file if exists.
+    Downloads a sample file. Will download  a sample data file and move it to the sample data
+    directory. Also, uncompresses zip files if necessary. Returns the local file if exists.
 
     Parameters
     ----------

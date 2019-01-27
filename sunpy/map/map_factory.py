@@ -1,31 +1,30 @@
+"""
+This module provides the MapFactory class that creates other Maps.
+"""
+
 import os
 import glob
 from collections import OrderedDict
-import warnings
+from urllib.request import urlopen
 
 import numpy as np
+
 import astropy.io.fits
 from astropy.wcs import WCS
 
 import sunpy
-from sunpy.map.mapbase import GenericMap
-from sunpy.map.compositemap import CompositeMap
-from sunpy.map.mapsequence import MapSequence
-
 from sunpy.io.file_tools import read_file
 from sunpy.io.header import FileHeader
-
-from sunpy.util.net import download_file
+from sunpy.map.compositemap import CompositeMap
+from sunpy.map.mapbase import GenericMap
+from sunpy.map.mapsequence import MapSequence
 from sunpy.util import expand_list
-from sunpy.util.metadata import MetaDict
 from sunpy.util.config import get_and_create_download_dir
+from sunpy.util.datatype_factory_base import (BasicRegistrationFactory, MultipleMatchError,
+                                              NoMatchError, ValidationFunctionError)
 from sunpy.util.exceptions import SunpyDeprecationWarning
-
-from sunpy.util.datatype_factory_base import BasicRegistrationFactory
-from sunpy.util.datatype_factory_base import NoMatchError
-from sunpy.util.datatype_factory_base import MultipleMatchError
-from sunpy.util.datatype_factory_base import ValidationFunctionError
-from urllib.request import urlopen
+from sunpy.util.metadata import MetaDict
+from sunpy.util.net import download_file
 
 SUPPORTED_ARRAY_TYPES = (np.ndarray,)
 try:
@@ -34,8 +33,6 @@ try:
 except ImportError:
     pass
 
-__authors__ = ["Russell Hewett, Stuart Mumford"]
-__email__ = "stuart@mumford.me.uk"
 
 # Make a mock DatabaseEntry class if sqlalchemy is not installed
 try:
@@ -119,8 +116,9 @@ class MapFactory(BasicRegistrationFactory):
     """  # noqa
 
     def _read_file(self, fname, **kwargs):
-        """ Read in a file name and return the list of (data, meta) pairs in
-            that file. """
+        """
+        Read in a file name and return the list of (data, meta) pairs in that file.
+        """
 
         # File gets read here.  This needs to be generic enough to seamlessly
         # call a fits file or a jpeg2k file, etc
@@ -150,8 +148,9 @@ class MapFactory(BasicRegistrationFactory):
 
     def _parse_args(self, *args, **kwargs):
         """
-        Parses an args list for data-header pairs.  args can contain any
-        mixture of the following entries:
+        Parses an args list for data-header pairs.  args can contain any mixture of the following
+        entries:
+
         * tuples of data,header
         * data, header not in a tuple
         * data, wcs object in a tuple
@@ -170,7 +169,6 @@ class MapFactory(BasicRegistrationFactory):
                          'file4',
                          'directory1',
                          '*.fits')
-
         """
 
         data_header_pairs = list()
@@ -244,9 +242,10 @@ class MapFactory(BasicRegistrationFactory):
         return data_header_pairs, already_maps
 
     def __call__(self, *args, **kwargs):
-        """ Method for running the factory. Takes arbitrary arguments and
-        keyword arguments and passes them to a sequence of pre-registered types
-        to determine which is the correct Map-type to build.
+        """
+        Method for running the factory. Takes arbitrary arguments and keyword arguments and passes
+        them to a sequence of pre-registered types to determine which is the correct Map-type to
+        build.
 
         Arguments args and kwargs are passed through to the validation
         function and to the constructor for the final type.  For Map types,
@@ -348,21 +347,22 @@ def _is_url(arg):
 
 
 class InvalidMapInput(ValueError):
-    """Exception to raise when input variable is not a Map instance and does
-    not point to a valid Map input file."""
-    pass
+    """
+    Exception to raise when input variable is not a Map instance and does not point to a valid Map
+    input file.
+    """
 
 
 class InvalidMapType(ValueError):
-    """Exception to raise when an invalid type of map is requested with Map
     """
-    pass
+    Exception to raise when an invalid type of map is requested with Map.
+    """
 
 
 class NoMapsFound(ValueError):
-    """Exception to raise when input does not point to any valid maps or files
     """
-    pass
+    Exception to raise when input does not point to any valid maps or files.
+    """
 
 
 Map = MapFactory(registry=GenericMap._registry, default_widget_type=GenericMap,

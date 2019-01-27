@@ -1,7 +1,7 @@
+"""
+This module implements a function to understand chaincodes from HELIO.
+"""
 import numpy as np
-
-__authors__ = ["David PS"]
-__email__ = "dps.helio-?-gmail.com"
 
 
 class Chaincode(np.ndarray):
@@ -15,12 +15,13 @@ class Chaincode(np.ndarray):
     ----------
     origin : `numpy.ndarray`, `list`
         The 2 points of the origin of the chaincode
-    chaincode : str
+    chaincode : `str`
         A list of the numbers (0-7) that indicate the path of the
         chaincode.  0 moves horizontally to the left and the rest
         follows anticlockwise.
-    xdelta : Float
-    ydelta : Float
+    xdelta : `float`
+        The scale to convert between pixels and flat coordinates
+    ydelta : `float`
         The scale to convert between pixels and flat coordinates
 
     Returns
@@ -60,46 +61,16 @@ class Chaincode(np.ndarray):
                       y_steps[int(step)] * ydelta]]
 
     def matchend(self, end):
-        """
-        not documented yet
-
-        Parameters
-        ----------
-        end : not documented yet
-
-        Returns
-        -------
-        not documented yet
-
-        .. todo::
-            improve documentation. what does this function do?
-
-        """
         return np.alltrue(np.equal(self.coordinates[:, -1], np.asarray(end)))
 
     def matchany(self, coordinates, index):
-        """
-        not documented yet
-
-        Parameters
-        ----------
-        coordinates : not documented yet
-        index : not documented yet
-
-        Returns
-        -------
-        not documented yet
-
-        .. todo::
-            improve documentation. what does this function do?
-
-        """
         return np.alltrue(np.allclose(self.coordinates[:, index],
                                       np.asarray(coordinates)))
 
     def BoundingBox(self):
         """
-        Extract the coordinates of the chaincode
+        Extract the coordinates of the chaincode.
+
         [[x0,x1],[y0,y1]]
         """
         bb = np.zeros((2, 2))
@@ -108,28 +79,19 @@ class Chaincode(np.ndarray):
         return bb
 
     def area(self):
-        """
-        Place holder (no code)
-        """
-        # should we add a mask for possible not flat objects (eg. Sun)?
-        # Check whether it is a closed object
         pass
 
     def length(self):
-        """
-        Place holder (no code)
-        """
         pass
 
     def subBoundingBox(self, xedge=None, yedge=None):
         """
-        Extract the x or y boundaries of the chaincode from
-        a defined limits xedge or yedge.
+        Extract the x or y boundaries of the chaincode from a defined limits xedge or yedge.
         """
-# It needs to check whether the input are lists and with 2 elements..
-#        try:
-#            if (type(xedge) == list) or (type(yedge) == list):
-#
+        # It needs to check whether the input are lists and with 2 elements.
+        #        try:
+        #            if (type(xedge) == list) or (type(yedge) == list):
+        #
         if xedge is not None:
             edge = xedge
             IndexMask = 0  # we want to mask X
@@ -143,6 +105,6 @@ class Chaincode(np.ndarray):
             return None
         mask = (self.coordinates[IndexMask, :] >= edge[0]) & \
             (self.coordinates[IndexMask, :] <= edge[1])
-# Should the edges be included?
+        # Should the edges be included?
         mx = np.ma.masked_array(self.coordinates[IndexValue, :], mask=(~mask))
         return [mx.min(), mx.max()]

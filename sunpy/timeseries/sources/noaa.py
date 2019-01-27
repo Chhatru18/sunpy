@@ -1,21 +1,24 @@
-# -*- coding: utf-8 -*-
-"""NOAA Solar Cycle TimeSeries subclass definitions."""
+"""
+This module provies NOAA Solar Cycle TimeSeries subclass definitions.
+"""
 from collections import OrderedDict
+
+import numpy as np
 from matplotlib import pyplot as plt
 from pandas.io.parsers import read_csv
-import numpy as np
-
-from sunpy.timeseries.timeseriesbase import GenericTimeSeries
-from astropy.time import Time
-from sunpy.util.metadata import MetaDict
 
 from astropy import units as u
+from astropy.time import Time
+
+from sunpy.timeseries.timeseriesbase import GenericTimeSeries
+from sunpy.util.metadata import MetaDict
 
 __all__ = ['NOAAIndicesTimeSeries', 'NOAAPredictIndicesTimeSeries']
 
 
 class NOAAIndicesTimeSeries(GenericTimeSeries):
-    """NOAA Solar Cycle monthly indices.
+    """
+    NOAA Solar Cycle monthly indices.
 
     Solar activity is measured by a number of different values. The NOAA Solar
     Weather Prediction Center (SWPC) publishes the following indices. All of
@@ -52,7 +55,8 @@ class NOAAIndicesTimeSeries(GenericTimeSeries):
     _source = 'noaaindices'
 
     def peek(self, type='sunspot SWO', **plot_args):
-        """Plots NOAA Indices as a function of time. An example is shown below.
+        """
+        Plots NOAA Indices as a function of time. An example is shown below.
 
         .. plot::
 
@@ -65,7 +69,6 @@ class NOAAIndicesTimeSeries(GenericTimeSeries):
         ----------
         type : `str`
             The type of plot required.
-
         **plot_args : `dict`
             Any additional plot arguments that should be used when plotting.
         """
@@ -107,7 +110,10 @@ class NOAAIndicesTimeSeries(GenericTimeSeries):
 
     @classmethod
     def _parse_file(cls, filepath):
-        """Parses an NOAA indices csv file"""
+        """
+        Parses an NOAA indices csv file.
+        """
+        # TODO: Delete this?
         """
         header = []
         with open(filepath, 'r') as fp:
@@ -155,19 +161,22 @@ class NOAAIndicesTimeSeries(GenericTimeSeries):
                                  ('radio flux smooth', u.W/u.m**2),
                                  ('geomagnetic ap', u.dimensionless_unscaled),
                                  ('geomagnetic smooth', u.dimensionless_unscaled)])
-            # Todo: check units
-            # Todo: fix header/meta, it's returning rubbish.
+            # TODO: check units
+            # TODO: fix header/meta, it's returning rubbish.
             return data, MetaDict({'comments': header}), units
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if header corresponds to an NOAA indices timeseries"""
+        """
+        Determines if header corresponds to an NOAA indices timeseries.
+        """
         if kwargs.get('source', ''):
             return kwargs.get('source', '').lower().startswith(cls._source)
 
 
 class NOAAPredictIndicesTimeSeries(GenericTimeSeries):
-    """NOAA Solar Cycle Predicted Progression
+    """
+    NOAA Solar Cycle Predicted Progression.
 
     The predictions are updated monthly and are produced by ISES. Observed
     values are initially the preliminary values which are replaced with the
@@ -193,14 +202,14 @@ class NOAAPredictIndicesTimeSeries(GenericTimeSeries):
     * `Predicted solar indices <http://services.swpc.noaa.gov/text/predicted-sunspot-radio-flux.txt>`_
     * `NOAA plots of Solar Cycle Progression <https://www.swpc.noaa.gov/products/solar-cycle-progression>`_
     * `NOAA Product List <https://www.swpc.noaa.gov/products-and-data>`_
-
     """
 
     # Class attribute used to specify the source class of the TimeSeries.
     _source = 'noaapredictindices'
 
     def peek(self, **plot_args):
-        """Plots predicted NOAA Indices as a function of time. An example is shown below.
+        """
+        Plots predicted NOAA Indices as a function of time. An example is shown below.
 
         .. plot::
 
@@ -237,7 +246,9 @@ class NOAAPredictIndicesTimeSeries(GenericTimeSeries):
 
     @staticmethod
     def _parse_file(filepath):
-        """Parses an NOAA indices csv file"""
+        """
+        Parses an NOAA indices csv file.
+        """
         header = ''
         with open(filepath, 'r') as fp:
             line = fp.readline()
@@ -271,6 +282,8 @@ class NOAAPredictIndicesTimeSeries(GenericTimeSeries):
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if header corresponds to an NOAA predict indices timeseries"""
+        """
+        Determines if header corresponds to an NOAA predict indices timeseries.
+        """
         if kwargs.get('source', ''):
             return kwargs.get('source', '').lower().startswith(cls._source)

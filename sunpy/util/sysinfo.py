@@ -1,5 +1,8 @@
-import platform
+"""
+This module provides functions to retrieve system information.
+"""
 import datetime
+import platform
 
 __all__ = ['get_sys_dict', 'system_info']
 
@@ -12,8 +15,7 @@ def get_sys_dict():
     -------
     sys_prop : `dict`
         A dictionary containing the programs and versions installed on this
-        machine
-
+        machine.
     """
 
     try:
@@ -85,7 +87,6 @@ def get_sys_dict():
 def system_info():
     """
     Takes dictionary from sys_info() and prints the contents in an attractive fashion.
-
     """
     sys_prop = get_sys_dict()
 

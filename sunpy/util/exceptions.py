@@ -1,9 +1,12 @@
-# Licensed under a 3-clause BSD style license - see LICENSE.rst
 """
-This module contains errors/exceptions and warnings of general use for
-sunpy. Exceptions that are specific to a given subpackage should *not*
-be here, but rather in the particular subpackage.
+This module provides errors/exceptions and warnings of general use for SunPy.
+
+Exceptions that are specific to a given subpackage should *not* be here, but rather in the
+particular subpackage.
 """
+
+__all__ = ["SunpyWarning", "SunpyUserWarning", "SunpyDeprecationWarning"]
+
 
 class SunpyWarning(Warning):
     """

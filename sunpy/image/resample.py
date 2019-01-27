@@ -1,4 +1,6 @@
-"""Image resampling methods"""
+"""
+Image resampling methods.
+"""
 import numpy as np
 import scipy.interpolate
 import scipy.ndimage
@@ -7,7 +9,8 @@ __all__ = ['resample', 'reshape_image_to_4d_superpixel']
 
 
 def resample(orig, dimensions, method='linear', center=False, minusone=False):
-    """Returns a new `numpy.ndarray` that has been resampled up or down.
+    """
+    Returns a new `numpy.ndarray` that has been resampled up or down.
 
     Arbitrary resampling of source array to new dimension sizes.
     Currently only supports maintaining the same number of dimensions.
@@ -79,7 +82,9 @@ def resample(orig, dimensions, method='linear', center=False, minusone=False):
 
 
 def _resample_nearest_linear(orig, dimensions, method, offset, m1):
-    """Resample Map using either linear or nearest interpolation."""
+    """
+    Resample Map using either linear or nearest interpolation.
+    """
 
     dimlist = []
 
@@ -114,7 +119,9 @@ def _resample_nearest_linear(orig, dimensions, method, offset, m1):
 
 
 def _resample_neighbor(orig, dimensions, offset, m1):
-    """Resample Map using closest-value interpolation."""
+    """
+    Resample Map using closest-value interpolation.
+    """
 
     dimlist = []
     dimensions = np.asarray(dimensions, dtype=int)
@@ -129,11 +136,13 @@ def _resample_neighbor(orig, dimensions, offset, m1):
 
 
 def _resample_spline(orig, dimensions, offset, m1):
-    """Resample Map using spline-based interpolation."""
+    """
+    Resample Map using spline-based interpolation.
+    """
 
     oslices = [slice(0, j) for j in orig.shape]
     # FIXME: not used?!
-    old_coords = np.ogrid[oslices]  # pylint: disable=W0612
+    old_coords = np.ogrid[oslices]
     nslices = [slice(0, j) for j in list(dimensions)]
     newcoords = np.mgrid[nslices]
 
@@ -141,7 +150,7 @@ def _resample_spline(orig, dimensions, offset, m1):
 
     # make first index last
     newcoords_dims.append(newcoords_dims.pop(0))
-    newcoords_tr = newcoords.transpose(newcoords_dims)  # pylint: disable=W0612
+    newcoords_tr = newcoords.transpose(newcoords_dims)
 
     # makes a view that affects newcoords
     newcoords_tr += offset
@@ -155,10 +164,10 @@ def _resample_spline(orig, dimensions, offset, m1):
 
 
 def reshape_image_to_4d_superpixel(img, dimensions, offset):
-    """Re-shape the two dimension input image into a a four dimensional
-    array whose first and third dimensions express the number of original
-    pixels in the x and y directions that form one superpixel. The reshaping
-    makes it very easy to perform operations on superpixels.
+    """
+    Re-shape the two dimension input image into a a four dimensional array whose first and third
+    dimensions express the number of original pixels in the x and y directions that form one
+    superpixel. The reshaping makes it very easy to perform operations on superpixels.
 
     An application of this reshaping is the following.  Let's say you have an
     array::
@@ -213,7 +222,6 @@ def reshape_image_to_4d_superpixel(img, dimensions, offset):
     ----------
     Taken from
     https://mail.scipy.org/pipermail/numpy-discussion/2010-July/051760.html
-
     """
     # make sure the input dimensions are integers
     dimensions = [int(dim) for dim in dimensions]
@@ -229,10 +237,12 @@ def reshape_image_to_4d_superpixel(img, dimensions, offset):
 
 
 class UnrecognizedInterpolationMethod(ValueError):
-    """Unrecognized interpolation method specified."""
-    pass
+    """
+    Unrecognized interpolation method specified.
+    """
 
 
 class UnequalNumDimensions(ValueError):
-    """Number of dimensions does not match input array"""
-    pass
+    """
+    Number of dimensions does not match input array.
+    """

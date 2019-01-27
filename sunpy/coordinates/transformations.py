@@ -1,31 +1,25 @@
-# -*- coding: utf-8 -*-
 """
-Coordinate Transformation Functions
-
-This module contains the functions for converting one
-`sunpy.coordinates.frames` object to another.
+This module contains the functions for converting one `sunpy.coordinates.frames` object to another.
 
 .. warning::
 
   The functions in this submodule should never be called directly, transforming
   between coordinate frames should be done using the ``.transform_to`` methods
-  on `~astropy.coordinates.BaseCoordinateFrame` or
-  `~astropy.coordinates.SkyCoord` instances.
-
+  on `~astropy.coordinates.BaseCoordinateFrame` or `~astropy.coordinates.SkyCoord` instances.
 """
 import numpy as np
 
 import astropy.units as u
-from astropy.coordinates import HCRS, ConvertError, BaseCoordinateFrame, get_body_barycentric
+from astropy.coordinates import HCRS, BaseCoordinateFrame, ConvertError, get_body_barycentric
 from astropy.coordinates.baseframe import frame_transform_graph
+from astropy.coordinates.matrix_utilities import matrix_product, matrix_transpose, rotation_matrix
 from astropy.coordinates.representation import (CartesianRepresentation, SphericalRepresentation,
                                                 UnitSphericalRepresentation)
-from astropy.coordinates.transformations import FunctionTransform, DynamicMatrixTransform
-from astropy.coordinates.matrix_utilities import matrix_product, rotation_matrix, matrix_transpose
+from astropy.coordinates.transformations import DynamicMatrixTransform, FunctionTransform
 
 from sunpy.sun import sun
 
-from .frames import Heliocentric, Helioprojective, HeliographicCarrington, HeliographicStonyhurst
+from .frames import Heliocentric, HeliographicCarrington, HeliographicStonyhurst, Helioprojective
 
 try:
     from astropy.coordinates.builtin_frames import _make_transform_graph_docs as make_transform_graph_docs
@@ -44,7 +38,7 @@ __all__ = ['hgs_to_hgc', 'hgc_to_hgs', 'hcc_to_hpc',
 
 def _carrington_offset(obstime):
     """
-    Calculate the HG Longitude offest based on a time
+    Calculate the HG Longitude offest based on a time.
     """
     if obstime is None:
         raise ValueError("To perform this transformation the coordinate"
@@ -251,6 +245,7 @@ def hgs_to_hcc(heliogcoord, heliocframe):
 def hpc_to_hpc(heliopcoord, heliopframe):
     """
     This converts from HPC to HPC, with different observer location parameters.
+
     It does this by transforming through HGS.
     """
     if (heliopcoord.observer == heliopframe.observer or
@@ -276,6 +271,7 @@ def hpc_to_hpc(heliopcoord, heliopframe):
 def _make_rotation_matrix_from_reprs(start_representation, end_representation):
     """
     Return the matrix for the direct rotation from one representation to a second representation.
+
     The representations need not be normalized first.
     """
     A = start_representation.to_cartesian()
@@ -305,13 +301,12 @@ def hcrs_to_hgs(hcrscoord, hgsframe):
     """
     Convert from HCRS to Heliographic Stonyhurst (HGS).
 
-    HGS shares the same origin (the Sun) as HCRS, but has its Z axis aligned with the Sun's
-    rotation axis and its X axis aligned with the projection of the Sun-Earth vector onto the Sun's
+    HGS shares the same origin (the Sun) as HCRS, but has its Z axis aligned with the Sun's rotation
+    axis and its X axis aligned with the projection of the Sun-Earth vector onto the Sun's
     equatorial plane (i.e., the component of the Sun-Earth vector perpendicular to the Z axis).
     Thus, the transformation matrix is the product of the matrix to align the Z axis (by de-tilting
-    the Sun's rotation axis) and the matrix to align the X axis.  The first matrix is independent
-    of time and is pre-computed, while the second matrix depends on the time-varying Sun-Earth
-    vector.
+    the Sun's rotation axis) and the matrix to align the X axis.  The first matrix is independent of
+    time and is pre-computed, while the second matrix depends on the time-varying Sun-Earth vector.
     """
     if hgsframe.obstime is None:
         raise ValueError("To perform this transformation the coordinate"
@@ -360,7 +355,7 @@ def hgs_to_hgs(from_coo, to_frame):
 @frame_transform_graph.transform(FunctionTransform, Heliocentric, Heliocentric)
 def hcc_to_hcc(hcccoord, hccframe):
     """
-    Convert from  Heliocentric to Heliocentric
+    Convert from  Heliocentric to Heliocentric.
     """
     if _observers_are_equal(hcccoord.observer, hccframe.observer, string_ok=True):
         return hccframe.realize_frame(hcccoord._data)

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 import re
 
 import pytest
 
-from sunpy.net import base_client, vso, jsoc, dataretriever
+from sunpy.net import base_client, dataretriever, jsoc, vso
 
 _REGEX = re.compile(r"Client")
 

@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-
+"""
+This module provides general net utility functions.
+"""
 import os
 import re
 import sys
@@ -23,7 +23,9 @@ _punct_re = re.compile(r'[:\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 
 def slugify(text, delim=u'_', encoding="ascii"):
-    """ Slugify given unicode text. """
+    """
+    Slugify given unicode text.
+    """
     text = normalize('NFKD', text)
 
     period = '.'
@@ -42,8 +44,11 @@ def slugify(text, delim=u'_', encoding="ascii"):
 
 
 def get_content_disposition(content_disposition):
-    """ Get content disposition filename from given header. Do not include
-    "Content-Disposition:". Returns a unicode string! """
+    """
+    Get content disposition filename from given header.
+
+    Do not include "Content-Disposition:". Returns a unicode string!
+    """
     parser = FeedParser()
     parser.feed('Content-Disposition: ' + content_disposition)
     name = parser.close().get_filename()
@@ -53,9 +58,11 @@ def get_content_disposition(content_disposition):
 
 
 def get_filename(sock, url):
-    """ Get filename from given urllib2.urlopen object and URL.
-    First, tries Content-Disposition, if unavailable, extracts
-    name from URL. """
+    """
+    Get filename from given urllib2.urlopen object and URL.
+
+    First, tries Content-Disposition, if unavailable, extracts name from URL.
+    """
     name = None
     # NOTE: This gives bytes on 2 and unicode on 3.
     # How does 3.x know the encoding?
@@ -73,10 +80,12 @@ def get_filename(sock, url):
 
 
 def get_system_filename(sock, url, default="file"):
-    """ Get filename from given urllib2.urlopen object and URL.
-    First, attempts to extract Content-Disposition, second, extract
-    from URL, eventually fall back to default. Returns bytestring
-    in file system encoding. """
+    """
+    Get filename from given urllib2.urlopen object and URL.
+
+    First, attempts to extract Content-Disposition, second, extract from URL, eventually fall back
+    to default. Returns bytestring in file system encoding.
+    """
     name = get_filename(sock, url)
     if not name:
         name = str(default)
@@ -84,19 +93,23 @@ def get_system_filename(sock, url, default="file"):
 
 
 def get_system_filename_slugify(sock, url, default="file"):
-    """ Get filename from given urllib2.urlopen object and URL.
-    First, attempts to extract Content-Disposition, second, extract
-    from URL, eventually fall back to default. Returns bytestring
-    in file system encoding, normalized so it shouldn't violate
-    operating system restrictions. """
+    """
+    Get filename from given urllib2.urlopen object and URL.
+
+    First, attempts to extract Content-Disposition, second, extract from URL, eventually fall back
+    to default. Returns bytestring in file system encoding, normalized so it shouldn't violate
+    operating system restrictions.
+    """
     return slugify(get_system_filename(sock, url, default))
 
 
 def download_file(url, directory, default="file", overwrite=False):
-    """ Download file from url into directory. Try to get filename from
-    Content-Disposition header, otherwise get from path of url. Fall
-    back to default if both fail. Only overwrite existing files when
-    overwrite is True. """
+    """
+    Download file from url into directory.
+
+    Try to get filename from Content-Disposition header, otherwise get from path of url. Fall back
+    to default if both fail. Only overwrite existing files when overwrite is True.
+    """
     opn = urlopen(url)
     try:
         path = download_fileobj(opn, directory, url, default, overwrite)
@@ -106,10 +119,12 @@ def download_file(url, directory, default="file", overwrite=False):
 
 
 def download_fileobj(opn, directory, url='', default="file", overwrite=False):
-    """ Download file from url into directory. Try to get filename from
-    Content-Disposition header, otherwise get from path of url if given.
-    Fall back to default if both fail. Only overwrite existing files when
-    overwrite is True. """
+    """
+    Download file from url into directory.
+
+    Try to get filename from Content-Disposition header, otherwise get from path of url if given.
+    Fall back to default if both fail. Only overwrite existing files when overwrite is True.
+    """
     filename = get_system_filename(opn, url, default)
     path = os.path.join(directory, filename.decode('utf-8'))
     if not overwrite and os.path.exists(path):
@@ -130,20 +145,16 @@ def check_download_file(filename, remotepath, download_dir, remotename=None,
 
     Parameters
     ----------
-    filename : str
+    filename : `str`
         Name of file.
-
-    remotepath : str
+    remotepath : `str`
         URL of the remote location from which filename can be downloaded.
-
-    download_dir : str
+    download_dir : `str`
         The files directory.
-
-    remotename : (optional) str
+    remotename : `str`, optional
         filename under which the file is stored remotely.
         Default is same as filename.
-
-    replace : (optional) bool
+    replace : `bool`, optional
         If True, file will be downloaded whether or not file already exists
         locally.
 
@@ -176,6 +187,8 @@ def url_exists(url, timeout=2):
     Returns
     -------
     value: `bool`
+        If the url exists, it is `True`.
+        If not, it is `False`.
 
     Examples
     --------
@@ -202,6 +215,8 @@ def is_online():
     Returns
     -------
     value: `bool`
+        If online, it is `True`.
+        If not, it is `False`.
 
     Examples
     --------

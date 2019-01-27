@@ -1,19 +1,18 @@
 import datetime
 
 import pytest
-from hypothesis import given, settings, HealthCheck
-from sunpy.net.tests.strategies import time_attr, Times
+from hypothesis import HealthCheck, given, settings
 
-from sunpy.time import parse_time
-from sunpy.time.timerange import TimeRange
-from sunpy.net.vso import VSOClient
-from sunpy.net.vso.attrs import Time, Instrument, Source, Level
-from sunpy.net.dataretriever.client import QueryResponse
 import sunpy.net.dataretriever.sources.eve as eve
-from sunpy.net.fido_factory import UnifiedResponse
 from sunpy.net import Fido
 from sunpy.net import attrs as a
-
+from sunpy.net.dataretriever.client import QueryResponse
+from sunpy.net.fido_factory import UnifiedResponse
+from sunpy.net.tests.strategies import Times, time_attr
+from sunpy.net.vso import VSOClient
+from sunpy.net.vso.attrs import Instrument, Level, Source, Time
+from sunpy.time import parse_time
+from sunpy.time.timerange import TimeRange
 
 LCClient = eve.EVEClient()
 
@@ -93,6 +92,7 @@ def test_fido(query):
 def test_levels(time):
     """
     Test the correct handling of level 0 / 1.
+
     The default should be level 1 from VSO, level 0 comes from EVEClient.
     """
     eve_a = a.Instrument('EVE')

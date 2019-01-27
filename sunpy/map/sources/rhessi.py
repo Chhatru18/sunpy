@@ -1,19 +1,16 @@
-"""RHESSI Map subclass definitions"""
-#pylint: disable=W0221,W0222,E1121
-
-__author__ = "Steven Christe"
-__email__ = "steven.d.christe@nasa.gov"
-
+"""
+This module provides the RHESSI Map subclass definitions.
+"""
 import matplotlib.pyplot as plt
 
 from sunpy.map import GenericMap
-
 
 __all__ = ['RHESSIMap']
 
 
 class RHESSIMap(GenericMap):
-    """RHESSI Image Map.
+    """
+    RHESSI Image Map.
 
     The RHESSI mission consists of a single spin-stabilized
     spacecraft in a low-altitude orbit inclined 38 degrees to
@@ -59,11 +56,13 @@ class RHESSIMap(GenericMap):
     @property
     def detector(self):
         """
-        Returns the name of the detector
+        Returns the name of the detector.
         """
         return self.meta['telescop']
 
     @classmethod
     def is_datasource_for(cls, data, header, **kwargs):
-        """Determines if header corresponds to an RHESSI image"""
+        """
+        Determines if header corresponds to an RHESSI image.
+        """
         return header.get('instrume') == 'RHESSI'

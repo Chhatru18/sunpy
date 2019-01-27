@@ -1,15 +1,14 @@
+import numpy as np
 import pytest
 
-import numpy as np
-
-from astropy.coordinates import SkyCoord
 import astropy.units as u
+from astropy.coordinates import SkyCoord
 
-from sunpy.sun import sun
-import sunpy.map
 import sunpy.data.test
+import sunpy.map
 from sunpy.coordinates import frames
 from sunpy.coordinates.utils import GreatArc
+from sunpy.sun import sun
 
 
 # Test the great arc code against calculable quantities

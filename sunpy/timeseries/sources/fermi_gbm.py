@@ -1,17 +1,19 @@
-# -*- coding: utf-8 -*-
-"""FERMI GBM TimeSeries subclass definitions."""
+"""
+This module FERMI GBM TimeSeries subclass definitions.
+"""
 from collections import OrderedDict
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+
+from astropy import units as u
+from astropy.time import Time
 
 import sunpy.io
 from sunpy.instr import fermi
 from sunpy.timeseries.timeseriesbase import GenericTimeSeries
 from sunpy.util.metadata import MetaDict
-
-from astropy.time import Time
-from astropy import units as u
 
 __all__ = ['GBMSummaryTimeSeries']
 
@@ -60,7 +62,8 @@ class GBMSummaryTimeSeries(GenericTimeSeries):
     _source = 'gbmsummary'
 
     def peek(self, **kwargs):
-        """Plots the GBM lightcurve TimeSeries. An example can be seen below.
+        """
+        Plots the GBM lightcurve TimeSeries. An example can be seen below.
 
         .. plot::
 
@@ -96,7 +99,9 @@ class GBMSummaryTimeSeries(GenericTimeSeries):
 
     @classmethod
     def _parse_file(cls, filepath):
-        """Parses GBM CSPEC FITS data files to create TimeSeries."""
+        """
+        Parses GBM CSPEC FITS data files to create TimeSeries.
+        """
         hdus = sunpy.io.read_file(filepath)
         return cls._parse_hdus(hdus)
 
@@ -133,7 +138,9 @@ class GBMSummaryTimeSeries(GenericTimeSeries):
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if the file corresponds to a GBM summary lightcurve timeseries"""
+        """
+        Determines if the file corresponds to a GBM summary lightcurve timeseries.
+        """
         # Check if source is explicitly assigned
         if 'source' in kwargs.keys():
             if kwargs.get('source', ''):
@@ -144,8 +151,11 @@ class GBMSummaryTimeSeries(GenericTimeSeries):
 
 
 def _bin_data_for_summary(energy_bins, count_data):
-    """ Rebin the 128 energy channels into some summary ranges, 4-15 keV, 15-25 keV,
-        25-50 keV, 50-100 keV, 100-300 keV, 300-800 keV, 800 - 2000 keV and put the data in the units of counts/s/keV"""
+    """
+    Rebin the 128 energy channels into some summary ranges, 4-15 keV, 15-25 keV,
+
+    25-50 keV, 50-100 keV, 100-300 keV, 300-800 keV, 800 - 2000 keV and put the data in the units of counts/s/keV
+    """
 
     # find the indices corresponding to some standard summary energy bins
     ebands = [4, 15, 25, 50, 100, 300, 800, 2000]
@@ -169,7 +179,9 @@ def _bin_data_for_summary(energy_bins, count_data):
 
 
 def _parse_detector(detector):
-    """Check and fix detector name strings."""
+    """
+    Check and fix detector name strings.
+    """
     oklist = ['n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9',
               'n10', 'n11']
     altlist = [str(i) for i in range(12)]

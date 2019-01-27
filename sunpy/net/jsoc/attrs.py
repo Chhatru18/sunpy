@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
-from astropy.time import Time as astropyTime
+"""
+This module provides attributes that can be used to construct JSOC queries.
+"""
 
-from sunpy.net.vso.attrs import _Range
-from sunpy.net.vso.attrs import Wavelength
+from sunpy.net.attr import Attr, AttrAnd, AttrOr, AttrWalker, SimpleAttr
 from sunpy.net.vso.attrs import Time as VSO_Time
-from sunpy.net.attr import AttrWalker, AttrAnd, AttrOr, Attr, SimpleAttr
-
+from sunpy.net.vso.attrs import Wavelength, _Range
 
 __all__ = ['Series', 'Protocol', 'Notify', 'Segment', 'Keys', 'PrimeKey']
 
@@ -16,19 +15,17 @@ class Series(SimpleAttr):
 
     This is the list of `Series <http://jsoc.stanford.edu/JsocSeries_DataProducts_map.html>`__.
     """
-    pass
 
 
 class Keys(SimpleAttr):
     """
     Keys choose which keywords to fetch while making a query request.
     """
-    pass
 
 
 class PrimeKey(Attr):
     """
-    Prime Keys
+    Prime Keys.
     """
     def __init__(self, label, value):
         Attr.__init__(self)
@@ -45,8 +42,8 @@ class PrimeKey(Attr):
 
 class Segment(Attr):
     """
-    Segments choose which files to download when there are more than
-    one present for each record e.g. 'image'.
+    Segments choose which files to download when there are more than one present for each record
+    e.g. 'image'.
     """
     def __init__(self, value):
         Attr.__init__(self)
@@ -62,11 +59,10 @@ class Segment(Attr):
 
 class Protocol(SimpleAttr):
     """
-    The type of download to request one of
-    ("FITS", "JPEG", "MPG", "MP4", or "as-is").
+    The type of download to request one of ("FITS", "JPEG", "MPG", "MP4", or "as-is").
+
     Only FITS is supported, the others will require extra keywords.
     """
-    pass
 
 
 class Notify(SimpleAttr):

@@ -1,14 +1,16 @@
-# This file is based heavily on towncrier
-# See licenses/TOWNCRIER.rst
 """
-Utility functions for working with the towncrier changelog
+This module provides Utility functions for working with the towncrier changelog.
+
+This file is based heavily on towncrier, please see licenses/TOWNCRIER.rst
 """
 import os
-import pkg_resources
 from functools import partial
 
-from towncrier import (load_config, find_fragments, split_fragments, render_fragments, get_version,
-                       get_project_name, append_to_newsfile, _get_date)
+import pkg_resources
+from towncrier import (_get_date, append_to_newsfile, find_fragments, get_project_name,
+                       get_version, load_config, render_fragments, split_fragments)
+
+__all__ = ["generate_changelog_for_docs"]
 
 
 def generate_changelog_for_docs(directory, output_filename=None):

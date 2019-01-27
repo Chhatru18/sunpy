@@ -1,15 +1,16 @@
+********
 `SunPy`_
-========
+********
 
 |Latest Version| |Build Status| |codecov| |matrix| |Research software impact| |DOI| |Powered by NumFOCUS|
 
 SunPy is an open-source Python library for Solar Physics data analysis and visualization.
-See `sunpy.org`_ for more information about the project.
+Our homepage `sunpy.org`_ has more information about the project.
 
 For some examples of using SunPy see our `gallery`_, to see the latest changes in SunPy see our `Changelog`_.
 
 Installation
-------------
+============
 
 The recommended way to install SunPy is with `conda`_.
 To install SunPy once conda is installed run the following two commands:
@@ -19,23 +20,28 @@ To install SunPy once conda is installed run the following two commands:
     $ conda config --append channels conda-forge
     $ conda install sunpy
 
+For detailed installation instructions, see the `installation guide`_ in the SunPy docs.
+
+Developing
+==========
+
 If you want to develop SunPy you will need to install from git.
 The best way to do this is to create a new conda environment and install the git version of SunPy in it:
 
 .. code:: bash
 
     $ conda config --append channels conda-forge
-    $ conda create -n sunpy-dev python sunpy hypothesis pytest-mock
-    $ source activate sunpy-dev
+    $ conda create -n sunpy-dev sunpy
+    $ conda activate sunpy-dev
     $ conda remove sunpy
     $ git clone https://github.com/sunpy/sunpy.git sunpy-git
     $ cd sunpy-git
-    $ pip install -e .
+    $ pip install -e .[all]
 
-For detailed installation instructions, see the `installation guide`_ in the SunPy docs.
+For detailed installation instructions, see the `Newcomers guide`_ in the SunPy docs.
 
 Usage
------
+=====
 
 Here is a quick example of plotting an AIA image:
 
@@ -47,7 +53,7 @@ Here is a quick example of plotting an AIA image:
     >>> aia.peek()
 
 Getting Help
-------------
+============
 
 For more information or to ask questions about SunPy, check out:
 
@@ -56,7 +62,7 @@ For more information or to ask questions about SunPy, check out:
 -  `SunPy Mailing List`_
 
 Contributing
-------------
+============
 
 |Open Source Helpers|
 
@@ -64,10 +70,10 @@ If you would like to get involved, start by joining the `SunPy mailing list`_ an
 Stop by our chat room `#sunpy:openastronomy.org`_ if you have any questions.
 Help is always welcome so let us know what you like to work on, or check out the `issues page`_ for the list of known outstanding items.
 
-For more information on contributing to SunPy, please read our `contributing guide`_ or the `Newcomers guide`_.
+For more information on contributing to SunPy, please read our `Newcomers guide`_.
 
 Code of Conduct
-~~~~~~~~~~~~~~~
+===============
 
 When you are interacting with the SunPy community you are asked to
 follow our `Code of Conduct`_.
@@ -101,7 +107,6 @@ follow our `Code of Conduct`_.
 .. _Developer’s Guide: http://docs.sunpy.org/en/latest/dev_guide/index.html
 .. _`#sunpy:openastronomy.org`: https://chat.openastronomy.org/#/room/#sunpy:openastronomy.org
 .. _issues page: https://github.com/sunpy/sunpy/issues
-.. _contributing guide: https://github.com/sunpy/sunpy/blob/master/CONTRIBUTING.rst
 .. _Newcomers guide: http://docs.sunpy.org/en/stable/dev_guide/newcomers.html
 .. _Code of Conduct: http://docs.sunpy.org/en/stable/coc.html
 .. _Changelog: https://docs.sunpy.org/en/latest/whatsnew/changelog.html

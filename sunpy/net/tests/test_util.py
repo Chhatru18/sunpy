@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-
 import sunpy.util.net
 
 

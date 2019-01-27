@@ -1,5 +1,5 @@
 Global Settings
-===============
+***************
 
 SunPy makes use of a settings file (:file:`sunpyrc`). This file contains a
 number of global settings such as where files should be downloaded by default

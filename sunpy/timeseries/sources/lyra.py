@@ -1,24 +1,25 @@
-# -*- coding: utf-8 -*-
-"""Proba-2 TimeSeries subclass definitions."""
+"""
+This module provies Proba-2 TimeSeries subclass definitions.
+"""
 import sys
 from collections import OrderedDict
 
-from matplotlib import pyplot as plt
 import pandas
+from matplotlib import pyplot as plt
 
 from astropy import units as u
-from astropy.time import Time, TimeDelta
+from astropy.time import TimeDelta
 
 import sunpy.io
-from sunpy.timeseries.timeseriesbase import GenericTimeSeries
-from sunpy.time import parse_time
-from sunpy.util.metadata import MetaDict
 from sunpy import config
-
+from sunpy.time import parse_time
+from sunpy.timeseries.timeseriesbase import GenericTimeSeries
+from sunpy.util.metadata import MetaDict
 
 TIME_FORMAT = config.get("general", "time_format")
 
 __all__ = ['LYRATimeSeries']
+
 
 class LYRATimeSeries(GenericTimeSeries):
     """
@@ -62,7 +63,8 @@ class LYRATimeSeries(GenericTimeSeries):
     _source = 'lyra'
 
     def peek(self, names=3, **kwargs):
-        """Plots the LYRA data. An example is shown below.
+        """
+        Plots the LYRA data. An example is shown below.
 
         .. plot::
 
@@ -75,9 +77,8 @@ class LYRATimeSeries(GenericTimeSeries):
         ----------
         names : `int`
             The number of columns to plot.
-
         **kwargs : `dict`
-            Any additional plot arguments that should be used when plotting
+            Any additional plot arguments that should be used when plotting.
         """
         # Check we have a timeseries valid for plotting
         self._validate_data_for_ploting()
@@ -106,19 +107,24 @@ class LYRATimeSeries(GenericTimeSeries):
 
     @classmethod
     def _parse_file(cls, filepath):
-        """Parses Lyra FITS data files to create TimeSeries."""
+        """
+        Parses Lyra FITS data files to create TimeSeries.
+        """
         hdus = sunpy.io.read_file(filepath)
         return cls._parse_hdus(hdus)
 
     @classmethod
     def _parse_hdus(cls, hdulist):
-        """Parses LYRA HDU list from a FITS file"""
+        """
+        Parses LYRA HDU list from a FITS file.
+        """
         # Open file with PyFITS
         fits_record = hdulist[1].data
         # secondary_header = hdulist[1].header
 
         # Start and end dates.  Different LYRA FITS files have
         # different tags for the date obs.
+        # TODO: Delete this?
         """
         print(hdulist[0].header)
         if 'date-obs' in hdulist[0].header:
@@ -165,12 +171,14 @@ class LYRATimeSeries(GenericTimeSeries):
                              ('CHANNEL2', u.W/u.m**2),
                              ('CHANNEL3', u.W/u.m**2),
                              ('CHANNEL4', u.W/u.m**2)])
-        # ToDo: check: http://www.wmo-sat.info/oscar/instruments/view/733
+        # TODO: check: http://www.wmo-sat.info/oscar/instruments/view/733
         return data, metadata, units
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if the file corresponds to a LYRA LightCurve timeseries"""
+        """
+        Determines if the file corresponds to a LYRA LightCurve timeseries.
+        """
         # Check if source is explicitly assigned
         if 'source' in kwargs.keys():
             if kwargs.get('source', ''):

@@ -1,8 +1,13 @@
+name: $(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.rr)
+
 variables:
+  "System.PreferGit": true
   Agent.Source.Git.ShallowFetchDepth: 1
   CI_NAME: Azure Pipelines
   CI_BUILD_ID: $(Build.BuildId)
   CI_BUILD_URL: "https://dev.azure.com/sunpy/sunpy/_build/results?buildId=$(Build.BuildId)"
+  GIT_BRANCH: $[ coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranchName'], 'not-found') ]
+  GIT_COMMIT_SHA: $[ coalesce(variables['System.PullRequest.SourceCommitId'], variables['Build.SourceVersion'], 'not-found') ]
 
 jobs:
 - template: azure-templates.yml

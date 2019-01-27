@@ -1,4 +1,6 @@
-import datetime
+"""
+This module implements differential rotation.
+"""
 import warnings
 from copy import deepcopy
 from itertools import product
@@ -6,10 +8,11 @@ from itertools import product
 import numpy as np
 
 from astropy import units as u
-from astropy.coordinates import SkyCoord, Longitude
+from astropy.coordinates import Longitude, SkyCoord
 
-from sunpy.time import parse_time
 from sunpy.coordinates import HeliographicStonyhurst, frames
+from sunpy.time import parse_time, _variables_for_parse_time_docstring
+from sunpy.util.decorators import add_common_docstring
 
 __all__ = ['diff_rot', 'solar_rotate_coordinate', 'diffrot_map']
 
@@ -92,13 +95,14 @@ def diff_rot(duration: u.s, latitude: u.deg, rot_type='howard', frame_time='side
     return Longitude(rotation.to(u.deg))
 
 
+@add_common_docstring(**_variables_for_parse_time_docstring())
 def solar_rotate_coordinate(coordinate,
                             new_observer_time,
                             new_observer_location="earth",
                             **diff_rot_kwargs):
     """
-    Given a coordinate on the Sun, calculate where that coordinate maps to
-    at some later or earlier time, given the solar rotation profile.
+    Given a coordinate on the Sun, calculate where that coordinate maps to at some later or earlier
+    time, given the solar rotation profile.
 
     Note that if the new observer location is defined using a
     BaseCoordinateFrame or SkyCoord, then it is assumed that the new observer
@@ -108,10 +112,8 @@ def solar_rotate_coordinate(coordinate,
     ----------
     coordinate : `~astropy.coordinates.SkyCoord`
         Any valid coordinate which is transformable to Heliographic Stonyhurst.
-
-    new_observer_time : sunpy-compatible time
+    new_observer_time : {parse_time_types}
         date/time at which the input co-ordinate will be rotated to.
-
     new_observer_location : `str`, `~astropy.coordinates.BaseCoordinateFrame`, `~astropy.coordinates.SkyCoord`
         The solar-system body for which to calculate observer locations.  Note
         that spacecraft are not explicitly supported as yet.  Instruments in
@@ -119,8 +121,7 @@ def solar_rotate_coordinate(coordinate,
         BaseCoordinateFrame or SkyCoord are passed in, it is assumed that
         this observer location is correct for the observer time that was also
         passed in.
-
-    **diff_rot_kwargs : keyword arguments
+    diff_rot_kwargs : `dict`
         Keyword arguments are passed on as keyword arguments to `~sunpy.physics.differential_rotation.diff_rot`.
 
     Returns
@@ -142,7 +143,6 @@ def solar_rotate_coordinate(coordinate,
     >>> solar_rotate_coordinate(c, end_time)
     <SkyCoord (Helioprojective: obstime=2010-09-10T13:34:56.000, rsun=695508.0 km, observer=<HeliographicStonyhurst Coordinate for 'earth'>): (Tx, Ty, distance) in (arcsec, arcsec, km)
         (-562.37689548, 119.26840368, 1.50083152e+08)>
-
     """
 
     # Calculate the interval between the start and end time
@@ -171,22 +171,21 @@ def solar_rotate_coordinate(coordinate,
 @u.quantity_input
 def _warp_sun_coordinates(xy, smap, dt: u.s, **diffrot_kwargs):
     """
-    Function that returns a new list of coordinates for each input coord.
-    This is an inverse function needed by the scikit-image `transform.warp`
-    function.
+    Function that returns a new list of coordinates for each input coord. This is an inverse
+    function needed by the scikit-image `transform.warp` function.
 
     Parameters
     ----------
     xy : `numpy.ndarray`
         Array from `transform.warp`
-    smap : `~sunpy.map`
+    smap : `sunpy.map.Map`
         Original map that we want to transform
-    dt : `~astropy.units.Quantity`
+    dt : `astropy.units.Quantity`
         Desired interval to rotate the input map by solar differential rotation.
 
     Returns
     -------
-    xy2 : `~numpy.ndarray`
+    xy2 : `numpy.ndarray`
         Array with the inverse transformation
     """
     # NOTE: The time is being subtracted - this is because this function
@@ -233,24 +232,25 @@ def _warp_sun_coordinates(xy, smap, dt: u.s, **diffrot_kwargs):
 
 
 @u.quantity_input
+@add_common_docstring(**_variables_for_parse_time_docstring())
 def diffrot_map(smap, time=None, dt: u.s=None, pad=False, **diffrot_kwargs):
     """
     Function to apply solar differential rotation to a sunpy map.
 
     Parameters
     ----------
-    smap : `~sunpy.map`
+    smap : `sunpy.map`
         Original map that we want to transform.
-    time : sunpy-compatible time
+    time : {parse_time_types}
         date/time at which the input co-ordinate will be rotated to.
-    dt : `~astropy.units.Quantity` or `astropy.time.Time`
+    dt : `astropy.units.Quantity` or `astropy.time.Time`
         Desired interval between the input map and returned map.
     pad : `bool`
         Whether to create a padded map for submaps to don't loose data
 
     Returns
     -------
-    diffrot_map : `~sunpy.map`
+    diffrot_map : `sunpy.map`
         A map with the result of applying solar differential rotation to the
         input map.
     """

@@ -1,8 +1,12 @@
-import numpy as np
+"""
+This module provides a 2D animator with WCS support.
+"""
 import matplotlib as mpl
+import numpy as np
+
 import astropy.wcs
 
-from . base import ArrayAnimator
+from .base import ArrayAnimator
 
 __all__ = ['ImageAnimator', 'ImageAnimatorWCS']
 
@@ -13,52 +17,43 @@ class ImageAnimator(ArrayAnimator):
 
     The following keyboard shortcuts are defined in the viewer:
 
-    - 'left': previous step on active slider
-    - 'right': next step on active slider
-    - 'top': change the active slider up one
-    - 'bottom': change the active slider down one
-    - 'p': play/pause active slider
+    * 'left': previous step on active slider
+    * 'right': next step on active slider
+    * 'top': change the active slider up one
+    * 'bottom': change the active slider down one
+    * 'p': play/pause active slider
 
     This viewer can have user defined buttons added by specifying the labels
     and functions called when those buttons are clicked as keyword arguments.
 
     Parameters
     ----------
-    data: ndarray
-        The data to be visualized >= 2D
-
-    image_axes: list
-        The two axes that make the image
-
-    fig: mpl.figure
-        Figure to use
-
-    axis_ranges: list of physical coordinates for array or None
-        If None array indices will be used for all axes.
-        If a list it should contain one element for each axis of the numpy array.
-        For the image axes a [min, max] pair should be specified which will be
-        passed to :func:`matplotlib.pyplot.imshow` as extent.
-        For the slider axes a [min, max] pair can be specified or an array the
+    data: `numpy.array`
+        The data to be visualized >= 2D.
+    image_axes: `list`
+        The two axes that make the image.
+    fig: `matplotlib.figure.Figure`
+        Figure to use.
+    axis_ranges: `list` of physical coordinates for array or `None`
+        If `None`, array indices will be used for all axes.
+        If `list`, it should contain one element for each axis of the `numpy.array`.
+        For the image axes a ``[min, max]`` pair should be specified which will be
+        passed to `matplotlib.pyplot.imshow` as extent.
+        For the slider axes a ``[min, max]`` pair can be specified or an array the
         same length as the axis which will provide all values for that slider.
-        If None is specified for an axis then the array indices will be used
+        If `None` is specified for an axis then the array indices will be used
         for that axis.
+    interval: `int`
+        Animation interval in ms.
+    colorbar: `bool`
+        Plot colorbar.
+    button_labels: `list`
+        List of strings to label buttons.
+    button_func: `list`
+        List of functions to map to the buttons.
 
-    interval: int
-        Animation interval in ms
-
-    colorbar: bool
-        Plot colorbar
-
-    button_labels: list
-        List of strings to label buttons
-
-    button_func: list
-        List of functions to map to the buttons
-
-    Extra keywords are passed to imshow.
-
+    Extra keywords are passed to `matplotlib.pyplot.imshow`.
     """
-
     def __init__(self, data, image_axes=[-2, -1], axis_ranges=None, **kwargs):
         # Check that number of axes is 2.
         if len(image_axes) != 2:
@@ -75,7 +70,9 @@ class ImageAnimator(ArrayAnimator):
                                             axis_ranges=axis_ranges, **kwargs)
 
     def plot_start_image(self, ax):
-        """Sets up plot of initial image."""
+        """
+        Sets up plot of initial image.
+        """
         # Create extent arg
         extent = []
         # reverse because numpy is in y-x and extent is x-y
@@ -123,7 +120,9 @@ class ImageAnimator(ArrayAnimator):
         return im
 
     def update_plot(self, val, im, slider):
-        """Updates plot based on slider/array dimension being iterated."""
+        """
+        Updates plot based on slider/array dimension being iterated.
+        """
         val = int(val)
         ax_ind = self.slider_axes[slider.slider_ind]
         ind = int(np.argmin(np.abs(self.axis_ranges[ax_ind] - val)))
@@ -147,11 +146,11 @@ class ImageAnimatorWCS(ImageAnimator):
 
     The following keyboard shortcuts are defined in the viewer:
 
-    - 'left': previous step on active slider
-    - 'right': next step on active slider
-    - 'top': change the active slider up one
-    - 'bottom': change the active slider down one
-    - 'p': play/pause active slider
+    * 'left': previous step on active slider
+    * 'right': next step on active slider
+    * 'top': change the active slider up one
+    * 'bottom': change the active slider down one
+    * 'p': play/pause active slider
 
     This viewer can have user defined buttons added by specifying the labels
     and functions called when those buttons are clicked as keyword arguments.
@@ -159,47 +158,36 @@ class ImageAnimatorWCS(ImageAnimator):
     Parameters
     ----------
     data: `numpy.ndarray`
-        The data to be visualized >= 2D
-
+        The data to be visualized >= 2D.
     wcs: `astropy.wcs.WCS`
-        The wcs data.
-
+        The WCS data.
     image_axes: `list`
-        The two axes that make the image
-
+        The two axes that make the image.
     fig: `matplotlib.figure.Figure`
-        Figure to use
-
-    axis_ranges: list of physical coordinates for array or None
+        Figure to use.
+    axis_ranges: `list` of physical coordinates for array or `None`
         If None array indices will be used for all axes.
         If a list it should contain one element for each axis of the numpy array.
-        For the image axes a [min, max] pair should be specified which will be
+        For the image axes a ``[min, max]`` pair should be specified which will be
         passed to :func:`matplotlib.pyplot.imshow` as extent.
-        For the slider axes a [min, max] pair can be specified or an array the
+        For the slider axes a ``[min, max]`` pair can be specified or an array the
         same length as the axis which will provide all values for that slider.
         If None is specified for an axis then the array indices will be used
         for that axis.
-
     interval: `int`
-        Animation interval in ms
-
+        Animation interval in ms.
     colorbar: `bool`
-        Plot colorbar
-
+        Plot colorbar.
     button_labels: `list`
-        List of strings to label buttons
-
+        List of strings to label buttons.
     button_func: `list`
-        List of functions to map to the buttons
-
+        List of functions to map to the buttons.
     unit_x_axis: `astropy.units.Unit`
         The unit of x axis.
-
     unit_y_axis: `astropy.units.Unit`
         The unit of y axis.
 
-    Extra keywords are passed to imshow.
-
+    Extra keywords are passed to `matplotlib.pyplot.imshow`.
     """
     def __init__(self, data, wcs=None, image_axes=[-1, -2], unit_x_axis=None, unit_y_axis=None,
                  axis_ranges=None, **kwargs):
@@ -234,7 +222,9 @@ class ImageAnimatorWCS(ImageAnimator):
             axes.coords[y_index].set_ticks(exclude_overlapping=True)
 
     def plot_start_image(self, ax):
-        """Sets up plot of initial image."""
+        """
+        Sets up plot of initial image.
+        """
         imshow_args = {'interpolation': 'nearest',
                        'origin': 'lower',
                        }
@@ -245,7 +235,9 @@ class ImageAnimatorWCS(ImageAnimator):
         return im
 
     def update_plot(self, val, im, slider):
-        """Updates plot based on slider/array dimension being iterated."""
+        """
+        Updates plot based on slider/array dimension being iterated.
+        """
         val = int(val)
         ax_ind = self.slider_axes[slider.slider_ind]
         ind = int(np.argmin(np.abs(self.axis_ranges[ax_ind] - val)))

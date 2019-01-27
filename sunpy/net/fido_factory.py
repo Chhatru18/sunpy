@@ -1,25 +1,22 @@
 """
-This module provides the `Fido
-<sunpy.net.fido_factory.UnifiedDownloaderFactory>` instance of
-`sunpy.net.fido_factory.UnifiedDownloaderFactory` it also provides the
-`~sunpy.net.fido_factory.UnifiedResponse` class which
-`Fido.search <sunpy.net.fido_factory.UnifiedDownloaderFactory.search>` returns and the
-`~sunpy.net.fido_factory.DownloadResponse` class that is returned by
-`Fido.fetch <sunpy.net.fido_factory.UnifiedDownloaderFactory.fetch>`.
+This module provides provides the `Fido <sunpy.net.fido_factory.UnifiedDownloaderFactory>` instance
+of `~sunpy.net.fido_factory.UnifiedDownloaderFactory`. It also provides the
+`~sunpy.net.fido_factory.UnifiedResponse` class which `Fido.search.
 
+<sunpy.net.fido_factory.UnifiedDownloaderFactory.search>` returns and
+the `~sunpy.net.fido_factory.DownloadResponse` class that is returned by `Fido.fetch
+<sunpy.net.fido_factory.UnifiedDownloaderFactory.fetch>`.
 """
 from collections import Sequence
 
-from sunpy.util.datatype_factory_base import BasicRegistrationFactory
-from sunpy.util.datatype_factory_base import NoMatchError
-from sunpy.util.datatype_factory_base import MultipleMatchError
-
-from sunpy.net.base_client import BaseClient
-from sunpy.net.dataretriever.client import QueryResponse
-from sunpy.net.vso import VSOClient, QueryResponse as vsoQueryResponse
-
 from sunpy.net import attr
 from sunpy.net import attrs as a
+from sunpy.net.base_client import BaseClient
+from sunpy.net.dataretriever.client import QueryResponse
+from sunpy.net.vso import QueryResponse as vsoQueryResponse
+from sunpy.net.vso import VSOClient
+from sunpy.util.datatype_factory_base import (BasicRegistrationFactory,
+                                              MultipleMatchError, NoMatchError)
 
 __all__ = ['Fido', 'UnifiedResponse', 'UnifiedDownloaderFactory', 'DownloadResponse']
 
@@ -28,13 +25,12 @@ class UnifiedResponse(Sequence):
     """
     The object used to store results from `~sunpy.net.UnifiedDownloaderFactory.search`.
 
-    The `~sunpy.net.Fido` object returns results from multiple different
-    clients. So it is always possible to sub-select these results, you can
-    index this object with two indices. The first index is the client index,
-    i.e. corresponding to the results from the `~sunpy.net.vso.VSOClient`. The
-    second index can be used to select records from the results returned from
-    that client, for instance if you only want every second result you could
-    index the second dimension with ``::2``.
+    The `~sunpy.net.Fido` object returns results from multiple different clients. So it is always
+    possible to sub-select these results, you can index this object with two indices. The first
+    index is the client index, i.e. corresponding to the results from the
+    `~sunpy.net.vso.VSOClient`. The second index can be used to select records from the results
+    returned from that client, for instance if you only want every second result you could index the
+    second dimension with ``::2``.
     """
 
     def __init__(self, lst):
@@ -79,8 +75,8 @@ class UnifiedResponse(Sequence):
 
     def _handle_record_slice(self, client_resp, record_slice):
         """
-        Given a slice to be applied to the results from a single client, return
-        an object of the same type as client_resp.
+        Given a slice to be applied to the results from a single client, return an object of the
+        same type as client_resp.
         """
         # When we subindex, we want to persist the type of the response object.
         resp_type = type(client_resp)
@@ -103,8 +99,8 @@ class UnifiedResponse(Sequence):
         """
         Support slicing the UnifiedResponse as a 2D object.
 
-        The first index is to the client and the second index is the records
-        returned from those clients.
+        The first index is to the client and the second index is the records returned from those
+        clients.
         """
         # Just a single int as a slice, we are just indexing client.
         if isinstance(aslice, (int, slice)):
@@ -157,9 +153,8 @@ class UnifiedResponse(Sequence):
     @property
     def responses(self):
         """
-        A generator of all the `sunpy.net.dataretriever.client.QueryResponse`
-        objects contained in the `~sunpy.net.fido_factory.UnifiedResponse`
-        object.
+        A generator of all the `sunpy.net.dataretriever.client.QueryResponse` objects contained in
+        the `~sunpy.net.fido_factory.UnifiedResponse` object.
         """
         for i in range(len(self)):
             yield self.get_response(i)
@@ -326,8 +321,7 @@ class UnifiedDownloaderFactory(BasicRegistrationFactory):
     # def fetch(self, *query_results, wait=True, progress=True, **kwargs):
     def fetch(self, *query_results, **kwargs):
         """
-        Download the records represented by
-        `~sunpy.net.fido_factory.UnifiedResponse` objects.
+        Download the records represented by `~sunpy.net.fido_factory.UnifiedResponse` objects.
 
         Parameters
         ----------
@@ -369,7 +363,9 @@ class UnifiedDownloaderFactory(BasicRegistrationFactory):
         raise TypeError("'{}' object is not callable".format(self.__class__.__name__))
 
     def _check_registered_widgets(self, *args):
-        """Factory helper function"""
+        """
+        Factory helper function.
+        """
         candidate_widget_types = list()
         for key in self.registry:
 

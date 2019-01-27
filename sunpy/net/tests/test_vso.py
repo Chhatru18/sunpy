@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
 
 import pytest
 
 import astropy.units as u
 
-from sunpy.time import TimeRange, parse_time
-from sunpy.net import vso
-from sunpy.net.vso import attrs as va
+from sunpy.net import attr, vso
 from sunpy.net.vso import QueryResponse
-from sunpy.net import attr
-
+from sunpy.net.vso import attrs as va
 from sunpy.tests.mocks import MockObject
+from sunpy.time import TimeRange, parse_time
 
 
 class MockQRRecord:
@@ -230,7 +227,9 @@ def test_err_dummyattr_apply():
 
 
 def test_wave_repr():
-    """Tests the __repr__ method of class vso.attrs.Wave"""
+    """
+    Tests the __repr__ method of class vso.attrs.Wave.
+    """
     wav = vso.attrs.Wavelength(12 * u.AA, 16 * u.AA)
     moarwav = vso.attrs.Wavelength(15 * u.AA, 12 * u.AA)
     assert repr(wav) == "<Wavelength(12.0, 16.0, 'Angstrom')>"
@@ -251,8 +250,7 @@ def test_repr():
 @pytest.mark.remote_data
 def test_path(client, tmpdir):
     """
-    Test that '{file}' is automatically appended to the end of a custom path if
-    it is not specified.
+    Test that '{file}' is automatically appended to the end of a custom path if it is not specified.
     """
     qr = client.search(
         va.Time('2011-06-07 06:33', '2011-06-07 06:33:08'),
@@ -334,8 +332,7 @@ def test_QueryResponse_build_table_defaults():
 
 def test_QueryResponse_build_table_with_extent_type():
     """
-    When explcitley suppling an 'Extent' only the 'type' is stored
-    in the built table.
+    When explcitley suppling an 'Extent' only the 'type' is stored in the built table.
     """
     e_type = va.Extent(x=1.0, y=2.5, width=37, length=129.2, atype='CORONA')
 
@@ -349,7 +346,7 @@ def test_QueryResponse_build_table_with_extent_type():
 
 def test_QueryResponse_build_table_with_no_start_time():
     """
-    Only the 'end' time set, no 'start' time
+    Only the 'end' time set, no 'start' time.
     """
     a_st = parse_time((2016, 2, 14, 8, 8, 12))
 
@@ -371,7 +368,7 @@ def test_QueryResponse_build_table_with_no_start_time():
 
 def test_QueryResponse_build_table_with_no_end_time():
     """
-    Only the 'start' time is set, no 'end' time
+    Only the 'start' time is set, no 'end' time.
     """
     a_st = parse_time((2016, 2, 14, 8, 8, 12))
 
@@ -392,7 +389,7 @@ def test_QueryResponse_build_table_with_no_end_time():
 @pytest.mark.remote_data
 def test_vso_hmi(client, tmpdir):
     """
-    This is a regression test for https://github.com/sunpy/sunpy/issues/2284
+    This is a regression test for https://github.com/sunpy/sunpy/issues/2284.
     """
     res = client.search(va.Time('2017-09-02 23:52:00', '2017-09-02 23:54:00'),
                         va.Instrument('HMI') | va.Instrument('AIA'))

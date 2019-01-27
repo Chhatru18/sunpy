@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-isort:skip_file
+isort:skip_file.
 """
 import platform
 from distutils.version import LooseVersion

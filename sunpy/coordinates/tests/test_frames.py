@@ -1,25 +1,16 @@
-# -*- coding: utf-8 -*-
 
 import numpy as np
-
 import pytest
+
+import astropy.units as u
+from astropy.coordinates import (CartesianRepresentation, SkyCoord,
+                                 SphericalRepresentation, UnitSphericalRepresentation)
+from astropy.tests.helper import assert_quantity_allclose
 
 from sunpy.time import parse_time
 
-import astropy.units as u
-
-from astropy.tests.helper import assert_quantity_allclose
-
-from astropy.coordinates import (UnitSphericalRepresentation,
-                                 SphericalRepresentation,
-                                 CartesianRepresentation,
-                                 SkyCoord)
-
 from ... import sun
-from ..frames import (Helioprojective,
-                      HeliographicStonyhurst,
-                      Heliocentric,
-                      HeliographicCarrington)
+from ..frames import Heliocentric, HeliographicCarrington, HeliographicStonyhurst, Helioprojective
 
 RSUN_METERS = sun.constants.get('radius').si.to(u.m)
 DSUN_METERS = sun.constants.get('mean distance').si.to(u.m)
@@ -215,7 +206,7 @@ def test_HEE_creation():
                                obstime=parse_time('2018-12-21'))
     _ = HeliographicStonyhurst(x=1*u.km, y=1*u.km, z=1*u.km,
                                obstime=parse_time('2018-12-21'),
-                               representation='cartesian')
+                               representation_type='cartesian')
 
 @pytest.mark.parametrize('frame',
                          [HeliographicStonyhurst, HeliographicCarrington])
@@ -376,8 +367,7 @@ two_D_parameters = [
                                               {'representation': 'unitspherical'})])
 def test_skycoord_hpc(args, kwargs):
     """
-    Test that when instantiating a HPC frame with SkyCoord calculate distance
-    still works.
+    Test that when instantiating a HPC frame with SkyCoord calculate distance still works.
     """
 
     sc = SkyCoord(*args, **kwargs, frame="helioprojective", obstime="2011-01-01T00:00:00")
@@ -390,8 +380,7 @@ def test_skycoord_hpc(args, kwargs):
 @pytest.mark.parametrize("args, kwargs", two_D_parameters)
 def test_skycoord_hgs(args, kwargs):
     """
-    Test that when instantiating a HPC frame with SkyCoord correctly replaces
-    distance.
+    Test that when instantiating a HPC frame with SkyCoord correctly replaces distance.
 
     Note: We only need to test HGS here not HGC as they share the same
     constructor.

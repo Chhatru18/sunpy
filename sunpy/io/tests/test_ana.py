@@ -1,5 +1,5 @@
 """
-General ANA Tests
+General ANA Tests.
 """
 import tempfile
 
@@ -7,7 +7,6 @@ import numpy as np
 import pytest
 
 from sunpy.io import ana
-
 from sunpy.tests.helpers import skip_ana
 
 # Create a test image, store it, reread it and compare

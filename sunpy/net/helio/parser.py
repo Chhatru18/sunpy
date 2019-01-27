@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-This module is meant to parse the HELIO registry and return WSDL endpoints to
+This module provides functions that can parse the HELIO registry and return WSDL endpoints to
 facilitate the interfacing between further modules and HELIO.
 """
 import urllib
@@ -9,12 +8,11 @@ from contextlib import closing
 
 from bs4 import BeautifulSoup
 
-from sunpy.net.helio import registry_links as RL
-
 __all__ = ['webservice_parser', 'endpoint_parser', 'wsdl_retriever']
 
 # Lifespan in seconds before a link times-out
 LINK_TIMEOUT = 3
+RL = 'http://helio.ukssdc.ac.uk/helio_registry/viewResourceEntry_body.jsp?XML=true&IVORN=ivo://helio-vo.eu'
 
 
 def webservice_parser(service='HEC'):
@@ -46,9 +44,8 @@ def webservice_parser(service='HEC'):
      'http://festung3.oats.inaf.it:8080/helio-hec/HelioLongQueryService',
      'http://festung1.oats.inaf.it:8080/helio-hec/HelioLongQueryService',
      'http://hec.helio-vo.eu/helio_hec/HelioLongQueryService']
-
     """
-    link = RL.LINK + '/' + service.lower()
+    link = RL + '/' + service.lower()
     xml = link_test(link)
     if xml is None:
         return None
@@ -98,7 +95,6 @@ def endpoint_parser(link):
     'http://helio.mssl.ucl.ac.uk:80/helio-hec/HelioLongQueryService1_1?wsdl',
     'http://helio.mssl.ucl.ac.uk:80/helio-hec/HelioLongQueryService1_0b?wsdl',
     'http://helio.mssl.ucl.ac.uk:80/helio-hec/HelioTavernaService?wsdl']
-
     """
     endpoint_page = link_test(link)
     if endpoint_page is None:
@@ -137,7 +133,6 @@ def taverna_parser(link):
     >>> from sunpy.net.helio import parser
     >>> parser.taverna_parser('http://msslkz.mssl.ucl.ac.uk/helio-hec/HelioService')  # doctest: +REMOTE_DATA
     ['http://helio.mssl.ucl.ac.uk:80/helio-hec/HelioTavernaService?wsdl']
-
     """
     endpoints = endpoint_parser(link)
     taverna_links = []
@@ -185,7 +180,7 @@ def link_test(link):
 
 def wsdl_retriever(service='HEC'):
     """
-    Retrieves a link to a taverna WSDL file
+    Retrieves a link to a taverna WSDL file.
 
     This is essentially the master method, from it all the other functions get
     called and it essentially knits everything together. It gets a list of

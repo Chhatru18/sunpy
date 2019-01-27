@@ -1,10 +1,12 @@
-from sys import version_info
-import os
 import io
-import hashlib
+import os
 import json
+import hashlib
+from sys import version_info
 
 import matplotlib.pyplot as plt
+
+__all__ = ["hash_figure", "verify_figure_hash"]
 
 HASH_LIBRARY_NAME = 'figure_hashes_py{0}{1}.json'.format(version_info.major, version_info.minor)
 HASH_LIBRARY_FILE = os.path.join(os.path.dirname(__file__), HASH_LIBRARY_NAME)
@@ -23,15 +25,14 @@ def hash_figure(figure=None, out_stream=None):
 
     Parameters
     ----------
-    figure : matplotlib.figure.Figure
+    figure : `matplotlib.figure.Figure`
         If None is specified, the current figure is used (as determined by matplotlib.pyplot.gcf())
-
     out_stream : I/O stream (e.g., an open file)
         If not None, write a PNG of the figure to the stream
 
     Returns
     -------
-    out : str
+    out : `str`
         The SHA256 hash in hexadecimal representation
     """
 
@@ -53,7 +54,7 @@ def hash_figure(figure=None, out_stream=None):
 
 def _hash_file(in_stream):
     """
-    Hashes an already opened file
+    Hashes an already opened file.
     """
     in_stream.seek(0)
     buf = in_stream.read()
@@ -64,19 +65,19 @@ def _hash_file(in_stream):
 
 def verify_figure_hash(name, figure=None):
     """
-    Verifies whether a figure has the same hash as the named hash in the current hash library.
-    If the hash library does not contain the specified name, the hash is added to the library.
+    Verifies whether a figure has the same hash as the named hash in the current hash library. If
+    the hash library does not contain the specified name, the hash is added to the library.
 
     Parameters
     ----------
-    name : str
+    name : `str`
         The identifier for the hash in the hash library
-    figure : matplotlib.figure.Figure
+    figure : `matplotlib.figure.Figure`
         If None is specified, the current figure is used (as determined by matplotlib.pyplot.gcf())
 
     Returns
     -------
-    out : bool
+    out : `bool`
         False if the figure's hash does not match the named hash, otherwise True
     """
     if name not in hash_library:

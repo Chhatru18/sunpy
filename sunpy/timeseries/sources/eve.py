@@ -1,18 +1,20 @@
-# -*- coding: utf-8 -*-
-"""EVE TimeSeries subclass definitions."""
+"""
+This module provies EVE TimeSeries subclass definitions.
+"""
 import os
 import codecs
-import numpy
+from os.path import basename
 from datetime import datetime
 from collections import OrderedDict
+
 import matplotlib.pyplot as plt
+import numpy
 from pandas.io.parsers import read_csv
-from os.path import basename
+
+from astropy import units as u
 
 from sunpy.timeseries.timeseriesbase import GenericTimeSeries
 from sunpy.util.metadata import MetaDict
-
-from astropy import units as u
 
 __all__ = ['EVESpWxTimeSeries']
 
@@ -60,7 +62,8 @@ class EVESpWxTimeSeries(GenericTimeSeries):
     _source = 'eve'
 
     def peek(self, column=None, **kwargs):
-        """Plots the time series in a new figure. An example is shown below.
+        """
+        Plots the time series in a new figure. An example is shown below.
 
         .. plot::
 
@@ -73,7 +76,6 @@ class EVESpWxTimeSeries(GenericTimeSeries):
         ----------
         column : `str`
             The column to display. If None displays all.
-
         **kwargs : `dict`
             Any additional plot arguments that should be used
             when plotting.
@@ -104,7 +106,9 @@ class EVESpWxTimeSeries(GenericTimeSeries):
 
     @classmethod
     def _parse_file(cls, filepath):
-        """Parses an EVE CSV file."""
+        """
+        Parses an EVE CSV file.
+        """
         cls._filename = basename(filepath)
         with codecs.open(filepath, mode='rb', encoding='ascii') as fp:
             # Determine type of EVE CSV file and parse
@@ -118,13 +122,17 @@ class EVESpWxTimeSeries(GenericTimeSeries):
 
     @staticmethod
     def _parse_average_csv(fp):
-        """Parses an EVE Averages file."""
+        """
+        Parses an EVE Averages file.
+        """
         print('\nin _parse_average_csv()')
         return "", read_csv(fp, sep=",", index_col=0, parse_dates=True)
 
     @staticmethod
     def _parse_level_0cs(fp):
-        """Parses and EVE Level 0CS file."""
+        """
+        Parses and EVE Level 0CS file.
+        """
         is_missing_data = False  # boolean to check for missing data
         missing_data_val = numpy.nan
         header = []
@@ -198,6 +206,8 @@ class EVESpWxTimeSeries(GenericTimeSeries):
 
     @classmethod
     def is_datasource_for(cls, **kwargs):
-        """Determines if header corresponds to an EVE image"""
+        """
+        Determines if header corresponds to an EVE image.
+        """
         if kwargs.get('source', ''):
             return kwargs.get('source', '').lower().startswith(cls._source)

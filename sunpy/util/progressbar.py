@@ -1,3 +1,6 @@
+"""
+This module provides a progress bar.
+"""
 import sys
 
 __all__ = ['TTYProgressBar']
@@ -5,8 +8,8 @@ __all__ = ['TTYProgressBar']
 
 class TTYProgressBar(object):
     """
-    A simple progress bar to visualize progress on a TTY (teletypewriter).
-    It needs to support '\b' to delete characters.
+    A simple progress bar to visualize progress on a TTY (teletypewriter). It needs to support '\b'
+    to delete characters.
 
     The ProgressBar interface is start, finish, draw and poke.
     """
@@ -18,11 +21,11 @@ class TTYProgressBar(object):
         """
         Parameters
         ----------
-        n : int
+        n : `int`
             Total number of items until completion
-        current : int
+        current : `int`
             Current state of completion
-        width : int
+        width : `int`
             Width of progress bar.
         output : file
             Teletypewriter to print on.
@@ -47,8 +50,7 @@ class TTYProgressBar(object):
 
     def finish(self):
         """
-        Finish the bar, the ProgressBar cannot be used after this
-        method was called.
+        Finish the bar, the ProgressBar cannot be used after this method was called.
         """
         print()
 
@@ -69,8 +71,9 @@ class TTYProgressBar(object):
 
     def poke(self, n=1):
         """
-        Increase finished items by n. May advance the progress bar by one
-        or more fields.
+        Increase finished items by ``n``.
+
+        May advance the progress bar by one or more fields.
         """
         if self.current > self.n:
             raise ValueError("ProgressBar overflowed.")

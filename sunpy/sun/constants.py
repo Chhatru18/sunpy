@@ -1,14 +1,13 @@
 """
-Fundamental Solar Physical Constants
-------------------------------------
-These constants are taken from various sources. The structure of this module is heavily
-based on if not directly copied from the SciPy constants module but contains Solar
-Physical constants.
+This module provides fundamental solar physical constants.
+
+These constants are taken from various sources. The structure of this module is heavily based on if
+not directly copied from the SciPy constants module but contains Solar Physical constants.
 """
 
 from astropy.table import Table
 
-from sunpy.sun import _constants as _con  # pylint: disable=E0611
+from sunpy.sun import _constants as _con
 
 __all__ = [
     'get', 'find', 'print_all', 'spectral_classification', 'au', 'mass', 'equatorial_radius',
@@ -26,12 +25,12 @@ def get(key):
 
     Parameters
     ----------
-    key : Python string or unicode
+    key : `str`
         Key in dictionary in `constants`
 
     Returns
     -------
-    constant :  `~astropy.units.Constant`
+    constant : `~astropy.units.Constant`
 
     See Also
     --------
@@ -49,22 +48,21 @@ def get(key):
 
 def find(sub=None):
     """
-    Return list of constants keys containing a given string
+    Return list of constants keys containing a given string.
 
     Parameters
     ----------
-    sub : str, unicode
+    sub : `str`
         Sub-string to search keys for.  By default, return all keys.
 
     Returns
     -------
-    keys : None or list
+    keys : `None`, `list`
 
     See Also
     --------
     _constants : Contains the description of `constants`, which, as a
         dictionary literal object, does not itself possess a docstring.
-
     """
     if sub is None:
         result = list(constants.keys())
@@ -82,8 +80,8 @@ def print_all(key=None):
 
     Parameters
     ----------
-    key : Python string or unicode
-        Key in dictionary `constants`
+    key : `str`
+        Key in dictionary ``constants``
 
     Returns
     -------

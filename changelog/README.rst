@@ -1,5 +1,5 @@
 Changelog
-=========
+*********
 
 .. This README was adapted from the pytest changelog readme under the terms of the MIT licence.
 

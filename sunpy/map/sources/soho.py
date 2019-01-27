@@ -1,22 +1,18 @@
-"""SOHO Map subclass definitions"""
-# pylint: disable=W0221,W0222,E1101,E1121
-
-__author__ = "Keith Hughitt"
-__email__ = "keith.hughitt@nasa.gov"
-
-import numpy as np
+"""
+This module provides the SOHO Map subclass definitions.
+"""
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import colors
 
 from astropy.units import Quantity
 from astropy.visualization import PowerStretch
 from astropy.visualization.mpl_normalize import ImageNormalize
 
-from sunpy.map import GenericMap
-from sunpy.sun import constants
-from sunpy.sun import sun
-from sunpy.map.sources.source_type import source_stretch
 from sunpy.coordinates import get_sunearth_distance
+from sunpy.map import GenericMap
+from sunpy.map.sources.source_type import source_stretch
+from sunpy.sun import constants, sun
 
 __all__ = ['EITMap', 'LASCOMap', 'MDIMap']
 
@@ -43,7 +39,8 @@ def _dsunAtSoho(date, rad_d, rad_1au=None):
 
 
 class EITMap(GenericMap):
-    """SOHO EIT Image Map.
+    """
+    SOHO EIT Image Map.
 
     SOHO EIT is an extreme ultraviolet (EUV) imager able to image the solar
     transition region and inner corona in four selected bandpasses,
@@ -83,12 +80,15 @@ class EITMap(GenericMap):
 
     @classmethod
     def is_datasource_for(cls, data, header, **kwargs):
-        """Determines if header corresponds to an EIT image"""
+        """
+        Determines if header corresponds to an EIT image.
+        """
         return header.get('instrume') == 'EIT'
 
 
 class LASCOMap(GenericMap):
-    """SOHO LASCO Image Map
+    """
+    SOHO LASCO Image Map.
 
     The Large Angle and Spectrometric COronagraph (LASCO) is a set of three
     Lyot-type coronagraphs (C1, C2, and C3) that image the solar corona from
@@ -142,13 +142,15 @@ class LASCOMap(GenericMap):
 
     @classmethod
     def is_datasource_for(cls, data, header, **kwargs):
-        """Determines if header corresponds to an LASCO image."""
+        """
+        Determines if header corresponds to an LASCO image.
+        """
         return header.get('instrume') == 'LASCO'
 
 
 class MDIMap(GenericMap):
     """
-    SOHO MDI Image Map
+    SOHO MDI Image Map.
 
     The Michelson Doppler Imager (MDI) is a white light refracting telescope
     which feeds sunlight through a series of filters onto a CCD camera. Two
@@ -220,5 +222,7 @@ class MDIMap(GenericMap):
 
     @classmethod
     def is_datasource_for(cls, data, header, **kwargs):
-        """Determines if header corresponds to an MDI image"""
+        """
+        Determines if header corresponds to an MDI image.
+        """
         return header.get('instrume') == 'MDI' or header.get('camera') == 'MDI'

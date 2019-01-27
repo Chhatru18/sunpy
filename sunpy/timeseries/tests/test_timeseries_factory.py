@@ -1,29 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 23 12:08:21 2016
-
-@author: alex_
-"""
-
 import os
 import glob
-import pytest
 import datetime
-import numpy as np
-from pandas import DataFrame
 from collections import OrderedDict
 
-import sunpy.data.test
-import sunpy.timeseries
-from sunpy.util.metadata import MetaDict
-import sunpy.io
-from sunpy.util.datatype_factory_base import NoMatchError
+import numpy as np
+import pytest
+from pandas import DataFrame
 
 import astropy.units as u
-from astropy.table import Table
-from sunpy.time import parse_time
-from astropy.time import TimeDelta
 from astropy.io import fits
+from astropy.table import Table
+from astropy.time import TimeDelta
+
+import sunpy.data.test
+import sunpy.io
+import sunpy.timeseries
+from sunpy.time import parse_time
+from sunpy.util.datatype_factory_base import NoMatchError
+from sunpy.util.metadata import MetaDict
 
 # ==============================================================================
 # TimeSeries Factory Tests

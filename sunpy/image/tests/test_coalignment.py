@@ -1,23 +1,20 @@
-# Author: Jack Ireland, Steven Christe
-#
-# Testing functions for a mapsequence coalignment functionality.  This
-# functionality relies on the scikit-image function "match_template".
-#
+import os
 
 import numpy as np
-from astropy import units as u
+import pytest
 from numpy.testing import assert_allclose, assert_array_almost_equal
 from scipy.ndimage.interpolation import shift as sp_shift
-from sunpy.map import Map, MapSequence
-import pytest
-import os
+
+from astropy import units as u
+
 import sunpy.data.test
-from sunpy.image.coalignment import parabolic_turning_point, \
-    repair_image_nonfinite, _default_fmap_function, _lower_clip, _upper_clip, \
-    calculate_clipping, get_correlation_shifts, find_best_match_location, \
-    match_template_to_layer, clip_edges, \
-    calculate_match_template_shift,\
-    mapsequence_coalign_by_match_template, apply_shifts
+from sunpy.image.coalignment import (_default_fmap_function, _lower_clip, _upper_clip, apply_shifts,
+                                     calculate_clipping, calculate_match_template_shift, clip_edges,
+                                     find_best_match_location, get_correlation_shifts,
+                                     mapsequence_coalign_by_match_template, match_template_to_layer,
+                                     parabolic_turning_point, repair_image_nonfinite)
+from sunpy.map import Map, MapSequence
+
 
 @pytest.fixture
 def aia171_test_clipping():

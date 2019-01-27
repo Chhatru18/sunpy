@@ -1,21 +1,20 @@
-# -*- coding: utf-8 -*-
 """
-Test Generic Map
+Test Generic Map.
 """
 import os
-import pytest
 
+import matplotlib.pyplot as plt
 import numpy as np
+import pytest
 
 import astropy.units as u
 from astropy.coordinates import SkyCoord
-import matplotlib.pyplot as plt
 
 import sunpy
-import sunpy.sun
-import sunpy.map
 import sunpy.coordinates
 import sunpy.data.test
+import sunpy.map
+import sunpy.sun
 from sunpy.tests.helpers import figure_test
 
 testpath = sunpy.data.test.rootdir

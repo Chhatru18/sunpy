@@ -1,17 +1,17 @@
 """
-TimeSeries is a generic time series class from which all other TimeSeries
+This module provies TimeSeries, which is a generic time series class from which all other TimeSeries
 classes inherit from.
 """
 import copy
 import warnings
 from collections import OrderedDict
 
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 
 import astropy
 import astropy.units as u
-from astropy.table import Table, Column
+from astropy.table import Column, Table
 
 from sunpy import config
 from sunpy.time import TimeRange
@@ -23,6 +23,8 @@ det = u.def_unit('detector')
 u.add_enabled_units([det])
 
 TIME_FORMAT = config.get("general", "time_format")
+
+__all__ = ["GenericTimeSeries"]
 
 
 class GenericTimeSeries:
@@ -36,7 +38,7 @@ class GenericTimeSeries:
         of time.
     meta : `~sunpy.timeseries.metadata.TimeSeriesMetaData`, optional
         The metadata giving details about the time series data/instrument.
-    units : dict, optional
+    units : `dict`, optional
         A mapping from column names in *data* to the physical units of
         that column.
 
@@ -47,7 +49,7 @@ class GenericTimeSeries:
         of time.
     meta : `~sunpy.timeseries.metadata.TimeSeriesMetaData`
         The metadata giving details about the time series data/instrument.
-    units : dict
+    units : `dict`
         A mapping from column names in *data* to the physical units of
         that column.
 
@@ -69,7 +71,6 @@ class GenericTimeSeries:
     References
     ----------
     * `Pandas Documentation <https://pandas.pydata.org/pandas-docs/stable/>`_
-
     """
 
     # Class attribute used to specify the source class of the TimeSeries.
@@ -79,10 +80,11 @@ class GenericTimeSeries:
     def __init_subclass__(cls, **kwargs):
         """
         An __init_subclass__ hook initializes all of the subclasses of a given class.
-        So for each subclass, it will call this block of code on import.
-        This replicates some metaclass magic without the need to be aware of metaclasses.
-        Here we use this to register each subclass in a dict that has the `is_datasource_for`
-        attribute. This is then passed into the TimeSeries Factory so we can register them.
+
+        So for each subclass, it will call this block of code on import. This replicates some
+        metaclass magic without the need to be aware of metaclasses. Here we use this to register
+        each subclass in a dict that has the `is_datasource_for` attribute. This is then passed into
+        the TimeSeries Factory so we can register them.
         """
         super().__init_subclass__(**kwargs)
         if hasattr(cls, 'is_datasource_for'):
@@ -125,19 +127,22 @@ class GenericTimeSeries:
 
     @property
     def columns(self):
-        """A list of all the names of the columns in the data."""
+        """
+        A list of all the names of the columns in the data.
+        """
         return list(self.data.columns.values)
 
     @property
     def index(self):
-        """The time index of the data."""
+        """
+        The time index of the data.
+        """
         return self.data.index
 
     @property
     def time_range(self):
         """
-        The start and end times of the TimeSeries as a `~sunpy.time.TimeRange`
-        object
+        The start and end times of the TimeSeries as a `~sunpy.time.TimeRange` object.
         """
         if len(self.data)>0:
             return TimeRange(self.data.index.min(), self.data.index.max())
@@ -171,19 +176,17 @@ class GenericTimeSeries:
         ----------
         colname : `str`
             The heading of the column you want output.
-
         quantity : `~astropy.units.quantity.Quantity` or `~numpy.ndarray`
             The values to be placed within the column.
             If updating values only then a numpy array is permitted.
-
-        overwrite : `bool`, optional, default:True
+        overwrite : `bool`, optional
+            Defaults to `True`
             Set to true to allow the method to overwrite a column already present
             in the TimeSeries.
 
         Returns
         -------
         newts : TimeSeries
-
         """
         # Get the expected units from the quantity if required
         if not unit and isinstance(quantity, astropy.units.quantity.Quantity):
@@ -213,9 +216,10 @@ class GenericTimeSeries:
         return self.__class__(data, meta, units)
 
     def sort_index(self, **kwargs):
-        """Returns a sorted version of the TimeSeries object.
-        Generally this shouldn't be necessary as most TimeSeries operations sort
-        the data anyway to ensure consistent behaviour when truncating.
+        """
+        Returns a sorted version of the TimeSeries object. Generally this shouldn't be necessary as
+        most TimeSeries operations sort the data anyway to ensure consistent behaviour when
+        truncating.
 
         Returns
         -------
@@ -227,19 +231,18 @@ class GenericTimeSeries:
                                  copy.copy(self.units))
 
     def truncate(self, a, b=None, int=None):
-        """Returns a truncated version of the TimeSeries object.
+        """
+        Returns a truncated version of the TimeSeries object.
 
         Parameters
         ----------
-        a : `sunpy.time.TimeRange`, `str` or `int`
+        a : `sunpy.time.TimeRange`, `str`, `int`
             Either a time range to truncate to, or a start time in some format
             recognised by pandas, or a index integer.
-
-        b : `str` or `int`
+        b : `str`, `int`, optional
             If specified, the end time of the time range in some format
             recognised by pandas, or a index integer.
-
-        int : `int`
+        int : `int`, optional
             If specified, the integer indicating the slicing intervals.
 
         Returns
@@ -255,7 +258,7 @@ class GenericTimeSeries:
         if isinstance(a, TimeRange):
             # If we have a TimeRange, extract the values
             start = a.start.datetime
-            end   = a.end.datetime
+            end = a.end.datetime
         else:
             # Otherwise we already have the values
             start = a
@@ -279,7 +282,8 @@ class GenericTimeSeries:
         return object
 
     def extract(self, column_name):
-        """Returns a new time series with the chosen column.
+        """
+        Returns a new time series with the chosen column.
 
         Parameters
         ----------
@@ -291,13 +295,14 @@ class GenericTimeSeries:
         newts : `~sunpy.timeseries.TimeSeries`
             A new time series with only the selected column.
         """
-        """
-        # TODO allow the extract function to pick more than one column
-        if isinstance(self, pandas.Series):
-            return self
-        else:
-            return GenericTimeSeries(self.data[column_name], TimeSeriesMetaData(self.meta.metadata.copy()))
-        """
+
+        # TODO: allow the extract function to pick more than one column
+        # TODO: Fix this?
+        # if isinstance(self, pandas.Series):
+        #    return self
+        # else:
+        #    return GenericTimeSeries(self.data[column_name], TimeSeriesMetaData(self.meta.metadata.copy()))
+
         # Extract column and remove empty rows
         data = self.data[[column_name]].dropna()
 
@@ -310,26 +315,24 @@ class GenericTimeSeries:
         return object
 
     def concatenate(self, otherts, **kwargs):
-        """Concatenate with another TimeSeries. This function will check and
-        remove any duplicate times. It will keep the column values from the
-        original time series to which the new time series is being added.
+        """
+        Concatenate with another TimeSeries. This function will check and remove any duplicate
+        times. It will keep the column values from the original time series to which the new time
+        series is being added.
 
         Parameters
         ----------
         otherts : `~sunpy.timeseries.TimeSeries`
             Another time series.
-
-        same_source : `bool` Optional
+        same_source : `bool`, optional
             Set to true to check if the sources of the time series match.
 
         Returns
         -------
         newts : `~sunpy.timeseries.TimeSeries`
             A new time series.
-
-        Debate: decide if we want to be able to concatenate multiple time series
-        at once.
         """
+        # TODO: decide if we want to be able to concatenate multiple time series at once.
 
         # check to see if nothing needs to be done
         if self == otherts:
@@ -364,14 +367,14 @@ class GenericTimeSeries:
 # #### Plotting Methods #### #
 
     def plot(self, axes=None, **plot_args):
-        """Plot a plot of the time series
+        """
+        Plot a plot of the time series.
 
         Parameters
         ----------
-        axes : `~matplotlib.axes.Axes` or None
+        axes : `~matplotlib.axes.Axes`, `None`
             If provided the image will be plotted on the given axes. Otherwise
             the current axes will be used.
-
         **plot_args : `dict`
             Any additional plot arguments that should be used
             when plotting.
@@ -391,7 +394,8 @@ class GenericTimeSeries:
         return axes
 
     def peek(self, **kwargs):
-        """Displays the time series in a new figure.
+        """
+        Displays the time series in a new figure.
 
         Parameters
         ----------
@@ -407,11 +411,11 @@ class GenericTimeSeries:
         figure.show()
 
     def _validate_data_for_ploting(self):
-        """Raises an exception if the timeseries is invalid for plotting.
-        To be added into all the peek methods in all source sup-classes.
-        Currently only checks if we have an empty timeseries, where:
-        len(self.data) == 0
+        """
+        Raises an exception if the timeseries is invalid for plotting.
 
+        To be added into all the peek methods in all source sup-classes. Currently only checks if we
+        have an empty timeseries, where: len(self.data) == 0
         """
         # Check we have a valid TS
         if len(self.data) == 0:
@@ -431,7 +435,6 @@ class GenericTimeSeries:
 
         Allows for default unit assignment for:
             COL_UNITS
-
         """
 
         warnings.simplefilter('always', Warning)
@@ -454,7 +457,6 @@ class GenericTimeSeries:
 
         Allows for default unit assignment for:
             COL_UNITS
-
         """
 
         warnings.simplefilter('always', Warning)
@@ -470,12 +472,10 @@ class GenericTimeSeries:
 
     def _sanitize_units(self, **kwargs):
         """
-        Sanitises the collections.OrderedDict used to store the units.
-        Primarily this method will:
+        Sanitises the collections.OrderedDict used to store the units. Primarily this method will:
 
-        Remove entries that don't match up to a column,
-        Add unitless entries for columns with no units defined.
-        Re-arrange the order of the dictionary to match the columns.
+        Remove entries that don't match up to a column, Add unitless entries for columns with no
+        units defined. Re-arrange the order of the dictionary to match the columns.
         """
         warnings.simplefilter('always', Warning)
 
@@ -495,14 +495,12 @@ class GenericTimeSeries:
 
     def _sanitize_metadata(self, **kwargs):
         """
-        Sanitises the TimeSeriesMetaData object used to store the metadata.
-        Primarily this method will:
+        Sanitizes the TimeSeriesMetaData object used to store the metadata. Primarily this method
+        will:
 
-        Remove entries outside of the datas TimeRange or truncate TimeRanges
-        if the metadata overflows past the data,
-        Remove column references in the metadata that don't match to a column
-        in the data.
-        Remove metadata entries that have no columns matching the data.
+        Remove entries outside of the dates TimeRange or truncate TimeRanges if the metadata
+        overflows past the data, Remove column references in the metadata that don't match to a
+        column in the data. Remove metadata entries that have no columns matching the data.
         """
         warnings.simplefilter('always', Warning)
 
@@ -557,10 +555,10 @@ class GenericTimeSeries:
 
         Parameters
         ----------
-        columns: `list`, optional, default:None
-            If None, return all columns minus the index, otherwise, returns
+        columns: `list`, optional
+            Defaults to `None`.
+            If `None`, return all columns minus the index, otherwise, returns
             specified columns.
-
         kwargs :
             All keyword arguments are handed to the `as_matix` method of the DataFrame.
 
@@ -574,8 +572,8 @@ class GenericTimeSeries:
 
     def __eq__(self, other):
         """
-        Check two TimeSeries objects are the same, they have matching type, data,
-        metadata and units entries.
+        Check two TimeSeries objects are the same, they have matching type, data, metadata and units
+        entries.
 
         Parameters
         ----------
@@ -598,8 +596,8 @@ class GenericTimeSeries:
 
     def __ne__(self, other):
         """
-        Check two TimeSeries objects are not the same, they don't have matching
-        type, data, metadata and/or units entries.
+        Check two TimeSeries objects are not the same, they don't have matching type, data, metadata
+        and/or units entries.
 
         Parameters
         ----------
@@ -614,5 +612,7 @@ class GenericTimeSeries:
 
     @classmethod
     def _parse_file(cls, filepath):
-        """Parses a file - to be implemented in any subclass that may use files"""
+        """
+        Parses a file - to be implemented in any subclass that may use files.
+        """
         return NotImplemented

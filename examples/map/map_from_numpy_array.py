@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 =========================================
 Generating a Map From Data

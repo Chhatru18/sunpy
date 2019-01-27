@@ -2,8 +2,8 @@
 import numpy as np
 
 import astropy.units as u
-from astropy.tests.helper import assert_quantity_allclose
 from asdf.yamlutil import custom_tree_to_tagged_tree
+from astropy.tests.helper import assert_quantity_allclose
 
 import sunpy.map
 from sunpy.io.special.asdf.types import SunPyType
@@ -47,8 +47,7 @@ class GenericMapType(SunPyType):
     @classmethod
     def assert_equal(cls, old, new):
         """
-        This method is used by asdf to test that to_tree > from_tree gives an
-        equivalent object.
+        This method is used by asdf to test that to_tree > from_tree gives an equivalent object.
         """
         np.testing.assert_allclose(old.data, new.data)
 

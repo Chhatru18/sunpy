@@ -1,26 +1,25 @@
-# Author: Simon Liedtke <liedtke.simon@googlemail.com>
-#
-# This module was developed with funding provided by
-# the Google Summer of Code (2013).
+"""
+This module implements the tables for the database package.
+"""
 import os
 import fnmatch
 from datetime import datetime
 
 import numpy as np
-from sqlalchemy import Float, Table, Column, String, Boolean, Integer, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 import astropy.table
 from astropy.time import Time
-from astropy.units import Unit, nm, quantity, equivalencies
-
+from astropy.units import Unit, equivalencies, nm, quantity
 
 import sunpy
 from sunpy import config
-from sunpy.time import parse_time
+from sunpy.io import file_tools as sunpy_filetools
+from sunpy.io import fits
 from sunpy.io.header import FileHeader
-from sunpy.io import fits, file_tools as sunpy_filetools
+from sunpy.time import parse_time
 
 TIME_FORMAT = config.get("general", "time_format")
 
@@ -53,9 +52,9 @@ association_table = Table('association', Base.metadata,
 
 
 class WaveunitNotFoundError(Exception):
-    """This exception is raised if a wavelength unit cannot be found in a FITS
-    header or in a VSO query result block.
-
+    """
+    This exception is raised if a wavelength unit cannot be found in a FITS header or in a VSO query
+    result block.
     """
 
     def __init__(self, obj):
@@ -67,9 +66,8 @@ class WaveunitNotFoundError(Exception):
 
 
 class WaveunitNotConvertibleError(Exception):
-    """This exception is raised if a wavelength cannot be converted to an
-    astropy.units.Unit instance.
-
+    """
+    This exception is raised if a wavelength cannot be converted to an astropy.units.Unit instance.
     """
 
     def __init__(self, waveunit):
@@ -225,7 +223,7 @@ class DatabaseEntry(Base):
         The value of the measured wave length.
     wavemax : float
         This is the same value as ``wavemin``. The value is stored twice,
-        because each ``suds.sudsobject.QueryResponseBlock`` which is used by
+        because each ``sunpy.net.dataretriever.client.QueryResponseBlock`` which is used by
         the vso package contains both these values.
     hdu_index : int
         This value provides a list of all available HDUs and in what
@@ -243,7 +241,6 @@ class DatabaseEntry(Base):
     tags : list
         A list of ``Tag`` instances. Use `sunpy.database.Database.tag` to
         add a new tag or multiple tags to a specific entry.
-
     """
     __tablename__ = 'data'
 
@@ -269,15 +266,16 @@ class DatabaseEntry(Base):
 
     @classmethod
     def _from_query_result_block(cls, qr_block, default_waveunit=None):
-        """Make a new :class:`DatabaseEntry` instance from a VSO query result
-        block. The values of :attr:`wavemin` and :attr:`wavemax` are converted
-        to nm (nanometres).
+        """
+        Make a new :class:`DatabaseEntry` instance from a VSO query result block. The values of.
+
+        :attr:`wavemin` and :attr:`wavemax` are converted to nm (nanometres).
 
         Parameters
         ----------
-        qr_block : suds.sudsobject.QueryResponseBlock
+        qr_block : `sunpy.net.dataretriever.client.QueryResponseBlock`
             A query result block is usually not created directly; instead,
-            one gets instances of ``suds.sudsobject.QueryResponseBlock`` by
+            one gets instances of `sunpy.net.dataretriever.client.QueryResponseBlock` by
             iterating over a VSO query result.
         default_waveunit : str, optional
             The wavelength unit that is used if it cannot be found in the
@@ -308,7 +306,6 @@ class DatabaseEntry(Base):
         2059.0
         >>> entry.wavemin, entry.wavemax  # doctest: +REMOTE_DATA
         (19.5, 19.5)
-
         """
         time_start = datetime.strptime(qr_block.time.start, '%Y%m%d%H%M%S')
         if not qr_block.time.end:
@@ -357,8 +354,7 @@ class DatabaseEntry(Base):
     @classmethod
     def _from_fido_search_result_block(cls, sr_block, default_waveunit=None):
         """
-        Make a new :class:`DatabaseEntry` instance from a Fido search
-        result block.
+        Make a new :class:`DatabaseEntry` instance from a Fido search result block.
 
         Parameters
         ----------
@@ -455,8 +451,8 @@ class DatabaseEntry(Base):
 
     def _compare_attributes(self, other, attribute_list):
         """
-        Compare a given list of attributes of two :class:`DatabaseEntry`
-        instances and return True if all of them match.
+        Compare a given list of attributes of two :class:`DatabaseEntry` instances and return True
+        if all of them match.
 
         Parameters
         ----------
@@ -465,7 +461,6 @@ class DatabaseEntry(Base):
         attribute_list : `list`
             The list of attributes that will be compared in both instances,
             self and other.
-
         """
         if len(attribute_list) == 0:
             raise TypeError('At least one attribute required')
@@ -498,8 +493,10 @@ class DatabaseEntry(Base):
 
 def entries_from_query_result(qr, default_waveunit=None):
     """
-    Use a query response returned from :meth:`sunpy.net.vso.VSOClient.search`
-    or :meth:`sunpy.net.vso.VSOClient.query_legacy` to generate instances of
+    Use a query response returned from :meth:`sunpy.net.vso.VSOClient.search` or.
+
+    :meth:`sunpy.net.vso.VSOClient.query_legacy` to generate instances of.
+
     :class:`DatabaseEntry`. Return an iterator over those instances.
 
     Parameters
@@ -536,7 +533,6 @@ def entries_from_query_result(qr, default_waveunit=None):
     2059.0
     >>> entry.wavemin, entry.wavemax  # doctest: +REMOTE_DATA
     (19.5, 19.5)
-
     """
     for block in qr:
         yield DatabaseEntry._from_query_result_block(block, default_waveunit)
@@ -544,8 +540,8 @@ def entries_from_query_result(qr, default_waveunit=None):
 
 def entries_from_fido_search_result(sr, default_waveunit=None):
     """
-    Use a `sunpy.net.dataretriever.fido_factory.UnifiedResponse`
-    object returned from
+    Use a `sunpy.net.dataretriever.fido_factory.UnifiedResponse` object returned from.
+
     :meth:`sunpy.net.dataretriever.fido_factory.UnifiedDownloaderFactory.search`
     to generate instances of :class:`DatabaseEntry`. Return an iterator
     over those instances.
@@ -582,7 +578,6 @@ def entries_from_fido_search_result(sr, default_waveunit=None):
     (datetime.datetime(2012, 1, 1, 0, 0), datetime.datetime(2012, 1, 2, 0, 0))
     >>> entry.instrument # doctest: +REMOTE_DATA
     'lyra'
-
     """
     for entry in sr:
         if isinstance(entry, sunpy.net.vso.vso.QueryResponse):
@@ -602,7 +597,9 @@ def entries_from_file(file, default_waveunit=None,
                       time_string_parse_format=''):
     # Note: time_string_parse_format='' so that None won't be passed to Time.strptime
     # (which would make strptime freak out, if I remember correctly).
-    """Use the headers of a FITS file to generate an iterator of
+    """
+    Use the headers of a FITS file to generate an iterator of.
+
     :class:`sunpy.database.tables.DatabaseEntry` instances. Gathered
     information will be saved in the attribute `fits_header_entries`. If the
     key INSTRUME, WAVELNTH or DATE-OBS / DATE_OBS is available, the attribute
@@ -656,7 +653,6 @@ def entries_from_file(file, default_waveunit=None,
     (17.400000000000002, 17.400000000000002)
     >>> len(entry.fits_header_entries)  # doctest: +REMOTE_DATA
     111
-
     """
     headers = fits.get_header(file)
 
@@ -722,11 +718,11 @@ def entries_from_file(file, default_waveunit=None,
 
 def entries_from_dir(fitsdir, recursive=False, pattern='*',
                      default_waveunit=None, time_string_parse_format=None):
-    """Search the given directory for FITS files and use the corresponding FITS
-    headers to generate instances of :class:`DatabaseEntry`. FITS files are
-    detected by reading the content of each file, the `pattern` argument may be
-    used to avoid reading entire directories if one knows that all FITS files
-    have the same filename extension.
+    """
+    Search the given directory for FITS files and use the corresponding FITS headers to generate
+    instances of :class:`DatabaseEntry`. FITS files are detected by reading the content of each
+    file, the `pattern` argument may be used to avoid reading entire directories if one knows that
+    all FITS files have the same filename extension.
 
     Parameters
     ----------
@@ -771,7 +767,6 @@ def entries_from_dir(fitsdir, recursive=False, pattern='*',
     >>> entries = list(entries_from_dir(eitdir, default_waveunit='angstrom'))
     >>> len(entries)
     13
-
     """
     for dirpath, dirnames, filenames in os.walk(fitsdir):
         filename_paths = (os.path.join(dirpath, name) for name in sorted(filenames))
@@ -793,7 +788,8 @@ def entries_from_dir(fitsdir, recursive=False, pattern='*',
 
 
 def _create_display_table(database_entries, columns=None, sort=False):
-    """Generate a table to display the database entries.
+    """
+    Generate a table to display the database entries.
 
     Parameters
     ----------
@@ -812,7 +808,6 @@ def _create_display_table(database_entries, columns=None, sort=False):
     str
         An astropy table that can be printed on the console or written to a
         file.
-
     """
     if columns is None:
         columns = ['id', 'observation_time_start', 'observation_time_end',
@@ -854,7 +849,8 @@ def _create_display_table(database_entries, columns=None, sort=False):
 
 
 def display_entries(database_entries, columns=None, sort=False):
-    """Print a table to display the database entries.
+    """
+    Print a table to display the database entries.
 
     Parameters
     ----------
@@ -867,6 +863,5 @@ def display_entries(database_entries, columns=None, sort=False):
 
     sort : bool (optional)
         If True, sorts the entries before displaying them.
-
     """
     return _create_display_table(database_entries, columns, sort).__str__()

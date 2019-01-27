@@ -1,3 +1,6 @@
+"""
+This module implements a NorthOffsetFrame.
+"""
 import astropy.units as u
 from astropy.coordinates import SkyOffsetFrame, SphericalRepresentation, UnitSphericalRepresentation
 
@@ -7,7 +10,7 @@ __all__ = ['NorthOffsetFrame']
 class NorthOffsetFrame(object):
     """
     A frame which is relative to some position and another frame. Based on
-    `astropy.coordinates.SkyOffsetFrame`
+    `astropy.coordinates.SkyOffsetFrame`.
 
     Coordinates in a NorthOffsetFrame are both centered on the position
     specified by the ``north`` keyword *and* they are oriented in the same

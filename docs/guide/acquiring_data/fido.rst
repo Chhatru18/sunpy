@@ -1,6 +1,6 @@
----------------------------------------
+***************************************
 Finding and Downloading Data using Fido
----------------------------------------
+***************************************
 
 This guide outlines how to search for and download data using SunPy's
 Federated Internet Data Obtainer...or more usually (and sanely) referred to as Fido.
@@ -11,7 +11,7 @@ JSOC_, etc.  It therefore supplies a single, easy and consistent way to
 obtain most forms of solar physics data.
 
 Import
-------
+******
 
 The `Fido <sunpy.net.fido_factory.UnifiedDownloaderFactory>` object is in
 `sunpy.net`. It can be imported as follows::
@@ -19,7 +19,7 @@ The `Fido <sunpy.net.fido_factory.UnifiedDownloaderFactory>` object is in
     >>> from sunpy.net import Fido, attrs as a
 
 Searching for Data Using Fido
------------------------------
+*****************************
 
 To search for data with Fido, you need to specify attributes to search against.
 The (partial) range of allowed attributes are found in the `vso.attrs <sunpy.net.vso.attrs>`
@@ -146,7 +146,7 @@ operator would::
 
 
 Indexing search results
------------------------
+***********************
 
 The `~sunpy.net.fido_factory.UnifiedResponse` that Fido returns can be
 indexed to access a subset of the search results. When doing this, the
@@ -208,7 +208,7 @@ same as ``results``).
 .. _downloading_data:
 
 Downloading data
-----------------
+****************
 Once you have located your files via a
 `Fido.search <sunpy.net.fido_factory.UnifiedDownloaderFactory.search>`, you can
 download them via `Fido.fetch <sunpy.net.fido_factory.UnifiedDownloaderFactory.fetch>`::

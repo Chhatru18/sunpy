@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 import os
 import tempfile
+
 import pandas as pd
+import pytest
+
 import astropy.table
 import astropy.time
 import astropy.units as u
-import pytest
 
-from sunpy.net.jsoc import JSOCClient, JSOCResponse
-from sunpy.net.download import Results
 import sunpy.net.jsoc.attrs as attrs
 import sunpy.net.vso.attrs as vso_attrs
+from sunpy.net.download import Results
+from sunpy.net.jsoc import JSOCClient, JSOCResponse
 
 client = JSOCClient()
 

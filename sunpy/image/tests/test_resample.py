@@ -1,12 +1,14 @@
-# Author: Tomas Meszaros <exo@tty.sk>
+import os
+
+import numpy as np
+import pytest
 
 import astropy.units as u
-from sunpy.image.rescale import reshape_image_to_4d_superpixel
-import pytest
-import os
-import numpy as np
+
 import sunpy.data.test
 import sunpy.map
+from sunpy.image.resample import reshape_image_to_4d_superpixel
+
 
 @pytest.fixture
 def aia171_test_map():

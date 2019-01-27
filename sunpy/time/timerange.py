@@ -1,17 +1,21 @@
+"""
+This module provies a TimeRange object.
+"""
 from datetime import timedelta
 
 import astropy.units as u
-from astropy.time import TimeDelta
-from astropy.time import Time
+from astropy.time import Time, TimeDelta
 
-from sunpy.time import parse_time, is_time_equal
 from sunpy import config
+from sunpy.time import is_time_equal, parse_time, _variables_for_parse_time_docstring
+from sunpy.util.decorators import add_common_docstring
 
 TIME_FORMAT = config.get('general', 'time_format')
 
 __all__ = ['TimeRange']
 
 
+@add_common_docstring(**_variables_for_parse_time_docstring())
 class TimeRange(object):
     """
     An object to handle time ranges.
@@ -23,10 +27,10 @@ class TimeRange(object):
 
     Parameters
     ----------
-    a : str, number, `datetime.datetime`, `astropy.time.Time`
+    a : {parse_time_types}
         A time (usually the start time) specified as a parse_time-compatible
         time string, number, or a datetime object.
-    b : str, number, `datetime.datetime`, `datetime.timedelta`, `astropy.units.Quantity` (time),`astropy.time.Time`
+    b : {parse_time_types}
         Another time (usually the end time) specified as a
         parse_time-compatible time string, number, or a datetime object.
         May also be the size of the time range specified as a timedelta object,
@@ -51,7 +55,9 @@ class TimeRange(object):
     <BLANKLINE>
     """
     def __init__(self, a, b=None, format=None):
-        """Creates a new TimeRange instance"""
+        """
+        Creates a new TimeRange instance.
+        """
         # If a is a TimeRange object, copy attributes to new instance.
         self._t1 = None
         self._t2 = None
@@ -101,7 +107,7 @@ class TimeRange(object):
     @property
     def start(self):
         """
-        Get the start time
+        Get the start time.
 
         Returns
         -------
@@ -112,7 +118,7 @@ class TimeRange(object):
     @property
     def end(self):
         """
-        Get the end time
+        Get the end time.
 
         Returns
         -------
@@ -250,12 +256,12 @@ class TimeRange(object):
 
         Parameters
         ----------
-        n : int
+        n : `int`
             The number of times to split the time range (must >= 1)
 
         Returns
         -------
-        time ranges: list
+        time ranges: `list`
             An list of equally sized TimeRange objects between
             the start and end times.
 
@@ -278,8 +284,8 @@ class TimeRange(object):
 
     def window(self, cadence, window):
         """
-        Split the TimeRange up into a series of TimeRange windows,
-        'window' long, between the start and end with a cadence of 'cadence'.
+        Split the TimeRange up into a series of TimeRange windows, 'window' long, between the start
+        and end with a cadence of 'cadence'.
 
         Parameters
         ----------
@@ -290,7 +296,7 @@ class TimeRange(object):
 
         Returns
         -------
-        time ranges : list
+        time ranges : `list`
             A list of TimeRange objects, that are window long and separated by
             cadence.
 
@@ -324,7 +330,6 @@ class TimeRange(object):
                     0.003333333333333333 hours or
                     0.2 minutes or
                     12.0 seconds]
-
         """
         # After astropy 3.1 remove this check
         if isinstance(window, timedelta):
@@ -346,7 +351,9 @@ class TimeRange(object):
         return times
 
     def next(self):
-        """Shift the time range forward by the amount of time elapsed"""
+        """
+        Shift the time range forward by the amount of time elapsed.
+        """
         dt = self.dt
         self._t1 = self._t1 + dt
         self._t2 = self._t2 + dt
@@ -354,7 +361,9 @@ class TimeRange(object):
         return self
 
     def previous(self):
-        """Shift the time range backward by the amount of time elapsed"""
+        """
+        Shift the time range backward by the amount of time elapsed.
+        """
         dt = self.dt
         self._t1 = self._t1 - dt
         self._t2 = self._t2 - dt
@@ -362,7 +371,8 @@ class TimeRange(object):
         return self
 
     def extend(self, dt_start, dt_end):
-        """Extend the time range forwards and backwards
+        """
+        Extend the time range forwards and backwards.
 
         Parameters
         ----------
@@ -377,7 +387,7 @@ class TimeRange(object):
 
     def get_dates(self):
         """
-        Return all partial days contained within the timerange
+        Return all partial days contained within the timerange.
         """
         dates = []
         dates = [
@@ -386,21 +396,20 @@ class TimeRange(object):
         ]
         return dates
 
+    @add_common_docstring(**_variables_for_parse_time_docstring())
     def __contains__(self, time):
         """
-        Checks whether the given time lies within this range.
-        Both limits are inclusive (i.e. __contains__(t1) and __contains__(t2)
-        always return true)
+        Checks whether the given time lies within this range. Both limits are inclusive (i.e.
+        __contains__(t1) and __contains__(t2) always return true)
 
         Parameters
         ----------
-        time : [ int, float, string, datetime, astropy.time.Time,
-                    numpy.datetime64, pandas.Timestamp ]
+        time : {parse_time_types}
             A parse_time-compatible time to be checked.
 
         Returns
         -------
-        value : bool
+        value : `bool`
             True if time lies between start and end, False otherwise.
 
         Examples

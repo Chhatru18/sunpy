@@ -1,10 +1,11 @@
 SunPy Documentation
-===================
+*******************
 
-Welcome to the SunPy documentation. SunPy is a community-developed,
-free and open-source solar data analysis environment for Python.
+Welcome to SunPy's documentation.
+SunPy is a community-developed, free and open-source solar data analysis environment for Python.
 
-We have a documentation :any:`index <genindex>` and a :any:`module <modindex>` list.
+Here, we detail each part of SunPy and provide a user guide and a gallery of examples.
+Also, here is our documentation :any:`index <genindex>` and a :any:`module <modindex>` index.
 
 .. toctree::
   :maxdepth: 2
@@ -14,4 +15,4 @@ We have a documentation :any:`index <genindex>` and a :any:`module <modindex>` l
   generated/gallery/index
   dev_guide/index
   whatsnew/index
-  coc
+  code_of_conduct

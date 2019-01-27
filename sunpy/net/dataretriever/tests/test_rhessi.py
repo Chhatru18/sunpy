@@ -1,18 +1,18 @@
 import socket
 from datetime import datetime
+from unittest import mock
 from urllib.error import URLError
 from urllib.request import urlretrieve
 
-from unittest import mock
 import pytest
 
 import sunpy.instr.rhessi
 import sunpy.net.dataretriever.sources.rhessi as rhessi
 from sunpy.net import Fido
 from sunpy.net import attrs as a
-from sunpy.time import TimeRange, parse_time
-from sunpy.net.fido_factory import UnifiedResponse
 from sunpy.net.dataretriever.client import QueryResponse
+from sunpy.net.fido_factory import UnifiedResponse
+from sunpy.time import TimeRange, parse_time
 
 LCClient = rhessi.RHESSIClient()
 
@@ -29,8 +29,7 @@ def two_days_timerange():
 
 def test_get_observing_summary_dbase_file_with_unsupported_start_time():
     """
-    RHESSI summary files are not available for before 2002-02-01, ensure
-    `ValueError` is raised.
+    RHESSI summary files are not available for before 2002-02-01, ensure `ValueError` is raised.
     """
     with pytest.raises(ValueError):
         LCClient.get_observing_summary_dbase_file("2002/01/21")
@@ -41,8 +40,7 @@ def test_get_observing_summary_dbase_file_with_unsupported_start_time():
 def test_get_observing_summary_dbase_file_build_correct_url(mock_get_base_url, mock_urlretrieve,
                                                             one_day_timerange):
     """
-    This test ensures that we build the correct url which is then used
-    to get the database file.
+    This test ensures that we build the correct url which is then used to get the database file.
     """
     LCClient.get_observing_summary_dbase_file(one_day_timerange.start)
     mock_urlretrieve.assert_called_with(
@@ -54,7 +52,7 @@ def test_get_observing_summary_dbase_file_build_correct_url(mock_get_base_url, m
 @mock.patch('sunpy.net.dataretriever.sources.rhessi.urlopen', return_value=None)
 def test_get_base_url(mock_urlopen):
     """
-    Success case, can successfully 'ping' first data_server
+    Success case, can successfully 'ping' first data_server.
     """
     assert rhessi.get_base_url() == rhessi.data_servers[0]
 
@@ -82,8 +80,8 @@ def test_get_base_url_on_timeout(mock_urlopen):
 def parsed_dbase():
     """
     The result of calling `parse_observing_summary_dbase_file(...)` on
-    https://hesperia.gsfc.nasa.gov/hessidata/dbase/hsi_obssumm_filedb_200311.txt but
-    only using the first two rows of data.
+    https://hesperia.gsfc.nasa.gov/hessidata/dbase/hsi_obssumm_filedb_200311.txt but only using the
+    first two rows of data.
     """
 
     return {'filename': ['hsi_obssumm_20031101_139.fit',
@@ -141,8 +139,7 @@ def test_get_observing_summary_filename_two_days(mock_get_observing_summary_dbas
                                                  mock_parse_observing_summary_dbase_file,
                                                  mock_get_base_url):
     """
-    Given a time range of two days, make sure we get two files back, one
-    for each day.
+    Given a time range of two days, make sure we get two files back, one for each day.
     """
     filenames = LCClient.get_observing_summary_filename(('2003-11-01', '2003-11-02T23:59:59'))
 

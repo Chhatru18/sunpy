@@ -1,9 +1,9 @@
 """
-Nothing here but dictionaries for generating LinearSegmentedColormaps,
-and a dictionary of these dictionaries.
+Nothing here but dictionaries for generating LinearSegmentedColormaps, and a dictionary of these
+dictionaries.
 """
-import numpy as np
 import matplotlib.colors as colors
+import numpy as np
 
 __all__ = ['aia_color_table', 'sswidl_lasco_color_table', 'eit_color_table',
            'sxt_color_table', 'xrt_color_table', 'trace_color_table',
@@ -12,7 +12,9 @@ __all__ = ['aia_color_table', 'sswidl_lasco_color_table', 'eit_color_table',
 
 # FIXME: Give me a proper name.
 def _mkx(i, steps, n):
-    """ Generate list according to pattern of g0 and b0. """
+    """
+    Generate list according to pattern of g0 and b0.
+    """
     x = []
     for step in steps:
         x.extend(list(range(i, step + n, n)))
@@ -21,14 +23,18 @@ def _mkx(i, steps, n):
 
 
 def padfr(lst, len_, pad=0):
-    """ Pad lst to contain at least len_ items by adding pad to the front. """
+    """
+    Pad lst to contain at least len_ items by adding pad to the front.
+    """
     diff = len_ - len(lst)
     diff = 0 if diff < 0 else diff
     return [pad] * diff + lst
 
 
 def paden(lst, len_, pad=0):
-    """ Pad lst to contain at least len_ items by adding pad to the end. """
+    """
+    Pad lst to contain at least len_ items by adding pad to the end.
+    """
     diff = len_ - len(lst)
     diff = 0 if diff < 0 else diff
     return lst + [pad] * diff
@@ -67,9 +73,10 @@ aia_wave_dict = {1600: (c3, c3, c2), 1700: (c1, c0, c0), 4500: (c0, c0, b0 / 2.0
 
 
 def aia_color_table(wavelength):
-    """Returns one of the fundamental color tables for SDO AIA images.
-       Based on aia_lct.pro part of SDO/AIA on SSWIDL written by
-       Karel Schrijver (2010/04/12).
+    """
+    Returns one of the fundamental color tables for SDO AIA images.
+
+    Based on aia_lct.pro part of SDO/AIA on SSWIDL written by Karel Schrijver (2010/04/12).
     """
     try:
         r, g, b = aia_wave_dict[wavelength]
@@ -251,7 +258,9 @@ eit_dark_red_b = np.concatenate((np.zeros(204).astype('int'), np.array(
 
 
 def eit_color_table(wavelength):
-    """Returns one of the fundamental color tables for SOHO EIT images."""
+    """
+    Returns one of the fundamental color tables for SOHO EIT images.
+    """
     # SOHO EIT Color tables
     # EIT 171 IDL Name EIT Dark Bot Blue
     # EIT 195 IDL Name EIT Dark Bot Green
@@ -329,11 +338,13 @@ lasco_c3_b = np.concatenate((np.array(
 
 
 def sswidl_lasco_color_table(number):
-    """Returns one of the SSWIDL-defined color tables for SOHO LASCO images.
-    This function is included to allow users to access the SSWIDL-defined
-    LASCO color tables provided by SunPy. It is recommended to use the function
-    'lasco_color_table' to obtain color tables for use with LASCO data
-    and Helioviewer JP2 images."""
+    """
+    Returns one of the SSWIDL-defined color tables for SOHO LASCO images.
+
+    This function is included to allow users to access the SSWIDL-defined LASCO color tables
+    provided by SunPy. It is recommended to use the function 'lasco_color_table' to obtain color
+    tables for use with LASCO data and Helioviewer JP2 images.
+    """
     # SOHO LASCO Color tables
     # LASCO C2 white light IDL Name
     # LASCO C3 white light IDL Name
@@ -364,7 +375,9 @@ grayscale = np.arange(256)
 
 
 def sxt_color_table(sxt_filter):
-    """Returns one of the fundamental color tables for Yokhoh SXT images."""
+    """
+    Returns one of the fundamental color tables for Yokhoh SXT images.
+    """
     try:
         r, g, b = {
             'al': (sxt_gold_r, sxt_gold_g, sxt_gold_b),
@@ -382,7 +395,9 @@ def sxt_color_table(sxt_filter):
 
 
 def xrt_color_table():
-    """Returns the color table used for all Hinode XRT images."""
+    """
+    Returns the color table used for all Hinode XRT images.
+    """
     # Now create the color dictionary in the correct format
     cdict = create_cdict(r0, g0, b0)
     return colors.LinearSegmentedColormap('Hinode XRT', cdict)
@@ -522,8 +537,9 @@ stereo_cor2_r = np.array(
 
 
 def cor_color_table(number):
-    """Returns one of the fundamental color tables for STEREO coronagraph
-    images."""
+    """
+    Returns one of the fundamental color tables for STEREO coronagraph images.
+    """
     # STEREO COR Color tables
     try:
         r, g, b = {
@@ -1009,7 +1025,9 @@ trace_1700_b = np.array(
 
 
 def trace_color_table(measurement):
-    """Returns one of the standard color tables for TRACE JP2 files."""
+    """
+    Returns one of the standard color tables for TRACE JP2 files.
+    """
     # TRACE color tables
     try:
         r, g, b = {
@@ -1036,8 +1054,11 @@ def trace_color_table(measurement):
 
 
 def sot_color_table(measurement):
-    """Returns one of the standard color tables for SOT files (following osdc convention).
-    The relations between observation and color have been defined in hinode.py"""
+    """
+    Returns one of the standard color tables for SOT files (following osdc convention).
+
+    The relations between observation and color have been defined in hinode.py
+    """
     try:
         r, g, b = {
             'intensity': (r0, g0, b0),
@@ -1053,7 +1074,9 @@ def sot_color_table(measurement):
 
 
 def iris_sji_color_table(measurement, aialike=False):
-    """Return the standard color table for IRIS SJI files"""
+    """
+    Return the standard color table for IRIS SJI files.
+    """
     # base vectors for IRIS SJI color tables
     c0 = np.arange(0, 256)
     c1 = (np.sqrt(c0) * np.sqrt(255)).astype(np.uint8)
@@ -1180,8 +1203,7 @@ hmi_mag_b = np.array(
 
 def hmi_mag_color_table():
     """
-    Returns an alternate HMI Magnetogram color table; from Stanford
-    University/JSOC
+    Returns an alternate HMI Magnetogram color table; from Stanford University/JSOC.
 
     Examples
     --------
@@ -1360,7 +1382,9 @@ def stereo_hi_color_table(camera):
 
 
 def create_cdict(r, g, b):
-    """Create the color tuples in the correct format."""
+    """
+    Create the color tuples in the correct format.
+    """
     i = np.linspace(0, 1, r0.size)
 
     cdict = dict(

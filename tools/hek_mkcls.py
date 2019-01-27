@@ -1,17 +1,8 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-#
-# This module was developed with funding provided by
-# the ESA Summer of Code (2011).
-
-# The template can be found in tools/hektemplate.py
-
 """
-This script is used to generate sunpy.net.hek.attrs. The rationale for using
-code-generation in lieu of dynamic magic is that code-generation ensures
-that tools (e.g. IPython) are able to automatically complete names of members.
-Considering the sheer amount of members it is essential that users are able
-to use completion.
+This script is used to generate sunpy.net.hek.attrs. The rationale for using code-generation in lieu
+of dynamic magic is that code-generation ensures that tools (e.g. IPython) are able to automatically
+complete names of members. Considering the sheer amount of members it is essential that users are
+able to use completion.
 
 Events are EventType objects. When they are directly ORed together, they are
 joined together so that only one query is sent to the query. They may not
@@ -242,7 +233,9 @@ fields = {
 }
 
 def mk_gen(rest):
-    """ Generate Misc class. """
+    """
+    Generate Misc class.
+    """
     ret = ''
     ret += '@apply\nclass Misc(object):\n'
     for elem in sorted(rest):

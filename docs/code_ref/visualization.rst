@@ -1,12 +1,26 @@
-SunPy visualization
-===================
+.. _sunpy-visualization:
 
-`sunpy.visualization` contains plotting helpers and functions.
+*******************
+SunPy visualization
+*******************
+
+This package provides plotting helpers and functions that are able to animate N-dim data.
 
 .. automodapi:: sunpy.visualization
 
-.. automodapi:: sunpy.visualization.animator
-    :headings: ^#
-
 .. automodapi:: sunpy.visualization.wcsaxes_compat
-    :headings: ^#
+
+.. automodapi:: sunpy.visualization.animator
+   :no-inheritance-diagram:
+
+.. automodapi:: sunpy.visualization.animator.base
+   :no-inheritance-diagram:
+
+.. automodapi:: sunpy.visualization.animator.line
+   :no-inheritance-diagram:
+
+.. automodapi:: sunpy.visualization.animator.image
+   :no-inheritance-diagram:
+
+.. automodapi:: sunpy.visualization.animator.mapsequenceanimator
+   :no-inheritance-diagram:

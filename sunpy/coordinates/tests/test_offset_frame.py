@@ -1,11 +1,10 @@
-import pytest
-import numpy as np
 import hypothesis.strategies as st
+import pytest
 from hypothesis import given
 
 import astropy.units as u
-from astropy.tests.helper import assert_quantity_allclose
 from astropy.coordinates import SkyCoord, SkyOffsetFrame
+from astropy.tests.helper import assert_quantity_allclose
 
 from sunpy.coordinates import NorthOffsetFrame
 
@@ -36,8 +35,7 @@ def test_null():
 @given(lon=lonitude(), lat=latitude())
 def test_transform(lon, lat):
     """
-    Test that the north pole in the new frame transforms back to the given
-    north argument.
+    Test that the north pole in the new frame transforms back to the given north argument.
     """
     north = SkyCoord(lon=lon, lat=lat, frame='heliographic_stonyhurst')
     off = NorthOffsetFrame(north=north)

@@ -1,9 +1,9 @@
-========
+********
 Mac OS X
-========
+********
 
 Overview
---------
+========
 
 .. warning::
     We highly recommend that users use the Anaconda python distribution.
@@ -35,7 +35,7 @@ go to their respective websites and install one of the other as needed.
 .. _xcode:
 
 XCode tools / Compiler
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 If you are using MacOS X, you will need to the XCode command line
 tools.  One way to get them is to install `XCode
 <https://developer.apple.com/xcode/>`__. If you are using OS X 10.7
@@ -49,7 +49,7 @@ https://developer.apple.com/downloads/index.action (requires an Apple
 developer account).
 
 Homebrew
-^^^^^^^^
+--------
 
 `Homebrew <https://brew.sh/>`_ is a tool for helping to automate
 the installation of a number of useful tools and libraries on Mac OS X. It is
@@ -94,7 +94,7 @@ Use `easy_install`_ to install `pip`: ::
 You are now ready to install scipy, numpy, and matplotlib.
 
 Scientific Libraries
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 If pip installed properly, then you can install NumPy simply with: ::
 
     pip install numpy

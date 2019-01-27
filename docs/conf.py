@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 #
 # SunPy documentation build configuration file.
@@ -168,7 +167,7 @@ try:
     import ruamel.yaml as yaml
     has_yaml = True
     # Load data about stability
-    with open('./dev_guide/sunpy_stability.yaml', 'r') as estability:
+    with open('./stability.yaml', 'r') as estability:
         sunpy_modules = yaml.load(estability.read(), Loader=yaml.Loader)
 
     html_context = {
@@ -259,7 +258,9 @@ if has_sphinx_gallery:
                                            (os.path.join('..', 'examples/units_and_coordinates')),
                                            (os.path.join('..', 'examples/plotting')),
                                            (os.path.join('..', 'examples/saving_and_loading_data')),
-                                           (os.path.join('..', 'examples/computer_vision_techniques'))]),
+                                           (os.path.join('..', 'examples/computer_vision_techniques')),
+                                           (os.path.join('..', 'examples/example-template'))
+                                           ]),
         'gallery_dirs': path.joinpath('generated', 'gallery'),  # path to save gallery generated examples
         'default_thumb_file': path.joinpath('logo', 'sunpy_icon_128x128.png'),
         'reference_url': {

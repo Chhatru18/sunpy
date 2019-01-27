@@ -1,26 +1,25 @@
-"""A Python MapSequence Object"""
-#pylint: disable=W0401,W0614,W0201,W0212,W0404
-
+"""
+This module provides the MapSequence class.
+"""
 from copy import deepcopy
 
-import numpy as np
 import matplotlib.animation
+import numpy as np
 import numpy.ma as ma
 
 import astropy.units as u
 
 from sunpy.map import GenericMap
-from sunpy.visualization.animator.mapsequenceanimator import MapSequenceAnimator
-from sunpy.visualization import wcsaxes_compat
-from sunpy.visualization import axis_labels_from_ctype
 from sunpy.util import expand_list
+from sunpy.visualization import axis_labels_from_ctype, wcsaxes_compat
+from sunpy.visualization.animator.mapsequenceanimator import MapSequenceAnimator
 
 __all__ = ['MapSequence']
 
 
 class MapSequence(object):
     """
-    MapSequence
+    MapSequence.
 
     A series of Maps in a single object.
 
@@ -50,7 +49,9 @@ class MapSequence(object):
     """
     #pylint: disable=W0613,E1101
     def __init__(self, *args, **kwargs):
-        """Creates a new Map instance"""
+        """
+        Creates a new Map instance.
+        """
 
         # Hack to get around Python 2.x not backporting PEP 3102.
         sortby = kwargs.pop('sortby', 'date')
@@ -74,9 +75,12 @@ class MapSequence(object):
             self._derotate()
 
     def __getitem__(self, key):
-        """Overriding indexing operation.  If the key results in a single map,
-        then a map object is returned.  This allows functions like enumerate to
-        work.  Otherwise, a mapsequence is returned."""
+        """
+        Overriding indexing operation.
+
+        If the key results in a single map, then a map object is returned.  This allows functions
+        like enumerate to work.  Otherwise, a mapsequence is returned.
+        """
 
         if isinstance(self.maps[key], GenericMap):
             return self.maps[key]
@@ -84,7 +88,9 @@ class MapSequence(object):
             return MapSequence(self.maps[key])
 
     def __len__(self):
-        """Return the number of maps in a mapsequence."""
+        """
+        Return the number of maps in a mapsequence.
+        """
         return len(self.maps)
 
     # Sorting methods
@@ -93,14 +99,14 @@ class MapSequence(object):
         return lambda m: m.date  # maps.sort(key=attrgetter('date'))
 
     def _derotate(self):
-        """Derotates the layers in the MapSequence"""
-        pass
+        """
+        Derotates the layers in the MapSequence.
+        """
 
     def plot(self, axes=None, resample=None, annotate=True,
              interval=200, plot_function=None, **kwargs):
         """
-        A animation plotting routine that animates each element in the
-        MapSequence
+        A animation plotting routine that animates each element in the MapSequence.
 
         Parameters
         ----------
@@ -159,7 +165,6 @@ class MapSequence(object):
         >>> sequence = Map(files, sequence=True)   # doctest: +SKIP
         >>> ani = sequence.peek(plot_function=myplot)   # doctest: +SKIP
         >>> plt.show()   # doctest: +SKIP
-
         """
         if not axes:
             axes = wcsaxes_compat.gca_wcs(self.maps[0].wcs)
@@ -226,8 +231,7 @@ class MapSequence(object):
 
     def peek(self, resample=None, **kwargs):
         """
-        A animation plotting routine that animates each element in the
-        MapSequence
+        A animation plotting routine that animates each element in the MapSequence.
 
         Parameters
         ----------
@@ -308,8 +312,7 @@ class MapSequence(object):
 
     def all_maps_same_shape(self):
         """
-        Tests if all the maps have the same number pixels in the x and y
-        directions.
+        Tests if all the maps have the same number pixels in the x and y directions.
         """
         return np.all([m.data.shape == self.maps[0].data.shape for m in self.maps])
 
@@ -321,15 +324,15 @@ class MapSequence(object):
 
     def as_array(self):
         """
-        If all the map shapes are the same, their image data is rendered
-        into the appropriate numpy object.  If none of the maps have masks,
-        then the data is returned as a (ny, nx, nt) ndarray.  If all the maps
-        have masks, then the data is returned as a (ny, nx, nt) masked array
-        with all the masks copied from each map.  If only some of the maps
-        have masked then the data is returned as a (ny, nx, nt) masked array,
-        with masks copied from maps as appropriately; maps that do not have a
-        mask are supplied with a mask that is full of False entries.
-        If all the map shapes are not the same, a ValueError is thrown.
+        If all the map shapes are the same, their image data is rendered into the appropriate numpy
+        object.
+
+        If none of the maps have masks, then the data is returned as a (ny, nx, nt) ndarray.  If all
+        the maps have masks, then the data is returned as a (ny, nx, nt) masked array with all the
+        masks copied from each map.  If only some of the maps have masked then the data is returned
+        as a (ny, nx, nt) masked array, with masks copied from maps as appropriately; maps that do
+        not have a mask are supplied with a mask that is full of False entries. If all the map
+        shapes are not the same, a ValueError is thrown.
         """
         if self.all_maps_same_shape():
             data = np.swapaxes(np.swapaxes(np.asarray([m.data for m in self.maps]), 0, 1).copy(), 1, 2).copy()

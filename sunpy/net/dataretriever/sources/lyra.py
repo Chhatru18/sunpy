@@ -1,7 +1,6 @@
-# Author: Rishabh Sharma <rishabh.sharma.gunner@gmail.com>
-# This module was developed under funding provided by
-# Google Summer of Code 2014
-
+"""
+This module provides the downloader client for LYRA data.
+"""
 from urllib.parse import urljoin
 
 from ..client import GenericClient

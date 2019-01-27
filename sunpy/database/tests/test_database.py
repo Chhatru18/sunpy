@@ -1,8 +1,3 @@
-# Author: Simon Liedtke <liedtke.simon@googlemail.com>
-#
-# This module was developed with funding provided by
-# the Google Summer of Code (2013).
-
 import os
 import glob
 import shutil
@@ -16,16 +11,17 @@ from astropy import units
 
 import sunpy
 import sunpy.data.test
-from sunpy.io import fits
-from sunpy.net import Fido, hek, vso
-from sunpy.net import attrs as net_attrs
-from sunpy.database import (Database, NoSuchTagError, EntryNotFoundError, EntryAlreadyAddedError,
-                            TagAlreadyAssignedError, EntryAlreadyStarredError,
-                            EntryAlreadyUnstarredError, attrs, disable_undo, split_database)
-from sunpy.database.tables import Tag, JSONDump, DatabaseEntry, FitsKeyComment, FitsHeaderEntry
-from sunpy.database.caching import LFUCache, LRUCache
-from sunpy.database.commands import NoSuchEntryError, EmptyCommandStackError
 from sunpy.data.test.waveunit import waveunitdir
+from sunpy.database import (Database, EntryAlreadyAddedError, EntryAlreadyStarredError,
+                            EntryAlreadyUnstarredError, EntryNotFoundError, NoSuchTagError,
+                            TagAlreadyAssignedError, attrs, disable_undo, split_database)
+from sunpy.database.caching import LFUCache, LRUCache
+from sunpy.database.commands import EmptyCommandStackError, NoSuchEntryError
+from sunpy.database.tables import DatabaseEntry, FitsHeaderEntry, FitsKeyComment, JSONDump, Tag
+from sunpy.io import fits
+from sunpy.net import Fido
+from sunpy.net import attrs as net_attrs
+from sunpy.net import hek, vso
 
 testpath = sunpy.data.test.rootdir
 RHESSI_IMAGE = os.path.join(testpath, 'hsi_image_20101016_191218.fits')
@@ -1016,7 +1012,7 @@ def test_default_waveunit(default_waveunit_database):
 @pytest.fixture
 def split_function_database():
     """
-    Generates a custom database to test the split_database function
+    Generates a custom database to test the split_database function.
     """
     database = Database('sqlite:///:memory:')
     for i in range(1, 11):

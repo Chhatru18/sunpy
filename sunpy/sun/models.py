@@ -1,27 +1,24 @@
 """
-Solar Physical Models
----------------------
-This module contains standard models of the sun from various sources. All data is saved
-in pandas DataFrames with two added attributes
+This module contains standard models of the sun from various sources. All data is saved in pandas
+DataFrames with two added attributes.
 
 * source : names the source of the data
 * units : a dictionary with the units of each of the columns
 
-Object
-------
-    interior : pandas.DataFrame
-        The standard model of the solar interior
-    evolution : pandas.DataFrame
-        The evolution as a function of time of the Sun
+Models
+^^^^^^
 
-.. todo:: Need source for evolution model.
-
+1. interior : The standard model of the solar interior
+2. evolution : The evolution as a function of time of the Sun
 """
-
+# TODO: Need source for evolution model.
 import pandas
+
 from astropy.units import Quantity
+
 import sunpy.sun.constants as con
 
+__all__ = ["interior", "evolution"]
 # Solar radius measured outside earth's atmosphere in arcseconds
 
 # Standard Model - Interior Structure

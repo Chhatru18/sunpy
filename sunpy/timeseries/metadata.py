@@ -1,21 +1,21 @@
-# -*- coding: utf-8 -*-
-__authors__ = ["Alex Hamilton, Stuart Mumford"]
-__email__ = "stuart@mumford.me.uk"
-
-from sunpy.util.metadata import MetaDict
-import itertools
+"""
+This module provies metadata support for TimeSeries.
+"""
 import copy
-
-import warnings
 import inspect
+import warnings
+import itertools
 
 from sunpy.time import TimeRange, parse_time
+from sunpy.util.metadata import MetaDict
+
+__all__ = ["TimeSeriesMetaData"]
 
 
 class TimeSeriesMetaData(object):
     """
-    An object used to store metadata for TimeSeries objects that enables multiple
-    TimeSeries metadata to be concatenated in an organised fashion.
+    An object used to store metadata for TimeSeries objects that enables multiple TimeSeries
+    metadata to be concatenated in an organized fashion.
 
     Attributes
     ----------
@@ -60,9 +60,7 @@ class TimeSeriesMetaData(object):
     |            to             |                 |                                                   |
     |2012-06-02T00:00:00.000    |                 |                                                   |
     |-------------------------------------------------------------------------------------------------|
-
     """
-
     def __init__(self, meta=None, timerange=None, colnames=None, **kwargs):
         self.metadata = []
         # Parse in arguments
@@ -88,8 +86,8 @@ class TimeSeriesMetaData(object):
 
     def __eq__(self, other):
         """
-        Check two TimeSeriesMetaData objects are the same, they have the same
-        entries in the same order.
+        Check two TimeSeriesMetaData objects are the same, they have the same entries in the same
+        order.
 
         Parameters
         ----------
@@ -112,8 +110,8 @@ class TimeSeriesMetaData(object):
 
     def __ne__(self, other):
         """
-        Check two TimeSeriesMetaData objects are not the same, they don't have
-        same entries in the same order.
+        Check two TimeSeriesMetaData objects are not the same, they don't have same entries in the
+        same order.
 
         Parameters
         ----------
@@ -128,9 +126,8 @@ class TimeSeriesMetaData(object):
 
     def append(self, timerange, columns, metadata, **kwargs):
         """
-        Add the given metadata MetaDict into the metadata list as a tuple with
-        it's TimeRange and colnames (list).
-        Will add the new entry so the list is in chronological order for the
+        Add the given metadata MetaDict into the metadata list as a tuple with it's TimeRange and
+        colnames (list). Will add the new entry so the list is in chronological order for the
         TimeRange.start `~astropy.time.Time` values.
 
         Parameters
@@ -139,10 +136,8 @@ class TimeSeriesMetaData(object):
             The timerange for which a given metadict is relevant. This will
             generally initilly be the full range of the original file, but if
             the TimeSeries gets truncated this may change appropriately.
-
         columns : `str`
             A list of the colomn name strings that the metadata is relevant for.
-
         metadata : `~sunpy.util.metadata.MetaDict` or `OrderedDict` or `dict`
             The dictionary holding the metadata.
         """
@@ -175,20 +170,18 @@ class TimeSeriesMetaData(object):
 
     def find_indices(self, time=None, colname=None, **kwargs):
         """
-        Find the indices for all the metadata entries matching the given filters
-        for `~astropy.time.Time` and/or column name.
-        Will return all metadata entry indices if no filters are given.
+        Find the indices for all the metadata entries matching the given filters for
+        `~astropy.time.Time` and/or column name. Will return all metadata entry indices if no
+        filters are given.
 
         Parameters
         ----------
-        time : `str` or `astropy.time.Time` optional
+        time : `str` or `astropy.time.Time`, optional
             The string (parsed using the `~sunpy.time.parse_time`) or `~astropy.time.Time`
             that you need metadata for.
-
-        colname : `str` optional
+        colname : `str`, optional
             A string that can be used to narrow results to specific columns.
-
-        indices : `bool` optional
+        indices : `bool`, optional
             If True then return a list of indices, not of MetaDict items.
             Used when other methods use the filters for selecting metadata entries.
 
@@ -225,11 +218,10 @@ class TimeSeriesMetaData(object):
 
         Parameters
         ----------
-        time : `str` or `astropy.time.Time` optional
+        time : `str` or `astropy.time.Time`, optional
             The string (parsed using the `~sunpy.time.parse_time`) or `~astropy.time.Time`
             that you need metadata for.
-
-        colname : `str` optional
+        colname : `str`, optional
             A string that can be used to narrow results to specific columns.
 
         Returns
@@ -266,23 +258,20 @@ class TimeSeriesMetaData(object):
 
     def get(self, keys, time=None, colname=None, **kwargs):
         """
-        Return a TimeSeriesMetaData object of all entries matching the time and
-        colname filters with the dictionaries containing only the key value pairs
-        with the key matching the given input key.
+        Return a TimeSeriesMetaData object of all entries matching the time and colname filters with
+        the dictionaries containing only the key value pairs with the key matching the given input
+        key.
 
         Parameters
         ----------
         keys : `str`
             The Key/s to be searched in the dictionary.
-
-        time : `str` or `astropy.time.Time` optional
+        time : `str` or `astropy.time.Time`, optional
             The string (parsed using the `~sunpy.time.parse_time`) or `~astropy.time.Time`
             that you need metadata for.
-
-        colname : `str` optional
+        colname : `str`, optional
             A string that can be used to narrow results to specific columns.
-
-        itemised : `bool` optional
+        itemised : `bool`, optional
             Option to allow the return of the time ranges and column names
             (as list) that match each given value.
 
@@ -294,7 +283,7 @@ class TimeSeriesMetaData(object):
         """
         # Make a list of keys if only one is given
         if isinstance(keys, str):
-            keys = [ keys ]
+            keys = [keys]
 
         # Find all metadata entries for the given time/colname filters
         full_metadata = self.find(time=time, colname=colname)
@@ -306,7 +295,7 @@ class TimeSeriesMetaData(object):
             for curkey, value in entry[2].items():
                 for key in keys:
                     if curkey.lower() == key.lower():
-                        metadict.update({key:value})
+                        metadict.update({key: value})
             metadata.append((entry[0], entry[1], metadict))
 
         # Return a TimeSeriesMetaData object
@@ -314,8 +303,8 @@ class TimeSeriesMetaData(object):
 
     def concatenate(self, tsmetadata2, **kwargs):
         """
-        Combine the metadata from a TimeSeriesMetaData object with the current
-        TimeSeriesMetaData and return as a new TimeSeriesMetaData object.
+        Combine the metadata from a TimeSeriesMetaData object with the current TimeSeriesMetaData
+        and return as a new TimeSeriesMetaData object.
 
         Parameters
         ----------
@@ -338,17 +327,17 @@ class TimeSeriesMetaData(object):
 
         Parameters
         ----------
-        dictionary : `dict` or `OrderedDict` or `~sunpy.util.metadata.MetaDict`
+        dictionary : `dict`, `OrderedDict`, `~sunpy.util.metadata.MetaDict`
             The second TimeSeriesMetaData object.
 
-        time : `str` or `~astropy.time.Time` optional
+        time : `str` or `~astropy.time.Time`, optional
             The string (parsed using the `~sunpy.time.parse_time`) or `~astropy.time.Time`
             to filter the metadata entries updated.
 
-        colname : `str` optional
+        colname : `str`, optional
             A string that can be used to narrow results to specific columns.
 
-        overwrite : `bool` optional
+        overwrite : `bool`, optional
             Option to define if the user is able to overwrite already present keys.
             Defaults to False, designed to stop users from being able to
             corrupt/damage the metadict values so easily.
@@ -373,9 +362,9 @@ class TimeSeriesMetaData(object):
                     self.metadata[i][2][key] = dictionary[key]
 
     def _truncate(self, timerange):
-        """Removes metadata entries outside of the new (truncated) TimeRange.
-        Also adjusts start and end times of time ranges going outside of the
-        truncated time range.
+        """
+        Removes metadata entries outside of the new (truncated) TimeRange. Also adjusts start and
+        end times of time ranges going outside of the truncated time range.
 
         Parameters
         ----------
@@ -412,7 +401,9 @@ class TimeSeriesMetaData(object):
 
     @property
     def columns(self):
-        """Returns a list of all the names of the columns in the metadata."""
+        """
+        Returns a list of all the names of the columns in the metadata.
+        """
         all_cols = set()
         for metatuple in self.metadata:
             all_cols.update(metatuple[1])
@@ -422,7 +413,9 @@ class TimeSeriesMetaData(object):
 
     @property
     def metas(self):
-        """Returns a list of all the metadict objects in the TimeSeriesMetaData object."""
+        """
+        Returns a list of all the metadict objects in the TimeSeriesMetaData object.
+        """
         all_metas = []
         for metatuple in self.metadata:
             all_metas.append(metatuple[2])
@@ -430,15 +423,19 @@ class TimeSeriesMetaData(object):
 
     @property
     def timeranges(self):
-        """Returns a list of all the TimeRange objects the TimeSeriesMetaData object."""
+        """
+        Returns a list of all the TimeRange objects the TimeSeriesMetaData object.
+        """
         all_tr = []
         for metatuple in self.metadata:
             all_tr.append(metatuple[0])
         return all_tr
 
     def values(self):
-        """Returns a list of all the values from the metadict objects in each
-        entry in the TimeSeriesMetaData object."""
+        """
+        Returns a list of all the values from the metadict objects in each entry in the
+        TimeSeriesMetaData object.
+        """
         all_vals = set()
         for metatuple in self.metadata:
             for key, value in metatuple[2].items():
@@ -449,7 +446,9 @@ class TimeSeriesMetaData(object):
 
     @property
     def time_range(self):
-        """Returns the TimeRange of the entire time series meta data."""
+        """
+        Returns the TimeRange of the entire time series meta data.
+        """
         start = self.metadata[0][0].start
         end = self.metadata[0][0].end
         for metatuple in self.metadata:
@@ -458,11 +457,12 @@ class TimeSeriesMetaData(object):
         return TimeRange(start, end)
 
     def _remove_columns(self, colnames):
-        """Removes the given column/s from the TimeSeriesMetaData object.
+        """
+        Removes the given column/s from the TimeSeriesMetaData object.
 
         Parameters
         ----------
-        colnames : `str` or `list`
+        colnames : `str`, `list`
             The name or names of the columns to be removed.
         """
         # Parameters
@@ -484,8 +484,6 @@ class TimeSeriesMetaData(object):
         # Update the original list
         self.metadata = reduced
 
-
-
     def _rename_column(self, old, new):
         """
         Change the name of a column in all the metadata entries.
@@ -494,7 +492,6 @@ class TimeSeriesMetaData(object):
         ----------
         old : `str`
             The original column name to be changed.
-
         new : `str`
             The new column name.
         """
@@ -535,7 +532,6 @@ class TimeSeriesMetaData(object):
         depth : `int`
             The maximum number of lines to show for each entry. Metadata
             dictionaries and column lists will be truncated if this is small.
-
         width : `int`
             The number of characters wide to make the entire table.
         """
@@ -636,5 +632,6 @@ class TimeSeriesMetaData(object):
 
     def __repr__(self):
         return self.to_string()
+
     def __str__(self):
         return self.to_string()

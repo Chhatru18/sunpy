@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+
+"""
+This module provides the JSOC client.
+"""
 import os
 import time
 import urllib
@@ -9,15 +12,16 @@ from collections import Sequence
 import drms
 import numpy as np
 import pandas as pd
-import astropy.units as u
-import astropy.time
+
 import astropy.table
+import astropy.time
+import astropy.units as u
 from astropy.utils.misc import isiterable
 
 from sunpy import config
+from sunpy.net.attr import and_
 from sunpy.net.base_client import BaseClient
 from sunpy.net.download import Downloader, Results
-from sunpy.net.attr import and_
 from sunpy.net.jsoc.attrs import walker
 
 __all__ = ['JSOCClient', 'JSOCResponse']
@@ -220,7 +224,6 @@ class JSOCClient(BaseClient):
     of the download::
 
         >>> res.wait(progress=True)   # doctest: +SKIP
-
     """
 
     def search(self, *query, **kwargs):
@@ -323,7 +326,6 @@ class JSOCClient(BaseClient):
             2014-01-01T00:00:37Z  SDO/AIA    AIA_3      171    2145
             2014-01-01T00:00:49Z  SDO/AIA    AIA_3      171    2145
             2014-01-01T00:01:01Z  SDO/AIA    AIA_3      171    2145
-
         """
 
         return_results = JSOCResponse()
@@ -340,8 +342,8 @@ class JSOCClient(BaseClient):
 
     def search_metadata(self, *query, **kwargs):
         """
-        Get the metadata of all the files obtained in a search query.
-        Builds a jsoc query, similar to query method, and takes similar inputs.
+        Get the metadata of all the files obtained in a search query. Builds a jsoc query, similar
+        to query method, and takes similar inputs.
 
         Complex queries to be easily formed using logical operators such as
         ``&`` and ``|``, in the same way as the query function.
@@ -381,7 +383,6 @@ class JSOCClient(BaseClient):
             aia.lev1_euv_12s[2014-01-01T00:00:37Z][304]  2014-01-01T00:00:44.58Z       304
             aia.lev1_euv_12s[2014-01-01T00:00:49Z][304]  2014-01-01T00:00:56.57Z       304
             aia.lev1_euv_12s[2014-01-01T00:01:01Z][304]  2014-01-01T00:01:08.59Z       304
-
         """
         query = and_(*query)
         blocks = []
@@ -397,8 +398,8 @@ class JSOCClient(BaseClient):
 
     def request_data(self, jsoc_response, **kwargs):
         """
-        Request that JSOC stages the data for download. This method will not
-        wait for the request to be staged.
+        Request that JSOC stages the data for download. This method will not wait for the request to
+        be staged.
 
         Parameters
         ----------
@@ -412,7 +413,6 @@ class JSOCClient(BaseClient):
 
             Request Id can be accessed by requests.id
             Request status can be accessed by requests.status
-
         """
 
         requests = []
@@ -440,8 +440,8 @@ class JSOCClient(BaseClient):
     def fetch(self, jsoc_response, path=None, overwrite=False, progress=True,
               max_conn=5, downloader=None, sleep=10):
         """
-        Make the request for the data in a JSOC response and wait for it to be
-        staged and then download the data.
+        Make the request for the data in a JSOC response and wait for it to be staged and then
+        download the data.
 
         Parameters
         ----------
@@ -471,7 +471,6 @@ class JSOCClient(BaseClient):
         -------
         results : a `~sunpy.net.download.Results` instance
             A Results object
-
         """
 
         # Make staging request to JSOC
@@ -527,7 +526,6 @@ class JSOCClient(BaseClient):
         -------
         res: `~sunpy.net.download.Results`
             A `~sunpy.net.download.Results` instance or `None` if no URLs to download
-
         """
         c = drms.Client()
 
@@ -668,7 +666,6 @@ class JSOCClient(BaseClient):
         in the online database. Any missing prime-keys should be compensated by
         an empty {}, if it occurs before any passed prime-key. Any empty curly braces
         that is present at last of the pkstr, can be skipped.
-
         """
 
         # Extract and format segment

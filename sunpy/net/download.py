@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-#
-# This module was developed with funding provided by
-# the ESA Summer of Code (2011).
-
+"""
+This module provides the file download support for the clients.
+"""
 
 import os
 import re
@@ -69,7 +66,10 @@ class Downloader(object):
                     self._close(errback, [e], server)
 
     def _attempt_download(self, url, path, callback, errback):
-        """ Attempt download. If max. connection limit reached, queue for download later.
+        """
+        Attempt download.
+
+        If max. connection limit reached, queue for download later.
         """
 
         num_connections = self.connections[self._get_server(url)]
@@ -86,18 +86,22 @@ class Downloader(object):
         return False
 
     def _get_server(self, url):
-        """Returns the server name for a given URL.
+        """
+        Returns the server name for a given URL.
 
         Examples: http://server.com, server.org, ftp.server.org, etc.
         """
         return re.search(r'(\w+://)?([\w\.]+)', url).group(2)
 
     def _default_callback(self, *args):
-        """Default callback to execute on a successful download"""
-        pass
+        """
+        Default callback to execute on a successful download.
+        """
 
     def _default_error_callback(self, e):
-        """Default callback to execute on a failed download"""
+        """
+        Default callback to execute on a failed download.
+        """
         raise e
 
     def wait(self):
@@ -116,7 +120,8 @@ class Downloader(object):
         pass
 
     def download(self, url, path=None, callback=None, errback=None):
-        """Downloads a file at a specified URL.
+        """
+        Downloads a file at a specified URL.
 
         Parameters
         ----------
@@ -161,7 +166,10 @@ class Downloader(object):
             self.q[server].append((url, path, callback, errback))
 
     def _close(self, callback, args, server):
-        """ Called after download is done. Activated queued downloads, call callback.
+        """
+        Called after download is done.
+
+        Activated queued downloads, call callback.
         """
         callback(*args)
 
@@ -171,7 +179,7 @@ class Downloader(object):
         if self.q[server]:
             self._attempt_download(*self.q[server].pop())
         else:
-            for k, v in self.q.items():  # pylint: disable=W0612
+            for k, v in self.q.items():
                 while v:
                     if self._attempt_download(*v[0]):
                         v.popleft()
@@ -182,8 +190,10 @@ class Downloader(object):
 
 
 class Results(object):
-    """ Returned by VSOClient.fetch. Use .wait to wait
-    for completion of download.
+    """
+    Returned by VSOClient.fetch.
+
+    Use .wait to wait for completion of download.
     """
     def __init__(self, callback, n=0, done=None):
         self.callback = callback
@@ -198,7 +208,7 @@ class Results(object):
 
     def submit(self, keys, value):
         """
-        Submit
+        Submit.
 
         Parameters
         ----------
@@ -212,9 +222,11 @@ class Results(object):
         self.poke()
 
     def poke(self):
-        """ Signal completion of one item that was waited for. This can be
-        because it was submitted, because it lead to an error or for any
-        other reason. """
+        """
+        Signal completion of one item that was waited for.
+
+        This can be because it was submitted, because it lead to an error or for any other reason.
+        """
         with self.lock:
             self.n -= 1
             if self.progress is not None:
@@ -226,9 +238,10 @@ class Results(object):
                 self.evt.set()
 
     def require(self, keys):
-        """ Require that keys be submitted before the Results object is
-        finished (i.e., wait returns). Returns a callback method that can
-        be used to submit the result by simply calling it with the result.
+        """
+        Require that keys be submitted before the Results object is finished (i.e., wait returns).
+        Returns a callback method that can be used to submit the result by simply calling it with
+        the result.
 
         keys : list
             name of keys under which to save the result
@@ -239,7 +252,9 @@ class Results(object):
             return partial(self.submit, keys)
 
     def wait(self, timeout=100, progress=True):
-        """ Wait for result to be complete and return it. """
+        """
+        Wait for result to be complete and return it.
+        """
         # Giving wait a timeout somehow circumvents a CPython bug that the
         # call gets ininterruptible.
         if progress:
@@ -256,7 +271,8 @@ class Results(object):
         return self.map_
 
     def add_error(self, exception):
-        """ Signal a required result cannot be submitted because of an
-        error. """
+        """
+        Signal a required result cannot be submitted because of an error.
+        """
         self.errors.append(exception)
         self.poke()

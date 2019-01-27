@@ -4,7 +4,6 @@ import warnings
 import importlib
 
 import pytest
-from pkg_resources import parse_version
 
 # Force MPL to use non-gui backends for testing.
 try:
@@ -38,8 +37,8 @@ def figure_base_dir(request):
 
 def pytest_runtest_setup(item):
     """
-    pytest hook to skip all tests that have the mark 'remotedata' if the
-    pytest_remotedata plugin is not installed.
+    pytest hook to skip all tests that have the mark 'remotedata' if the pytest_remotedata plugin is
+    not installed.
     """
     if isinstance(item, pytest.Function):
         if 'remote_data' in item.keywords and not HAVE_REMOTEDATA:
@@ -63,6 +62,7 @@ def pytest_unconfigure(config):
             from pytest_remotedata.disable_internet import turn_on_internet, turn_off_internet
         else:
             def turn_on_internet(): pass
+
             def turn_off_internet(): pass
 
         turn_on_internet()

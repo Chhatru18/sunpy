@@ -1,7 +1,9 @@
+"""
+This module implements a solarsoft genx File Reader.
+"""
+import copy
 import xdrlib
 from collections import OrderedDict
-from functools import partial
-import copy
 
 import numpy as np
 
@@ -9,8 +11,7 @@ __all__ = ['read_genx']
 
 class SSWUnpacker(xdrlib.Unpacker):
     """
-    `xdrlib.Unpacker` customisation to read strings and complex data as written
-    by IDL.
+    `xdrlib.Unpacker` customisation to read strings and complex data as written by IDL.
     """
     def unpack_string(self):
         n = self.unpack_uint()
@@ -24,8 +25,7 @@ class SSWUnpacker(xdrlib.Unpacker):
 
 def read_struct_skeleton(xdrdata):
     """
-    Reads the skeleton of the IDL's structure as written in
-    solarsoft `build_str()` function.
+    Reads the skeleton of the IDL's structure as written in solarsoft `build_str()` function.
     """
     # Read Number of tags
     ntags = xdrdata.unpack_uint()
@@ -56,13 +56,12 @@ def read_struct_skeleton(xdrdata):
     return tagdict
 
 def struct_to_data(xdrdata, subskeleton):
-    """"
-    Converts the dictionary with the keys and IDL's size output to
-    the data stored in the xdrdata.
+    """
+    " Converts the dictionary with the keys and IDL's size output to the data stored in the xdrdata.
 
-    `subskeleton` must contain the size and type of the data that's going to be
-    read in the right order (that's why `OrderedDict` is used). Then the data is
-    read and the `subskeleton` is updated with the data itself.
+    `subskeleton` must contain the size and type of the data that's going to be read in the right
+    order (that's why `OrderedDict` is used). Then the data is read and the `subskeleton` is updated
+    with the data itself.
     """
     #http://www.harrisgeospatial.com/docs/SIZE.html
     types_dict = {
@@ -99,7 +98,8 @@ def struct_to_data(xdrdata, subskeleton):
                                             dtype=types_dict[sswtype][1]).reshape(sswsize[1:-2][::-1])
 
 def read_genx(filename):
-    """solarsoft genx file reader
+    """
+    solarsoft genx file reader.
 
     genx files have been used to store calibration data for multiple
     instruments and distributed within solarsoft. They are stored in XDR
@@ -131,7 +131,6 @@ def read_genx(filename):
     a single integer is converted from 16 to 32/64 bits, and a float from 32 to 64.
 
     **Strings** read from genx files are assumed to be UTF-8.
-
     """
     with open(filename, mode='rb') as xdrfile:
         xdrdata = SSWUnpacker(xdrfile.read())

@@ -1,10 +1,10 @@
 import tempfile
 
-import pytest
 import numpy as np
+import pytest
 
-import sunpy.map
 import sunpy.data.test as test
+import sunpy.map
 from sunpy.instr.aia import aiaprep
 
 # Define the original and prepped images first so they're available to all

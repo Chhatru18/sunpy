@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-
+"""
+This module provides a full class for conditional dispatch support.
+"""
 import os
 import glob
 
-from sunpy.util.net import download_file
-from sunpy.util.config import get_and_create_download_dir
-
 from sunpy.util.cond_dispatch import ConditionalDispatch, run_cls
+from sunpy.util.config import get_and_create_download_dir
+from sunpy.util.net import download_file
 
 __all__ = ['Parent']
 
@@ -25,14 +24,18 @@ class Parent(object):
 
     @classmethod
     def from_glob(cls, pattern):
-        """ Read out files using glob (e.g., ~/BIR_2011*) pattern. Returns
-        list of objects made from all matched files.
+        """
+        Read out files using glob (e.g., ~/BIR_2011*) pattern.
+
+        Returns list of objects made from all matched files.
         """
         return cls.read_many(glob.glob(pattern))
 
     @classmethod
     def from_single_glob(cls, singlepattern):
-        """ Read out a single file using glob (e.g., ~/BIR_2011*) pattern.
+        """
+        Read out a single file using glob (e.g., ~/BIR_2011*) pattern.
+
         If more than one file matches the pattern, raise ValueError.
         """
         matches = glob.glob(os.path.expanduser(singlepattern))
@@ -42,20 +45,25 @@ class Parent(object):
 
     @classmethod
     def from_files(cls, filenames):
-        """ Return list of object read from given list of
-        filenames. """
+        """
+        Return list of object read from given list of filenames.
+        """
         filenames = list(map(os.path.expanduser, filenames))
         return cls.read_many(filenames)
 
     @classmethod
     def from_file(cls, filename):
-        """ Return object from file. """
+        """
+        Return object from file.
+        """
         filename = os.path.expanduser(filename)
         return cls.read(filename)
 
     @classmethod
     def from_dir(cls, directory):
-        """ Return list that contains all files in the directory read in. """
+        """
+        Return list that contains all files in the directory read in.
+        """
         directory = os.path.expanduser(directory)
         return cls.read_many(
             (os.path.join(directory, elem) for elem in os.listdir(directory))
@@ -63,11 +71,12 @@ class Parent(object):
 
     @classmethod
     def from_url(cls, url):
-        """ Return object read from URL.
+        """
+        Return object read from URL.
 
         Parameters
         ----------
-        url : str
+        url : `str`
             URL to retrieve the data from
         """
         path = download_file(url, get_and_create_download_dir())
@@ -80,7 +89,6 @@ Parent._create.add(
     [type, str], check=False
 )
 Parent._create.add(
-    # pylint: disable=W0108
     # The lambda is necessary because introspection is performed on the
     # argspec of the function.
     run_cls('from_dir'),

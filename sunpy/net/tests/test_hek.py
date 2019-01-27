@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-# Author: Florian Mayer <florian.mayer@bitsrc.org>
-
-#pylint: disable=W0613
-
 import pytest
 
-from sunpy.net import hek
-from sunpy.net import attr
+from sunpy.net import attr, hek
 
 
 @pytest.fixture

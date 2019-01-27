@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 
 import numpy as np
 
-import sunpy.map
 from astropy.wcs import WCS
 
-from sunpy.coordinates.frames import Helioprojective, Heliocentric, HeliographicStonyhurst, HeliographicCarrington
+import sunpy.map
+from sunpy.coordinates.frames import (Heliocentric, HeliographicCarrington,
+                                      HeliographicStonyhurst, Helioprojective)
+
 from ..wcs_utils import solar_wcs_frame_mapping
 
 
@@ -56,8 +57,9 @@ def test_none():
 
 def test_wcs_extras():
     """
-    To enable proper creation of the coordinate systems, Map sticks three extra
-    attributes on the WCS object:
+    To enable proper creation of the coordinate systems, Map sticks three extra attributes on the
+    WCS object:
+
     * heliographic_longitude
     * heliographic_latitude
     * dsun

@@ -1,23 +1,16 @@
-"""A Composite Map class
-
-Author: `Keith Hughitt <keith.hughitt@nasa.gov>`
 """
-import numpy as np
-
+This module provides a CompositeMap class.
+"""
 import matplotlib.pyplot as plt
+import numpy as np
 
 import astropy.units as u
 
 from sunpy.map import GenericMap
+from sunpy.util import expand_list
 from sunpy.visualization import axis_labels_from_ctype
 
-from sunpy.util import expand_list
-
 __all__ = ['CompositeMap']
-
-__author__ = "Keith Hughitt"
-__email__ = "keith.hughitt@nasa.gov"
-
 
 class CompositeMap(object):
     """
@@ -68,7 +61,6 @@ class CompositeMap(object):
     ...                          composite=True)  # doctest: +REMOTE_DATA
     >>> comp_map.add_map(sunpy.map.Map(sunpy.data.sample.RHESSI_IMAGE))  # doctest: +REMOTE_DATA
     >>> comp_map.peek()  # doctest: +SKIP
-
     """
     def __init__(self, *args, **kwargs):
         self._maps = expand_list(args)
@@ -90,7 +82,8 @@ class CompositeMap(object):
             m.levels = levels[i]
 
     def add_map(self, amap, zorder=None, alpha=1, levels=False):
-        """Adds a map to the CompositeMap.
+        """
+        Adds a map to the CompositeMap.
 
         Parameters
         ----------
@@ -116,7 +109,8 @@ class CompositeMap(object):
         self._maps.append(amap)
 
     def remove_map(self, index):
-        """Removes and returns the map with the given index.
+        """
+        Removes and returns the map with the given index.
 
         Parameters
         ----------
@@ -132,11 +126,15 @@ class CompositeMap(object):
         return self._maps.pop(index)
 
     def list_maps(self):
-        """Prints a list of the currently included maps."""
+        """
+        Prints a list of the currently included maps.
+        """
         print([m.__class__ for m in self._maps])
 
     def get_map(self, index):
-        """Returns the map with given index """
+        """
+        Returns the map with given index.
+        """
         return self._maps[index]
 
     def get_alpha(self, index=None):
@@ -149,8 +147,8 @@ class CompositeMap(object):
             return self._maps[index].alpha
 
     def get_levels(self, index=None):
-        """Returns the list of contour levels for a map within the
-        composite.
+        """
+        Returns the list of contour levels for a map within the composite.
 
         Parameters
         ----------
@@ -170,7 +168,8 @@ class CompositeMap(object):
             return self._maps[index].levels
 
     def get_plot_settings(self, index=None):
-        """Returns the plot settings for a map within the composite map.
+        """
+        Returns the plot settings for a map within the composite map.
 
         Parameters
         ----------
@@ -190,8 +189,8 @@ class CompositeMap(object):
             return self._maps[index].plot_settings
 
     def get_zorder(self, index=None):
-        """Returns the layering preference (z-order) for a map within the
-        composite.
+        """
+        Returns the layering preference (z-order) for a map within the composite.
 
         Parameters
         ----------
@@ -211,7 +210,8 @@ class CompositeMap(object):
             return self._maps[index].zorder
 
     def set_alpha(self, index, alpha):
-        """Sets the alpha-channel value for a layer in the composite image.
+        """
+        Sets the alpha-channel value for a layer in the composite image.
 
         Parameters
         ----------
@@ -261,7 +261,8 @@ class CompositeMap(object):
             self._maps[index].levels = [self._maps[index].max()*level/100.0 for level in levels]
 
     def set_plot_settings(self, index, plot_settings):
-        """Sets the plot settings for a layer in the composite image.
+        """
+        Sets the plot settings for a layer in the composite image.
 
         Parameters
         ----------
@@ -280,8 +281,8 @@ class CompositeMap(object):
         self._maps[index].plot_settings = plot_settings
 
     def set_zorder(self, index, zorder):
-        """Set the layering order (z-order) for a map within the
-        composite.
+        """
+        Set the layering order (z-order) for a map within the composite.
 
         Parameters
         ----------
@@ -300,7 +301,8 @@ class CompositeMap(object):
         self._maps[index].zorder = zorder
 
     def draw_limb(self, index=None, axes=None, **kwargs):
-        """Draws a circle representing the solar limb.
+        """
+        Draws a circle representing the solar limb.
 
         Parameters
         ----------
@@ -333,7 +335,8 @@ class CompositeMap(object):
 
     @u.quantity_input
     def draw_grid(self, index=None, axes=None, grid_spacing: u.deg=20*u.deg, **kwargs):
-        """Draws a grid over the surface of the Sun.
+        """
+        Draws a grid over the surface of the Sun.
 
         Parameters
         ----------
@@ -370,9 +373,10 @@ class CompositeMap(object):
         ax = self._maps[index].draw_grid(axes=axes, grid_spacing=grid_spacing, **kwargs)
         return ax
 
-    def plot(self, axes=None, annotate=True,  # pylint: disable=W0613
+    def plot(self, axes=None, annotate=True,
              title="SunPy Composite Plot", **matplot_args):
-        """Plots the composite map object using matplotlib
+        """
+        Plots the composite map object using matplotlib.
 
         Parameters
         ----------
@@ -456,7 +460,8 @@ class CompositeMap(object):
 
     def peek(self, colorbar=True, basic_plot=False, draw_limb=True,
              draw_grid=False, **matplot_args):
-        """Displays the map in a new figure.
+        """
+        Displays the map in a new figure.
 
         Parameters
         ----------
@@ -513,7 +518,6 @@ class CompositeMap(object):
 
 
 class OutOfRangeAlphaValue(ValueError):
-    """Exception to raise when an alpha value outside of the range 0-1 is
-    requested.
     """
-    pass
+    Exception to raise when an alpha value outside of the range 0-1 is requested.
+    """

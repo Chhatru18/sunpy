@@ -1,19 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 20 10:24:06 2016
-
-"""
-
-
 import copy
-
-from sunpy.timeseries import TimeSeriesMetaData
-from sunpy.time import TimeRange
-from sunpy.util.metadata import MetaDict
 from collections import OrderedDict
 
 import pytest
 
+from sunpy.time import TimeRange
+from sunpy.timeseries import TimeSeriesMetaData
+from sunpy.util.metadata import MetaDict
 
 #==============================================================================
 # Creating TimeSeriesMetaData Objects
