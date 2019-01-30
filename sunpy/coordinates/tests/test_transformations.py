@@ -1,6 +1,7 @@
 from distutils.version import LooseVersion
 
 import numpy as np
+import pytest
 
 from  astropy import __version__
 ASTROPY_LT_3 = LooseVersion(__version__) < LooseVersion('3')
@@ -91,6 +92,7 @@ def test_hpc_hpc_null():
     assert hpc_out.observer == hpc_new.observer
 
 
+@pytest.mark.flaky(reruns=5)
 def test_hcrs_hgs():
     # Get the current Earth location in HCRS
     now = Time(parse_time('now'))
